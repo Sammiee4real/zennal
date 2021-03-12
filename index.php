@@ -1,8 +1,20 @@
-
-<?php include("sidebar.php");?>
+<?php include("sidebar.php");
+    $user_id =$_SESSION['user_id'];
+    $get_user_details = get_one_row_from_one_table_by_id('users','unique_id', $user_id, 'registered_on');
+    $get_personal_loan = get_one_row_from_one_table_by_id('loan_category','type', 1, 'date_created');
+    $get_num_personal_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_category_id',$get_personal_loan['unique_id']);
+    $get_asset_loan = get_one_row_from_one_table_by_id('loan_category','type', 2, 'date_created');
+    $get_num_asset_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_category_id',$get_asset_loan['unique_id']);
+    $get_num_insurance = get_number_of_rows_one_param('insurance','user_id',$user_id);
+    $get_num_running_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_status', 1);
+    $get_recent_activities = get_user_recent_activities($user_id);
+?>
 <div id="main">
 
-<?php include("header.php");?>            
+<?php 
+    include("header.php");
+    include('config/functions.php');
+?>         
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Dashboard</h3>
