@@ -1,5 +1,8 @@
-<?php include("sidebar.php");
-    $user_id =$_SESSION['user_id'];
+<?php 
+
+    include("sidebar.php");
+    include("header.php");
+
     $get_user_details = get_one_row_from_one_table_by_id('users','unique_id', $user_id, 'registered_on');
     $get_personal_loan = get_one_row_from_one_table_by_id('loan_category','type', 1, 'date_created');
     $get_num_personal_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_category_id',$get_personal_loan['unique_id']);
@@ -12,8 +15,7 @@
 <div id="main">
 
 <?php 
-    include("header.php");
-    include('config/functions.php');
+    // include('config/functions.php');
 ?>         
 <div class="main-content container-fluid">
     <div class="page-title">

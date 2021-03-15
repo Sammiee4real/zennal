@@ -8,11 +8,33 @@
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     
     <link rel="shortcut icon" href="assets/images/logozennal.png" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/app.css">
 </head>
 
 <body>
-    <div id="auth">
+
+<div id="success_toast" class="toast-box toast-center">
+    <div class="in">
+        <ion-icon name="checkmark-circle" class="text-success"></ion-icon>
+        <div class="text" id="success_message">
+            
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-text-light close-button">CLOSE</button>
+</div>
+
+<div id="error_toast" class="toast-box toast-center bg-danger">
+    <div class="in">
+        <ion-icon name="close-circle" class="text-white"></ion-icon>
+        <div class="text" id="error_message">
+            
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-text-light close-button">OK</button>
+</div>
+
+<div id="auth">
         
 <div class="container">
     <div class="row">
@@ -23,11 +45,11 @@
                         <img src="assets/images/logozennal.png" height="48" class='mb-4'>
                         <h3>Sign In</h3>
                     </div>
-                    <form action="index.php">
+                    <form id="login_form" method="post">
                         <div class="form-group position-relative has-icon-left">
-                            <label for="username">Email</label>
+                            <label for="email">Email</label>
                             <div class="position-relative">
-                                <input type="text" class="form-control" id="username" >
+                                <input type="text" class="form-control" id="email" name="email">
                                 <div class="form-control-icon">
                                     <i data-feather="mail"></i>
                                 </div>
@@ -41,7 +63,7 @@
                                 </a>
                             </div>
                             <div class="position-relative">
-                                <input type="text" class="form-control" id="password">
+                                <input type="password" class="form-control" name="password" id="password">
                                 <div class="form-control-icon">
                                     <i data-feather="lock"></i>
                                 </div>
@@ -59,7 +81,7 @@
                         </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <button class="btn btn-block mb-2 btn-primary">Submit</button>
+                            <button id="login_submit_btn" class="btn btn-block mb-2 btn-primary">Submit</button>
                         </div>
                     </div>
                     </form>
@@ -69,12 +91,8 @@
         </div>
     </div>
 </div>
-
-    </div>
-    <script src="assets/js/feather-icons/feather.min.js"></script>
-    <script src="assets/js/app.js"></script>
-    
-    <script src="assets/js/main.js"></script>
+</div>
+<?php include("footer.php");?>
 </body>
 
 </html>
