@@ -18,10 +18,12 @@
     // include('config/functions.php');
 ?>         
 <div class="main-content container-fluid">
+    
     <div class="page-title">
         <h3>Dashboard</h3>
         <p class="text-subtitle text-muted">Friday, 08,January 2021</p>
     </div>
+    
     <section class="section mt-5">
         <div class="row mb-2">
 

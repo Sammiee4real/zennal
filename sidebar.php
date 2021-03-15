@@ -1,7 +1,16 @@
 <?php
 include('config/functions.php');
-$user_id = $_SESSION['user']['id'];
+if(!isset($_SESSION['user'])){
+    header('location: login.php');
+    end();
+}
+$user_id = $_SESSION['user']['unique_id'];
 $user = $_SESSION['user'];
+
+if (intval($user['email_verified']) === 0) {
+    header('location: default.php');
+    end();
+}
 
 ?>
 <!DOCTYPE html>
@@ -124,7 +133,7 @@ $user = $_SESSION['user'];
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="login.php" class='sidebar-link'>
+                    <a href="logout.php" class='sidebar-link'>
                         <i data-feather="log-out" width="20"></i> 
                         <span>logout</span>
                     </a>

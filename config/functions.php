@@ -266,10 +266,45 @@ function login_user($post){
   if($user === false){
     return json_encode(array("status"=>0, "msg"=>"Invalid login details"));
   }else{
+
+    if (intval($user['email_verified']) === 0) {
+      // Email verification
+      send_verification_link($user);
+    }
+
     $_SESSION['user'] = $user;
     return json_encode(array("status"=>1, "msg"=>"success"));
   }
 
+}
+
+// Badmus
+function verify_user_email($user_id){
+  global $dbc;
+
+  $sql = "UPDATE `users` SET `email_verified` = 1 WHERE unique_id ='$user_id'";
+  $query = mysqli_query($dbc, $sql);
+  return true;
+
+}
+
+// Badmus
+function send_verification_link($user){
+
+  $verr_id = md5($user['unique_id']);
+  $email = $user['email'];
+  // Email verification
+  $subject = 'Email verification';
+  $content = 'Dear '.$user['first_name'].' '.$user['last_name'].'<br/>';
+  $content .= 'Please click on the link below to verify your account <br/>';
+  $content .= '<a href="https://'.$_SERVER['HTTP_HOST'].'verify_email.php?id='.$verr_id.'"></a><br/>';
+  $content .= 'Thank you';
+  
+  if(email_function($email, $subject, $content)){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 function insurance_packages(){

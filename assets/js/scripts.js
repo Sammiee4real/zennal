@@ -1121,6 +1121,7 @@ $(document).ready(function(){
 					$("#error_message").empty();
 					$("#error_message").html("Error! " + data);
 					toastbox('error_toast', 6000);
+					setTimeout( function(){ location.reload();}, 3000);
 				}
 			}
 		})
