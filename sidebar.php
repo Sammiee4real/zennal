@@ -117,7 +117,7 @@ if (intval($user['email_verified']) === 0) {
 
             
                 <li class="sidebar-item">
-                    <a href="vehicle_registration.php" class='sidebar-link'>
+                    <a href="activities.php" class='sidebar-link'>
                         <i data-feather="activity" width="20"></i> 
                         <span>Activities</span>
                     </a>
@@ -125,7 +125,7 @@ if (intval($user['email_verified']) === 0) {
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="activities.php" class='sidebar-link'>
+                    <a href="refer.php" class='sidebar-link'>
                         <i data-feather="credit-card" width="20"></i> 
                         <span>Wallet</span>
                     </a>

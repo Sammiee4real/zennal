@@ -1,48 +1,72 @@
-<?php include("sidebar.php");
-    // $user_id = $_SESSION['user_id'];
-    $user_id = '07bf739aba673b233f89d1a25821870d';
-    $get_user_loan = get_one_row_from_one_table_by_id('user_loan_details','user_id', $user_id, 'date_created');
-?>
+
+<?php include("sidebar.php");?>
 <div id="main">
 
 <?php include("header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
-        <h3>Zennal Loans</h3>
-        <p class="text-subtitle text-muted"><?= date("l, d, F, Y ")?></p>
+        <h3>Refer a Friend</h3>
+        <p class="text-subtitle text-muted">Get a bonus for sharing Zennal</p>
     </div>
 
 <section class="section mt-5">
-<div class="col-xl-5 col-md-5 col-12">
-                <div class="card">
+<div class="row">    
+<div class="col-xl-6 col-md-5 col-12">
+                <div class="card pb-4">
                     <div class="card-content">
                         <div class="row no-gutters">
                             <div class="col-lg-7 col-12">
                                 <div class="card-body">
                                     <p class="card-text text-ellipsis">
-                                       Apply for you loan, enter all your details to get approval.
+                                       Copy your referral link to share with a friend.
                                     </p>
-                                    <a href="apply_loan.php"><button class="btn btn-info">APPLY FOR LOAN</button></a>
+                                    <h6>https://www.zennal.com/referee/Az453b</h6>
+                                    <a href=""><button class="btn btn-info">COPY LINK</button></a>
                                 </div>
                             </div>
                             <div class="col-lg-5 col-12 mt-4">
-                            	<h6>TOTAL ACTIVE LOAN</h6>
-                            	<h4 class="text-success ">₦20,000.00</h4>
+                                <h6>TOTAL BONUS</h6>
+                                <h4 class="text-success ">₦20,000.00</h4>
 
-                            	<h6>AMOUNT DUE</h6>
-                            	<h4 class="text-danger">₦5,000.00</h4>
+                                <h6>Your approved bonus must be up to #5000 to withdraw</h6>
+                                <a href=""><button class="btn btn-info">WITHDRAW</button></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-xl-1 col-md-1 col-12">
+                
+            </div>
+            <div class="col-xl-4 col-md-4 col-12">
+                <p>REFERRAL NOTIFICATION</p>
+                <div class="card pb-4">
+                    <div class="card-content">
+                        <div class="row no-gutters">
+                            <div class="col-12">
+                                <div class="card-body">
+                                    <p class="card-text text-ellipsis">
+                                        <i data-feather="bell" width="20"></i>
+                                       ADE used your referral code
+                                    </p>
+                                    <p class="card-text text-ellipsis">
+                                        <i data-feather="bell" width="20"></i>
+                                       OPE used your referral code
+                                    </p>
+                                    <p class="card-text text-ellipsis">
+                                        <i data-feather="bell" width="20"></i>
+                                       BEN used your referral code
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
 </section>
 
-    <div class="page-title mt-5">
-        <p class="text-subtitle text-muted">LOAN HISTORY</p>
-    </div>
-
- <section class="section">
+ <section class="section mt-5">
         <div class="card">
             <div class="card-header">
                 
@@ -51,9 +75,11 @@
                 <table class='table table-striped' id="myTable">
                     <thead class="thead-light">
                  <?php 
-                 //if($get_loan_applications == null){
-                        echo "<tr><td>No record found...</td></tr>";
-                     // } else{ ?>
+                 // if($get_loan_applications == null){
+                       echo "<tr><td>No record found...</td></tr>";
+                      // } else{ 
+
+                        ?>
                   <tr>
                     
                     <th scope="col">Fullname</th>
@@ -69,11 +95,11 @@
                 <tbody>
                   <?php
 
-                   //foreach($get_loan_applications as $value){
+                 // foreach($get_loan_applications as $value){
                     // $get_user = get_one_row_from_one_table_by_id('users','unique_id', $value['user_id'], 'registered_on');
                      ?>
                      <tr>
-                        <td><?php //echo $get_user['first_name'].' '.$get_user['last_name'];?></td>
+                        <td><?php // echo $get_user['first_name'].' '.$get_user['last_name'];?></td>
                         <td>
                             <?php //echo $value['loan_purpose'];?>
                         </td>
@@ -81,10 +107,10 @@
                             <?php //echo $value['loan_interest'].'%';?>
                         </td>
                         <td>
-                            &#8358;<?php// echo number_format($value['user_approved_amount'], 2);?>
+                            &#8358;<?php //echo number_format($value['user_approved_amount'], 2);?>
                         </td>
                         <td>
-                            &#8358;<?php// echo number_format($value['amount_to_repay'], 2);?>
+                            &#8358;<?php //echo number_format($value['amount_to_repay'], 2);?>
                         </td>
                         <td>
                             <?php 
@@ -109,15 +135,15 @@
                             ?>
                         </td>
                         <td>
-                          <?php //echo $value['date_created'];?>
+                         <?php// echo $value['date_created'];?>
                         </td>
                       </tr>
-                    <?php
-                     // } 
-                 //} 
+                    <?php 
+                //} 
+            // }
                  ?>
                 </tbody>
-              </table>
+            </table>
          </div>
      </div>
 </section>   
