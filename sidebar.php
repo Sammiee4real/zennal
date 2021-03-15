@@ -1,5 +1,7 @@
 <?php
-    include('config/functions.php');
+include('config/functions.php');
+$user_id = $_SESSION['user']['id'];
+$user = $_SESSION['user'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -1101,11 +1101,12 @@ $(document).ready(function(){
 
 	});
 
-	$("#form_login").submit(function(e){
+	$("#login_form").submit(function(e){
 		e.preventDefault();
-		
+		$('#login_submit_btn').attr('disabled', true);
+		$('#login_submit_btn').text('Please wait');
 		$.ajax({
-			url:"ajax/login_user.php",
+			url:"ajax/user_login.php",
 			method: "POST",
 			data: $(this).serialize(),
 			success: function(data){
@@ -1114,7 +1115,7 @@ $(document).ready(function(){
 					$("#success_message").empty();
 					$("#success_message").html("Success! You've successfully logged in");
 					toastbox('success_toast', 3000);
-					setTimeout( function(){ window.location.href = "dashboard.php";}, 3000);
+					setTimeout( function(){ window.location.href = "index.php";}, 3000);
 				}
 				else{
 					$("#error_message").empty();

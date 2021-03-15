@@ -4,35 +4,34 @@
     $user_id = '07bf739aba673b233f89d1a25821870d';
     $get_recent_activities = get_user_recent_activities($user_id);
 ?>
-
-<nav class="navbar navbar-header navbar-expand navbar-light">
-    <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
-    <button class="btn navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav d-flex align-items-center navbar-light ml-auto">
-            
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                    <div class="avatar mr-1">
-                        <img src="assets/images/profile.png" alt="" srcset="">
+            <nav class="navbar navbar-header navbar-expand navbar-light">
+                <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
+                <button class="btn navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav d-flex align-items-center navbar-light ml-auto">
+                        
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                                <div class="avatar mr-1">
+                                    <img src="assets/images/profile.png" alt="" srcset="">
+                                </div>
+                                <div class="d-none d-md-block d-lg-inline-block"><?php echo $user['first_name']." ".$user['last_name']; ?></div>
+                                <span><i data-feather="arrow-down" width="20"></i> </span>
+                            </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="">
+                        
+                    <div class="card-header border-bottom text-center">
+                        <div class="avatar avatar-lg ">
+                           <img src="assets/images/logozennal.png" alt="" srcset="">
+                        </div>
+                        <h4 class="card-title ">Jane Doe</h4>
+                        <p>janedoe@gmail.com</p>
                     </div>
-                    <div class="d-none d-md-block d-lg-inline-block">Jane Doe</div>
-                    <span><i data-feather="arrow-down" width="20"></i> </span>
-                </a>
-    <div class="dropdown-menu dropdown-menu-right">
-        <div class="">
-            
-        <div class="card-header border-bottom text-center">
-            <div class="avatar avatar-lg ">
-               <img src="assets/images/logozennal.png" alt="" srcset="">
-            </div>
-            <h4 class="card-title ">Jane Doe</h4>
-            <p>janedoe@gmail.com</p>
-        </div>
-        <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                    <div class="card-header border-bottom d-flex justify-content-between align-items-center">
 
             <span class="">Recent Activities</span>
             <a href="activities.php">View more<i data-feather="arrow-right" width="20"></i></a>
