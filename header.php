@@ -12,7 +12,7 @@
                                 <div class="avatar mr-1">
                                     <img src="assets/images/profile.png" alt="" srcset="">
                                 </div>
-                                <div class="d-none d-md-block d-lg-inline-block">Jane Doe</div>
+                                <div class="d-none d-md-block d-lg-inline-block"><?php echo $user['first_name']." ".$user['last_name']; ?></div>
                                 <span><i data-feather="arrow-down" width="20"></i> </span>
                             </a>
                 <div class="dropdown-menu dropdown-menu-right">

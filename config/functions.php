@@ -2,8 +2,8 @@
 $table = "";
 $app_name = 'ZENNAL';
 require_once("db_connect.php");
-require_once('generic_functions.php');
-require_once("config_settings.php");
+// require_once('generic_functions.php');
+// require_once("config_settings.php");
 @session_start();
 global $dbc;
 
@@ -239,25 +239,37 @@ function register_user($data){
   return json_encode(array("status" => 1, "msg" => "Success"));
 }
 
-
-function login_user($details){
+// Badmus
+function get_user_details($email, $password){
   global $dbc;
-  $email = secure_database($details["email"]);
-  $password = secure_database($details["password"]);
+  $sql = "SELECT * FROM `users` WHERE `email`='$email' AND `password`='$password'";
+  $query = mysqli_query($dbc, $sql);
+  $re = mysqli_fetch_assoc($query);
+
+  if (empty($re)) {
+    return false;
+  } else {
+    return $re;
+  }
+
+}
+
+// Badmus
+function login_user($post){
+  
+  $email = secure_database($post["email"]);
+  $password = secure_database($post["password"]);
   $hashpassword = md5($password);
+  
+  $user = get_user_details($email, $hashpassword);
 
-  $sql = "SELECT * FROM `users` WHERE `email`='$email' AND `password`='$hashpassword'";
-  $query = mysqli_query($dbc,$sql);
-  $count = mysqli_num_rows($query);
-
-  if($count === 0){
+  if($user === false){
     return json_encode(array("status"=>0, "msg"=>"Invalid login details"));
+  }else{
+    $_SESSION['user'] = $user;
+    return json_encode(array("status"=>1, "msg"=>"success"));
   }
-  if($count === 1){
-  $row = mysqli_fetch_array($query);
-    $_SESSION['uid'] = $row["unique_id"];
-    return json_encode(array("status"=>1, "msg"=>"Success"));
-  }
+
 }
 
 function insurance_packages(){
@@ -796,46 +808,46 @@ function user_signup($fname,$lname,$email,$phone,$password,$cpassword,$refid,$ge
 
 
 
-function user_login($email,$password){
-   global $dbc;
-   $email = secure_database($email);
-   $password = secure_database($password);
-   $hashpassword = md5($password);
+// function user_login($email,$password){
+//    global $dbc;
+//    $email = secure_database($email);
+//    $password = secure_database($password);
+//    $hashpassword = md5($password);
 
-   $sql = "SELECT * FROM `users` WHERE `email`='$email' AND `password`='$hashpassword' AND `role`=2";
-   $query = mysqli_query($dbc,$sql);
-   $count = mysqli_num_rows($query);
-   if($count === 1){
-      $row = mysqli_fetch_array($query);
-      $fname = $row['fname'];
-      $lname = $row['lname'];
-      $phone = $row['phone'];
-      $email = $row['email'];
-      $unique_id = $row['unique_id'];
-      $access_status = $row['access_status'];
+//    $sql = "SELECT * FROM `users` WHERE `email`='$email' AND `password`='$hashpassword' AND `role`=2";
+//    $query = mysqli_query($dbc,$sql);
+//    $count = mysqli_num_rows($query);
+//    if($count === 1){
+//       $row = mysqli_fetch_array($query);
+//       $fname = $row['fname'];
+//       $lname = $row['lname'];
+//       $phone = $row['phone'];
+//       $email = $row['email'];
+//       $unique_id = $row['unique_id'];
+//       $access_status = $row['access_status'];
 
-      if($access_status != 1){
-                return json_encode(array( "status"=>101, "msg"=>"Sorry, you currently do not have access. Contact Admin!" ));
-      }else{
-                return json_encode(array( 
-                    "status"=>111, 
-                    "user_id"=>$unique_id, 
-                    "fname"=>$fname, 
-                    "lname"=>$lname, 
-                    "phone"=>$phone, 
-                    "email"=>$email 
-                  )
-                 );
+//       if($access_status != 1){
+//                 return json_encode(array( "status"=>101, "msg"=>"Sorry, you currently do not have access. Contact Admin!" ));
+//       }else{
+//                 return json_encode(array( 
+//                     "status"=>111, 
+//                     "user_id"=>$unique_id, 
+//                     "fname"=>$fname, 
+//                     "lname"=>$lname, 
+//                     "phone"=>$phone, 
+//                     "email"=>$email 
+//                   )
+//                  );
 
-      }
+//       }
     
-   }else{
-                return json_encode(array( "status"=>102, "msg"=>"Wrong username or password!" ));
+//    }else{
+//                 return json_encode(array( "status"=>102, "msg"=>"Wrong username or password!" ));
 
-   }
+//    }
  
 
-}
+// }
 
 
 
@@ -1090,39 +1102,55 @@ function get_rows_from_one_table_by_two_params($table,$param,$value,$param2,$val
 
 
 
-function check_user_exists($phone){
-          global $dbc;
+// function check_user_exists($phone){
+//           global $dbc;
           
-          $phone = secure_database($phone);
+//           $phone = secure_database($phone);
 
 
-          $sql = "SELECT * FROM `user` WHERE `mobile_phone_number`='$phone'";
-          $query = mysqli_query($dbc, $sql);
-          $count = mysqli_num_rows($query);
-          if($count > 0){
+//           $sql = "SELECT * FROM `user` WHERE `mobile_phone_number`='$phone'";
+//           $query = mysqli_query($dbc, $sql);
+//           $count = mysqli_num_rows($query);
+//           if($count > 0){
             
-            $row = mysqli_fetch_array($query);
-            $first_name = $row['first_name'];
-            $last_name = $row['last_name'];
+//             $row = mysqli_fetch_array($query);
+//             $first_name = $row['first_name'];
+//             $last_name = $row['last_name'];
             
-           return json_encode(
-            array( 
+//            return json_encode(
+//             array( 
 
-              "status"=>111, 
-              "mobile_phone_number"=>$phone,
-              "first_name"=>$first_name,
-              "last_name"=>$last_name
+//               "status"=>111, 
+//               "mobile_phone_number"=>$phone,
+//               "first_name"=>$first_name,
+//               "last_name"=>$last_name
 
-             ));
-          }
+//              ));
+//           }
 
-          else{
+//           else{
           
-           return json_encode(array( "status"=>100, "msg"=>"Sorry, your record was not found on our server. Kindly register" ));
+//            return json_encode(array( "status"=>100, "msg"=>"Sorry, your record was not found on our server. Kindly register" ));
           
-          }
+//           }
 
+// }
+
+// Badmus
+function user_exists($email, $password){
+    global $dbc;
+    
+    $sql = "SELECT COUNT(*) AS num FROM `users` WHERE `email`='$email' AND `password`='$password'";
+    $query = mysqli_query($dbc, $sql);
+    $re = mysqli_fetch_assoc($query);
+
+    if (intval($re['num']) === 1) {
+      return true;
+    } else {
+      return false;
+    }
 }
+
 
 
 
