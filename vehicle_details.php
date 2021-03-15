@@ -69,6 +69,7 @@ function show(el, txt){
                                         <fieldset class="form-group">
                                             <span for="Usagecolumn">Usage</span>
                                         <select class="form-select" id="basicSelect">
+                                            <option value="">Select Usage</option>
                                             <option value="Private">Private</option>
                                             <option value="Business">Business</option>
                                             <option value="pandb">Private and Business</option>
@@ -80,6 +81,7 @@ function show(el, txt){
                                         <fieldset class="form-group">
                                             <span for="Maker">Make of Vehicle</span>
                                         <select id="basicS" name="thename" class="form-select" onChange="show('others', this.options[this.selectedIndex].firstChild.nodeValue)">
+                                            <option value="">Select make</option>
                                             <option value="Honda">Honda</option>
                                             <option value="Toyota">Toyota</option>
                                             <option value="Audi">Audi</option>
@@ -265,7 +267,7 @@ function show(el, txt){
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="SumInsured">Sum Insured (Value of Vehicle of to be Insured)</span>
+                                            <span for="SumInsured">Sum Insured (Value of Vehicle to be Insured)</span>
                                             <input type="text" id="SumInsured" class="form-control" name="SumInsured" placeholder="Sum Insured">
                                         </div>
                                     </div>
@@ -282,7 +284,7 @@ function show(el, txt){
 
                                         <div id="bar">
                                         <div class="form-group">
-                                            <input type="text" id="" class="form-control" name="" placeholder="Name">
+                                            <input type="text" id="" class="form-control" name="" placeholder="Name of primary user ">
                                             <input type="text" id="" class="form-control" name="" placeholder="Relationship (e.g Sister, Mother)">
                                         </div>
 
@@ -291,14 +293,14 @@ function show(el, txt){
                                    
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="PolicyStartDate">Policy Start Date</span>
+                                            <span for="PolicyStartDate">Policy Start Date (Date of commencement of policy)</span>
                                             <input type="date" id="PolicyStartDate" class="form-control" name="PolicyStartDate" placeholder="Policy Start Date">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="company-column">Risk Images (4 Corners of Car including Plate number)</span>
+                                            <span for="company-column">Vehicle Images (4 sizes of Vehicle including Plate number)</span>
                                             <div class="input-group mb-3">
                                         <div class="form-file">
                                             <input type="file" class="form-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">

@@ -12,8 +12,8 @@ function show(el, txt){
     var elem1 = document.getElementById('one');
     var elem2 = document.getElementById('on');
 
-    elem1.style.display = (txt == 'One time Installement') ? 'block' : 'none';
-    elem2.style.display = (txt == 'On Installement') ? 'block' : 'none';
+    elem1.style.display = (txt == 'One time Payment') ? 'block' : 'none';
+    elem2.style.display = (txt == 'Pay in Installement') ? 'block' : 'none';
     }
 </script>       
 
@@ -89,8 +89,8 @@ function show(el, txt){
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                                     <select name="thename" class="form-select" onChange="show('one', this.options[this.selectedIndex].firstChild.nodeValue)">
                                       <option>Select Payment Option</option>
-                                      <option>One time Installement</option>
-                                      <option>On Installement</option>
+                                      <option>One time Payment</option>
+                                      <option>Pay in Installement</option>
                                         </select>
                         </ul>
                   </div>

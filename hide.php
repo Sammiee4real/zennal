@@ -14,8 +14,9 @@
     /*.green{ background: #228B22; }*/
     /*.blue{ background: #0000ff; }*/
 </style>
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script>
+<!-- <script>
 $(document).ready(function(){
     $("select").change(function(){
         $(this).find("option:selected").each(function(){
@@ -28,6 +29,15 @@ $(document).ready(function(){
             }
         });
     }).change();
+});
+</script> -->
+<script type="text/javascript">
+$(document).ready(function(){
+$(".box").hide();
+$("#dropdown").change(function() {
+$(".box").hide();
+$("#div" + $(this).val()).show();
+});
 });
 </script>
 </head>
@@ -48,5 +58,18 @@ $(document).ready(function(){
         <button type="submit" class="btn btn-primary mr-1 mb-1">Proceed (₦ 21,000.00)</button> 
     </div> -->
     <!-- <div class="blue box">You have selected <strong>blue option</strong> so i am here</div> -->
+<form>
+<select id="dropdown" name="dropdown">
+<option value="0">Choose</option>
+<option value="area1">DIV Area 1</option>
+<option value="area2">DIV Area 2</option>
+<option value="area3">DIV Area 3</option>
+</select>
+</form>
+<div class="box">
+<div id="divarea1">DIV Area 1</div>
+<div id="divarea2">DIV Area 2</div>
+<div id="divarea3">DIV Area 3</div>
+</div>
 </body>
 </html>

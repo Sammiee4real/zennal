@@ -14,9 +14,10 @@
     <!-- <link rel="stylesheet" href="assets/css/appp.css"> -->
     <link rel="stylesheet" type="text/css" href="assets/css/wizard.css">
     <link rel="shortcut icon" href="assets/images/logozennal.png" type="image/x-icon">
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  -->
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+   
+<!-- Include Choices CSS -->
+<link rel="stylesheet" href="assets/vendors/choices.js/choices.min.css" />
+    
 </head>
 
 <style type="text/css">
