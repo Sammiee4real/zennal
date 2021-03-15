@@ -1,24 +1,24 @@
 <?php include("sidebar.php");
-    $user_id =$_SESSION['user_id'];
+    // $user_id = $_SESSION['user_id'];
+$user_id = '07bf739aba673b233f89d1a25821870d';
     $get_user_details = get_one_row_from_one_table_by_id('users','unique_id', $user_id, 'registered_on');
     $get_personal_loan = get_one_row_from_one_table_by_id('loan_category','type', 1, 'date_created');
     $get_num_personal_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_category_id',$get_personal_loan['unique_id']);
-    $get_asset_loan = get_one_row_from_one_table_by_id('loan_category','type', 2, 'date_created');
-    $get_num_asset_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_category_id',$get_asset_loan['unique_id']);
     $get_num_insurance = get_number_of_rows_one_param('insurance','user_id',$user_id);
+    // $get_num_vehicle_reg = get_number_of_rows_one_param('vehicle_registration','user_id',$user_id);
     $get_num_running_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_status', 1);
     $get_recent_activities = get_user_recent_activities($user_id);
+    $get_wallet_balance = get_one_row_from_one_table_by_id('wallet','user_id', $user_id, 'date_created');
 ?>
 <div id="main">
 
 <?php 
     include("header.php");
-    include('config/functions.php');
 ?>         
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Dashboard</h3>
-        <p class="text-subtitle text-muted">Friday, 08,January 2021</p>
+        <p class="text-subtitle text-muted"><?= date("l, d, F, Y ")?></p>
     </div>
     <section class="section mt-5">
         <div class="row mb-2">
@@ -30,7 +30,7 @@
                             <div class='px-3 py-3 d-flex justify-content-between'>
                                 <h3 class='card-title'>INSURANCE</h3>
                                 <div class="card-right d-flex align-items-center">
-                                    <p>1 </p>
+                                    <p><?= $get_num_insurance;?></p>
                                 </div>
                             </div>
                             <div class="px-3 py-3 d-flex justify-content-between">
@@ -47,7 +47,7 @@
                             <div class='px-3 py-3 d-flex justify-content-between'>
                                 <h3 class='card-title'>RUNNING LOAN</h3>
                                 <div class="card-right d-flex align-items-center">
-                                    <p>2 </p>
+                                    <p><?= $get_num_running_loan;?></p>
                                 </div>
                             </div>
 
@@ -82,7 +82,7 @@
                             <div class='px-3 py-3 d-flex justify-content-between'>
                                 <h3 class='card-title'>WALLET</h3>
                                 <div class="card-right d-flex align-items-center">
-                                    <p>₦2,000</p>
+                                    <p>&#8358;<?= $get_wallet_balance['balance'];?></p>
                                 </div>
                             </div>
                             <div class="px-3 py-3 d-flex justify-content-between">
@@ -140,14 +140,14 @@
                     </a>
                 </div>
                 <div class="col-12 col-md-4">
-                <a href="vehicle_registration.php"><div class="card card-statistic" style="background: #00DBC5; border-radius: 8px;">
+                <a href="vehicle_reg.php"><div class="card card-statistic" style="background: #00DBC5; border-radius: 8px;">
                     <div class="card-body p-0">
                         <div class="d-flex flex-column">
                             <div class='px-3 py-3  justify-content-between'>
                                 <h5 class=''>Vehicle Registration</h5>
                             </div>
                             <div class="px-3 py-3 d-flex justify-content-between">
-                                <p>Obtain documents for your vehivles - renewal or fresh registration</p>
+                                <p>Obtain documents for your vehicles - renewal or fresh registration</p>
                                 <div class="card-right d-flex align-items-center">
                                     <img src="assets/images/car.png" >
                                 </div>

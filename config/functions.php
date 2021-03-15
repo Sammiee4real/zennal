@@ -2,19 +2,19 @@
 $table = "";
 $app_name = 'ZENNAL';
 require_once("db_connect.php");
-require_once('generic_functions.php');
-require_once("config_settings.php");
+require_once("tcpdf/tcpdf.php");
 @session_start();
 global $dbc;
 
 
 // // Email Function
+//   $headers .= 'From: FarmKonnect <admin@farmkonnect.com>' . "\r\n";
+//   $headers .= 'Cc: support@loyalty.com' . "\r\n";
+
 function email_function($email, $subject, $content){
-    $headers = "MIME-Version: 1.0" . "\r\n";
-      $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    //   $headers .= 'From: FarmKonnect <admin@farmkonnect.com>' . "\r\n";
-    //   $headers .= 'Cc: support@loyalty.com' . "\r\n";
-    $headers .= "From: Zennal\r\n";
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+    $headers .= "From: Zennal";
     @$mail = mail($email, $subject, $content, $headers);
     return $mail;
   }
@@ -27,16 +27,16 @@ function send_sms($sender, $to, $message, $developer_id, $cloud_sms_password){
   $curl = curl_init();
 
   curl_setopt_array($curl, array(
-    CURLOPT_URL => "http://developers.cloudsms.com.ng/api.php?userid=".$developer_id."&password=".$cloud_sms_password."&type=0&destination=".$to."&sender=".$sender."&message=$message",
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => "",
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 30,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_HTTPHEADER => array(
-      "Content-Type: application/x-www-form-urlencoded",
-      "cache-control: no-cache"
-    ),
+      CURLOPT_URL => "http://developers.cloudsms.com.ng/api.php?userid=".$developer_id."&password=".$cloud_sms_password."&type=0&destination=".$to."&sender=".$sender."&message=$message",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_HTTPHEADER => array(
+          "Content-Type: application/x-www-form-urlencoded",
+          "cache-control: no-cache"
+      ),
   ));
 
   $response = curl_exec($curl);
@@ -80,6 +80,46 @@ function get_number_of_rows($table){
   return $count;     
 }
 
+function get_rows_form_table($table){
+  global $dbc;
+  $table = secure_database($table);
+  $sql= "SELECT * FROM `$table`";
+  $query = mysqli_query($dbc, $sql);
+  $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
+  return $data;     
+}
+
+function add_insurance_benefit($benefit_name, $data){
+    
+    global $dbc;
+    
+    
+    $sql = "SELECT * FROM insurance_benefits WHERE benefit = '$benefit_name'";
+    
+    $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    
+    if(mysqli_num_rows($exe) >= 1){
+        return json_encode(array("status"=>0, "msg"=>"Benefit exist"));
+    }
+    
+    $benefit_unique_id = unique_id_generator($benefit_name);
+    
+    $sql = "INSERT INTO insurance_benefits (unique_id, benefit, datetime)
+            VALUES ('$benefit_unique_id', '$benefit_name', now())";
+    
+    $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    
+    unset($data["benefit_name"]);
+    
+    foreach($data as $k => $v){
+        $unique_id = unique_id_generator($k);
+        $sql = "INSERT INTO insurance_info (unique_id, benefit_id, category_id, description, datetime)
+            VALUES ('$unique_id', '$benefit_unique_id', '$k', '$v', now())";
+        $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    }
+    return json_encode(array("status"=>1));
+}
+
 
 ///////// Badmus Functions Starts Here //////////////////////
 
@@ -100,18 +140,22 @@ function verify_user($phone, $email){
   $otp = rand(000000, 999999);
 
   $subject = "Zennal Registration";
-  $content = "<p>Use the following OTP for your verification.</p><br/>";
+  $content = "<html><body>";
+  $content .= "<p>Use the following OTP for your verification.</p><br/>";
   $content .= "<h1>".$otp."</h1>";
+  $content .= "</body></html>";
 
-  // $send_email = email_function($email, $subject, $content);
-  // $send_sms = send_sms($app_name, $phone, $content, $developer_id, $cloud_sms_password);
+   $send_email = email_function($email, $subject, $content);
+   $send_sms = send_sms($app_name, $phone, $content, $developer_id, $cloud_sms_password);
 
-  // if( !$send_email || !$send_sms){
-    // http_response_code(500);
-  //   return json_encode(array("status"=>0, "msg"=>"OTP not sent"));
-  // }
+   if( !$send_email || !$send_sms){
+    http_response_code(500);
+     return json_encode(array("status"=>0, "msg"=>"OTP not sent"));
+   }
 
   $_SESSION["otp"] = md5($otp);
+  $_SESSION['start'] = time();
+  $_SESSION['expire'] = $_SESSION['start'] + (60*3);
 
   // http_response_code(200);
   return json_encode(array("status"=>1, "msg"=>"Success"));
@@ -493,6 +537,55 @@ function save_account_details($post){
 
 }
 
+function update_existing_row_with_mult_params($table, $unique_id, array $data){
+  global $dbc;
+  $table = secure_database($table);
+  $unique_id = secure_database($unique_id);
+  $emptyfound = 0;
+  if( is_array($data) && !empty($data) ){
+    $sql = "UPDATE `$table` SET ";
+    $sql .= "`date_created` = now(), ";
+    //$sql .= "`privilege` = '1', ";
+      for($i = 0; $i < count($data); $i++){
+          $each_data = $data[$i];
+          
+          if($_POST[$each_data] == ""  ){
+            $emptyfound++;
+          }
+
+          if($i ==  (count($data) - 1)  ){
+                $sql .= " $data[$i] = '$_POST[$each_data]' WHERE `unique_id` = '$unique_id'";
+            }else{
+              if($data[$i] === "password"){
+              $enc_password = md5($_POST[$data[$i]]); 
+              $sql .= " $data[$i] = '$enc_password' ,";
+              }else{
+              $sql .= " $data[$i] = '$_POST[$each_data]' ,";
+              } 
+          }
+
+      }
+    
+    if($emptyfound > 0){
+        return json_encode(["status"=>"0", "msg"=>"Empty field(s)"]);
+    } 
+      else{
+      //var_dump($sql);
+      $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+      if($query){
+        return json_encode(["status"=>"1", "msg"=>"success"]);
+      }else{
+        return json_encode(["status"=>"0", "msg"=>"db_error"]);
+      }
+
+    }  
+
+  }
+  else{
+    return json_encode(["status"=>"0", "msg"=>"error"]);
+  }
+}
+
 function make_full_payment(){
   global $dbc;
   global $secret_key;
@@ -582,6 +675,51 @@ function get_insurance_price(){
   return json_encode(array("status"=>1, "price"=>number_format($price["plan_price"])));
 }
 
+
+function update_insurance($data){
+
+  global $dbc;
+
+  $payment_duration = $data["paymentPeriod"];
+  $userid = $_SESSION["uid"];
+  $sql = "SELECT plan_price FROM insurance AS i LEFT JOIN insurance_pricing_plans AS ipp ON i.insurance_pricing_plan = ipp.unique_id WHERE i.user_id='$userid'";
+  
+  $exe = mysqli_query($dbc, $sql);
+  $res = mysqli_fetch_assoc($exe);
+  $price = $res["plan_price"];
+  $percent_interest = get_rows_from_one_table('insurance_interest_rate','date_created');
+
+  // echo json_encode($percent_interest[0][2]);  
+  $insurance_percentage_interest = $percent_interest[0][2];
+
+  $interest_per_month = floatval((($insurance_percentage_interest / 100) * $price));
+
+  $sql = "UPDATE insurance SET insurance_payment_plan = '$payment_duration', monthly_repayment = '$interest_per_month', datetime=now() WHERE user_id = '$userid'";
+
+  if (mysqli_query($dbc, $sql)){
+    $res = json_encode(array("status"=>1));
+  }else {
+    $res = json_encode(array("status"=>0, "msg"=>"Could not update insurance"));
+  }
+  return $res;
+}
+
+function insert_insurance_category($category_name, $category_rate){
+    global $dbc;
+    $sql = "SELECT * FROM insurance_categories WHERE category_name ='$category_name'";
+    
+    $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    if (mysqli_num_rows($exe) >= 1){
+        return json_encode(array("status"=>0, "msg"=>"Category exist"));
+    }
+    $uniqueid = unique_id_generator($category_name);
+    $sql = "INSERT INTO insurance_categories (unique_id, category_name, category_percentage, datetime)
+            VALUES ('$uniqueid', '$category_name', '$category_rate', now())";
+            
+    $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    $res = json_encode(array("status"=>1));
+    return $res;
+}
 ///////// Badmus Functions Here /////////////////////
 
 
@@ -883,19 +1021,19 @@ function admin_login($email,$password){
 
 
 function get_one_row_from_one_table_by_id($table,$param,$value,$order_option){
-         global $dbc;
-        $table = secure_database($table);
-        $sql = "SELECT * FROM `$table` WHERE `$param`='$value' ORDER BY `$order_option` DESC";
-        $query = mysqli_query($dbc, $sql);
-        $num = mysqli_num_rows($query);
-       if($num > 0){
-             $row = mysqli_fetch_array($query);              
-             return $row;
-          }
-          else{
-             return null;
-        }
-    }
+  global $dbc;
+  $table = secure_database($table);
+  $sql = "SELECT * FROM `$table` WHERE `$param`='$value' ORDER BY `$order_option` DESC";
+  $query = mysqli_query($dbc, $sql);
+  $num = mysqli_num_rows($query);
+  if($num > 0){
+    $row = mysqli_fetch_array($query);              
+    return $row;
+  }
+  else{
+    return null;
+  }
+}
 
 function get_one_row_from_one_table_by_two_params($table,$param,$value,$param2,$value2,$order_option){
          global $dbc;
@@ -1186,8 +1324,10 @@ function save_employment_details($user_id, array $employment_array){
   $official_email_address = $employment_array['official_email_address'];
   $otp = rand(111111, 999999);
   $_SESSION['otp'] = md5($otp);
+  $_SESSION['start'] = time();
+  $_SESSION['expire'] = $_SESSION['start'] + (60*1);
   $subject = 'Email Verification - Zennal';
-  $content = "The token for your transaction is".$otp."<br> Thanks, Regards";
+  $content = "The token for your transaction is ".$otp."<br> Thanks, Regards";
 
   if($user_id == '' || $unique_id == '' || $employment_status == '' || $name_of_organization == '' || $contact_address_of_organization == '' || $employment_type == '' || $employment_duration == '' || $years_of_experience == '' || $industry_type == '' || $job_title == '' || $monthly_salary == '' || $salary_payday == '' || $official_email_address == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
@@ -1223,18 +1363,19 @@ function save_employment_details($user_id, array $employment_array){
 
 // Verify OTP
 function verify_otp($otp){
-  if($otp == ''){
-    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
-  }
-  
-  if (! isset($_SESSION["otp"]) || md5($otp) !=  $_SESSION["otp"]){
-    // http_response_code(400);
-    return json_encode(array("status"=>"0", "msg"=>"Invalid otp"));
-  }
-  unset($_SESSION["otp"]);
-  //http_response_code(200);
-  return json_encode(array("status"=>"1", "msg"=>"success"));
-  
+    $now = time();
+    if($otp == ''){
+        return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+        
+    }
+    else if($now > $_SESSION['expire']){
+        return json_encode(array("status"=>"0", "msg"=>"OTP expired, please request for a new one"));
+    }
+    else if(! isset($_SESSION["otp"]) || md5($otp) !=  $_SESSION["otp"]){
+        return json_encode(array("status"=>"0", "msg"=>"Invalid otp"));
+    }
+    unset($_SESSION["otp"]);
+    return json_encode(array("status"=>"1", "msg"=>"success"));
 }
 
 
@@ -1554,7 +1695,7 @@ function submit_loan_application($user_approved_amount, $loan_id){
   $update_data_sql = "UPDATE `personal_loan_application` SET `user_approved_amount`='$user_approved_amount', `amount_to_repay`='$amount_to_repay', `approval_status` = 3  WHERE `unique_id`='$loan_id'";
   $update_data_query = mysqli_query($dbc, $update_data_sql) or mysqli_error($dbc);
   if($update_data_query){
-    $flutter_transfer = $this->flutterwave_transfer($loan_id, $get_loan_details['user_id'], $user_approved_amount);
+    $flutter_transfer = flutterwave_transfer($loan_id, $get_loan_details['user_id'], $user_approved_amount);
     return json_encode(["status"=>"1", "msg"=>"success", "data"=>$amount_to_repay]);
   }else{
     return json_encode(["status"=>"0", "msg"=>"Please try again"]);
@@ -1679,7 +1820,7 @@ function submit_loan_purpose($user_id, $loan_amount, $loan_purpose, $bank_statem
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    $insert_data_sql = "INSERT INTO `personal_loan_application` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `user_selection_amount`='$loan_amount', `loan_purpose`='$loan_purpose', `loan_interest`='$loan_interest', `bank_statement`='$bank_statement', `date_created` = now()";
+    $insert_data_sql = "INSERT INTO `personal_loan_application` SET `unique_id` = '$unique_id', `user_id` = '$user_id',  `user_selection_amount`='$loan_amount', `loan_purpose`='$loan_purpose', `loan_interest`='$loan_interest', `bank_statement`='$bank_statement', `date_created` = now()";
     $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
       $get_last_id = mysqli_query($dbc, "SELECT MAX(ID) AS last_id FROM okra_test");
@@ -1706,7 +1847,7 @@ function submit_asset_loan_purpose($user_id, $loan_purpose, $product_id, $repaym
   $loan_interest = $get_repayment['interest_per_month'];
   $user_approved_equity_con = $get_repayment['equity_contribution'];
   $user_approved_repayment_month = $get_repayment['no_of_month'];
-  if($user_id == '' || $unique_id == '' || $loan_purpose == '' || $product_id == '' || $bank_statement == ''){
+  if($user_id == '' || $unique_id == '' || $loan_purpose == '' || $product_id == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
@@ -2034,6 +2175,7 @@ function flutterwave_checkout($user_id, $amount, $redirect_url){
   $name = $get_user_details['first_name'].' '.$get_user_details['last_name'].' '.$get_user_details['other_names'];
   $transaction_ref = md5(uniqid().rand(1000, 9999));
   $curl = curl_init();
+  
   $data = [
     "tx_ref"=>$transaction_ref,
     "amount"=>$amount,
@@ -2083,7 +2225,7 @@ function generate_bank_statement($user_id, $amount){
   // $name = $get_user_details['first_name'].' '.$get_user_details['last_name'].' '.$get_user_details['other_names'];
   // $transaction_ref = md5(uniqid().rand(1000, 9999));
   $get_unused_payment = get_rows_from_one_table_by_id('online_bank_statement', 'user_id',$user_id, 'date_created');
-  $redirect_url = "http://localhost/zennal/online_generation_callback.php";
+  $redirect_url = "http://zennal.staging.cloudware.ng/online_generation_callback.php";
   if($get_unused_payment != null){
     foreach ($get_unused_payment as $value) {
       if($value['use_status'] == 1){
@@ -2111,7 +2253,7 @@ function generate_bank_statement2($user_id, $amount, $id){
   // $name = $get_user_details['first_name'].' '.$get_user_details['last_name'].' '.$get_user_details['other_names'];
   // $transaction_ref = md5(uniqid().rand(1000, 9999));
   $get_unused_payment = get_rows_from_one_table_by_id('online_bank_statement', 'user_id',$user_id, 'date_created');
-  $redirect_url = "http://localhost/zennal/online_generation_callback2.php?id=".$id;
+  $redirect_url = "http://zennal.staging.cloudware.ng/online_generation_callback2.php?id=".$id;
   if($get_unused_payment != null){
     foreach ($get_unused_payment as $value) {
       if($value['use_status'] == 1){
@@ -2175,7 +2317,7 @@ function flutterwave_transfer($loan_id,$user_id, $amount){
   ]);
   
   // Execute cURL request with all previous settings
- $response = curl_exec($curl);
+ //echo $response = curl_exec($curl);
   
   // Close cURL session
   curl_close($curl);
@@ -2274,7 +2416,7 @@ function get_user_bank_statement($loan_id){
     ),
   ));
 
-  $response = curl_exec($curl);
+  return $response = curl_exec($curl);
 
   curl_close($curl);
     //echo $response;
@@ -2290,21 +2432,14 @@ function beautify_statement($loan_id){
   $decode_statement = json_decode($get_user_bank_statement, true);
   //print_r($decode_statement['data']);
   //print_r( $decode_statement['data']['transactions']['id'] );
-//   $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-//     $pdf->SetCreator(PDF_CREATOR);
-//     $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-//     $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
-//     $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-//     $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-//     $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-//     $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-//     $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-//     $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-//     $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-//     $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-//     $pdf->SetFont('helvetica', '', 10);
-//     $pdf->AddPage();
-  $response = '<h1>TRANSACTION DETAILS</h1>
+  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',       false);
+    // set default font subsetting mode
+    $pdf->setFontSubsetting(true);
+    $pdf->SetFont('helvetica', '', 10, '', true);
+    // Add a page
+    $pdf->AddPage("L");
+    $response = '';
+  $response .= '<h1>TRANSACTION DETAILS</h1>
     <div class="table-responsive">
     <table class="table table-bordered" id="myTable" width="100%" cellspacing="0">
       <thead class="thead-light">
@@ -2332,88 +2467,252 @@ function beautify_statement($loan_id){
     $credit = $data['credit'];
     $debit = $data['debit'];
     $trans_date = $data['trans_date']; 
-  $response.= '<tr>';
-  $response.='<td>'.$desc.'</td>';
-  $response.='<td>'.$beneficiary.'</td>';
-  $response.='<td>'.$account.'</td>';
-  $response.='<td>'.$address.'</td>';
-  $response.='<td>'.$raw.'</td>';
-  $response.='<td>'.$branch.'</td>';
-  $response.='<td>'.$credit.'</td>';
-  $response.='<td>'.$debit.'</td>';
-  $response.='<td>'.$trans_date.'</td>';
-  $reponse.='</tr>';
-  };
-  $response.='<tbody></table></div>';
-    $filename = '../bank_statement/'.$loan_id.'.pdf';
-  //$pdf->writeHTML($response, true, false, true, false, '');
-//   ob_clean();
-  //$pdf->Output($_SERVER['DOCUMENT_ROOT']. '/bank_statement/'.$loan_id.'.pdf', 'F');
+    // $response= '';
+    $response1= '';
+    $response1.= '<tr>';
+    $response1.='<td>'.$desc.'</td>';
+    $response1.='<td>'.$beneficiary.'</td>';
+    $response1.='<td>'.$account.'</td>';
+    $response1.='<td>'.$address.'</td>';
+    $response1.='<td>'.$raw.'</td>';
+    $response1.='<td>'.$branch.'</td>';
+    $response1.='<td>'.number_format($credit).'</td>';
+    $response1.='<td>'.number_format($debit).'</td>';
+    $response1.='<td>'.$trans_date.'</td>';
+    $response1.='</tr>';
+    $pdf->writeHTML($response . $response1, true, false, false, false, '');
+  }
+   $response1.='<tbody></table></div>';
+    $pdf->writeHTML($response . $response1, true, false, false, false, '');
+    //$filename = '../bank_statement/'.$loan_id.'.pdf';
+  //ob_end_flush();
+  $pdf->Output($_SERVER['DOCUMENT_ROOT']. '/bank_statement/'.$loan_id.'.pdf', 'F');
 
-   $myfile = fopen($filename, "w") or die("Unable to open file!");
-  fwrite($myfile, $response);
+   //$myfile = fopen($filename, "w") or die("Unable to open file!");
+  //fwrite($myfile, $response);
 }
 
-function add_new_vehicle($user_id, array $vehicle_details_array){
+///Tosin's functions end here
+
+function get_active_insurance_products(){
+    // $url = 'https://sandbox-customerportal.yoadirect.com/api/Integration/GetActiveProducts';
+    // // $collection_name = 'RapidAPI';
+    // $request_url = $url . '/';// . $collection_name;
+    
+    // $curl = curl_init($request_url);
+    
+    // curl_setopt($curl, CURLOPT_HTTPGET, true);
+    // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    // curl_setopt($curl, CURLOPT_HTTPHEADER, [
+    //   'UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a',
+    //   'Content-Type: application/json'
+    // ]);
+    
+    // $response = curl_exec($curl);
+    // curl_getinfo($response);
+    // curl_close($curl);
+    
+    
+    // echo $response;
+    // $array = json_decode(trim($response), TRUE);
+    // print_r($array);
+    
+    // echo $array[0]["Name"];
+    // -------------------------------------------------------
+    
+    $curl = curl_init();
+  
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/GetActiveProducts",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => array(
+      "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
+      "Cache-Control: no-cache",
+    ),
+  ));
+  
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+  curl_close($curl);
+  
+//   echo $response;
+  if ($response) {
+      $result =  json_decode(trim($response), TRUE);
+      return $result;
+  }
+}
+
+
+function get_insurance_quote($post_data){
+    
+    // Prepare json structure
+    
+    $curl = curl_init();
+    
+    $data = array(
+        $form_data=>null
+      );
+    
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/GetQuoteComprehensiveMotorInsurance",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS =>json_encode($data),
+        CURLOPT_HTTPHEADER => array(
+            "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
+            "Content-Type: application/json"
+        ),
+    ));
+    
+    $response = curl_exec($curl);
+    curl_close($curl);
+}
+
+
+function pay_insurance_quote($quote_number){
+    // Prepare json structure
+    
+    $curl = curl_init();
+    
+    $data = array(
+      "ThirdpartyAccountUid"=> "00000000-0000-0000-0000-000000000000",
+      "QuoteNumber"=> $quote_number,
+      "Payment"=> array(
+        "PaymentFrequency" => "Full",
+        "PaymentMode" => "CreditCard",
+        "ChequeNumber"=> "",
+        "Amount"=> 25000,
+        "PaymentReceivedDate"=> "2020-07-28",
+        "SumInsuredType"=> "Individual",
+        "Currency"=> "Naira"
+      )
+    );
+    
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/PayQuote",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS =>json_encode($data),
+        CURLOPT_HTTPHEADER => array(
+            "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
+            "Content-Type: application/json"
+        ),
+    ));
+    
+    $response = curl_exec($curl);
+    curl_close($curl);
+}
+
+function insert_into_wallet($user_id, $balance){
   global $dbc;
-  //$user_id = $vehicle_details_array['user_id'];
-  $vehicle_type = $vehicle_details_array['vehicle_type'];
-  $vehicle_brand = $vehicle_details_array['vehicle_brand'];
-  $vehicle_model = $vehicle_details_array['vehicle_model'];
-  $year_of_make = $vehicle_details_array['year_of_make'];
-  $plate_number = $vehicle_details_array['plate_number'];
-  $chassis_number = $vehicle_details_array['chassis_number'];
-  $engine_number = $vehicle_details_array['engine_number'];
-  $vehicle_color = $vehicle_details_array['vehicle_color'];
-  $vehicle_license_name = $vehicle_details_array['vehicle_license_name'];
-  $phone_of_vehicle = $vehicle_details_array['phone_of_vehicle'];
-  $address_of_vehicle = $vehicle_details_array['address_of_vehicle'];
-  $vehicle_license_expiry = $vehicle_details_array['vehicle_license_expiry'];
-  $insurance_expiry = $vehicle_details_array['insurance_expiry'];
-  $road_worthiness_expiry = $vehicle_details_array['road_worthiness_expiry'];
-  $hackney_permit_expiry = $vehicle_details_array['hackney_permit_expiry'];
-  $hd_permit_expiry = $vehicle_details_array['hd_permit_expiry'];
-  $unique_id = unique_id_generator($user_id. $chassis_number);
-  $check_vehicle_exist = check_record_by_one_param('vehicle_details', 'chassis_number',$chassis_number);
-  if($user_id == '' || $vehicle_type == '' || $vehicle_brand == '' || $vehicle_model == '' || $year_of_make == '' || $plate_number == '' || $chassis_number == '' || $engine_number == '' || $vehicle_color == '' || $vehicle_license_name == '' || $phone_of_vehicle == '' || $address_of_vehicle == '' || $vehicle_license_expiry == '' || $insurance_expiry == '' || $road_worthiness_expiry == '' || $hackney_permit_expiry == '' || $hd_permit_expiry == ''){
+  $user_id = secure_database($user_id);
+  $balance = secure_database($balance);
+  $unique_id = unique_id_generator($user_id.$balance);
+  $check_wallet_exist = check_record_by_one_param('wallet', 'user_id', $user_id);
+  if($user_id == '' || $balance == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
-  else if($check_vehicle_exist == true){
-     return  json_encode(["status"=>"0", "msg"=>"Vehicle already exists"]);
+  else{
+    if($check_wallet_exist){
+      $update_wallet = update_by_one_param('wallet','balance', $balance, 'user_id',$user_id);
+      if($update_wallet){
+        return json_encode(["status"=>"1", "msg"=>"success"]);
+      }else{
+        return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+      }
+    }else{
+      $sql = "INSERT INTO `wallet` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `balance` = '$balance', `date_created`= now()";
+      $query = mysqli_query($dbc, $sql);
+      if($query){
+        return json_encode(["status"=>"1", "msg"=>"success"]);
+      }
+      else{
+        return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+      }
+    }
+  }
+}
+
+function add_referral_bonus($referral_for, $referral_bonus, $admin_id){
+  global $dbc;
+  $referral_for = secure_database($referral_for);
+  $referral_bonus = secure_database($referral_bonus);
+  $admin_id = secure_database($admin_id);
+  $unique_id = unique_id_generator($referral_bonus.$admin_id);
+  $check_referral_exist = check_record_by_one_param('referral_tbl', 'referral_for', $referral_for);
+  if($referral_for == '' || $referral_bonus == '' || $admin_id == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else if($check_referral_exist){
+    return json_encode(["status"=>"0", "msg"=>"Referral Bonus already exists, Please update instead"]);
   }
   else{
-    $sql = "INSERT INTO `vehicle_details` SET
-    `unique_id` = '$unique_id',
-    `user_id` = '$user_id',
-    `vehicle_type` = '$vehicle_type',
-    `vehicle_brand` = '$vehicle_brand',
-    `vehicle_model` = '$vehicle_model',
-    `year_of_make` = '$year_of_make',
-    `plate_number` = '$plate_number',
-    `chassis_number` = '$chassis_number',
-    `engine_number` = '$engine_number',
-    `vehicle_color` = '$vehicle_color',
-    `vehicle_license_name` = '$vehicle_license_name',
-    `phone_of_vehicle` = '$phone_of_vehicle',
-    `address_of_vehicle` = '$address_of_vehicle',
-    `vehicle_license_expiry` = '$vehicle_license_expiry',
-    `insurance_expiry` = '$insurance_expiry',
-    `road_worthiness_expiry` = '$road_worthiness_expiry',
-    `hackney_permit_expiry` = '$hackney_permit_expiry',
-    `hd_permit_expiry` = '$hd_permit_expiry',
-    `date_created` = now()
-    ";
+    $sql = "INSERT INTO `referral_tbl` SET `unique_id` = '$unique_id', `referral_for` = '$referral_for', `referral_bonus` = '$referral_bonus', `added_by` = '$admin_id', `date_created` = now()";
     $query = mysqli_query($dbc, $sql);
     if($query){
       return json_encode(["status"=>"1", "msg"=>"success"]);
-    }else{
+    }
+    else{
       return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
     }
   }
 }
-///Tosin's functions end here
 
+function add_referral($referrer_id, $referred_id, $referral_for, $amount_paid, $description){
+  global $dbc;
+  $referrer_id = secure_database($referrer_id);
+  $referred_id = secure_database($referred_id);
+  $referral_for = secure_database($referral_for);
+  $amount_paid = secure_database($amount_paid);
+  $description = secure_database($description);
+  $unique_id = unique_id_generator($referrer_id.$referred_id);
 
+  if($referrer_id == '' || $referred_id == '' || $referral_for == '' || $amount_paid == '' || $description == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $get_referral_bonus = get_one_row_from_one_table_by_id('referral_tbl', 'referral_for', $referral_for, 'date_created');
+    $get_user_balance = get_one_row_from_one_table_by_id('wallet', 'user_id', $referrer_id, 'date_created');
+    $referral_bonus = $get_referral_bonus['referral_bonus'];
+    $amount_to_add_to_wallet = ($referral_bonus / 100) * $amount_paid;
+    if($get_user_balance == null){
+      $wallet_balance = $amount_to_add_to_wallet;
+    }
+    else{
+      $wallet_balance = $get_user_balance['balance'] + $amount_to_add_to_wallet;
+    }
+    $add_money_to_wallet = insert_into_wallet($referrer_id, $wallet_balance);
+    $add_money_to_wallet_decode = json_decode($add_money_to_wallet, true);
+    if($add_money_to_wallet_decode['status'] == "1"){
+      $insert_referral_log = "INSERT INTO `referral_log` SET `unique_id` = '$unique_id', `referrer_id` = '$referrer_id', `referred_id` = '$referred_id', `referral_for` = '$referral_for', `amount` = '$amount_to_add_to_wallet', `description` = '$description', `date_added` = now()";
+      $insert_referral_log_query = mysqli_query($dbc, $insert_referral_log) or die(mysqli_error($dbc));
+      if($insert_referral_log_query){
+        return json_encode(["status"=>"1", "msg"=>"success"]);
+      }
+      else{
+        return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+      }
+    }
+    else{
+      echo json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
 
 /////// MOST IMPORTANT FUNCTIONS END HERE
 
