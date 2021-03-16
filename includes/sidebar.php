@@ -20,8 +20,9 @@
     <link rel="stylesheet" type="text/css" href="assets/css/wizard.css">
     <link rel="shortcut icon" href="assets/images/logozennal.png" type="image/x-icon">
    
-<!-- Include Choices CSS -->
-<link rel="stylesheet" href="assets/vendors/choices.js/choices.min.css" />
+    <!-- Include Choices CSS -->
+    <link rel="stylesheet" href="assets/vendors/choices.js/choices.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/vendors/sweetalert2/package/dist/sweetalert2.min.css">
     
 </head>
 <style type="text/css">
@@ -43,7 +44,7 @@
         <ul class="menu" id="navMenus">
             
                 <li class="sidebar-item active">
-                    <a href="index.php" class='sidebar-link'>
+                    <a href="index" class='sidebar-link'>
                         <i data-feather="home" width="20"></i> 
                         <span>Dashboard</span>
                     </a>
@@ -51,7 +52,7 @@
             
             
                 <li class="sidebar-item ">
-                    <a href="loan.php" class='sidebar-link'>
+                    <a href="loan" class='sidebar-link'>
                         <i data-feather="twitch" width="20"></i> 
                         <span>Loan</span>
                     </a>
@@ -59,7 +60,7 @@
             
             
                 <li class="sidebar-item ">
-                    <a href="insurance.php" class='sidebar-link'>
+                    <a href="insurance" class='sidebar-link'>
                         <i data-feather="shield" width="20"></i> 
                         <span>Insurance</span>
                     </a>
@@ -72,27 +73,27 @@
                     
                     <ul class="submenu">
                         <li>
-                            <a href="vehicle_reg.php">Register your New Vehicle</a>
+                            <a href="vehicle_reg">Register your New Vehicle</a>
                         </li>
                         <li>
-                            <a href="particulars.php">Renew your Vehicle Particulars</a>
+                            <a href="particulars">Renew your Vehicle Particulars</a>
                         </li>
                         <li>
-                            <a href="vehicle_permit.php">Other Vehicle Permit</a>
+                            <a href="vehicle_permit">Other Vehicle Permit</a>
                         </li>
                         
                         <li>
-                            <a href="change_ownership.php">Change Vehicle Ownership</a>
+                            <a href="change_ownership">Change Vehicle Ownership</a>
                         </li>
                         <li>
-                            <a href="pricing.php">Get Quote</a>
+                            <a href="pricing">Get Quote</a>
                         </li>
                         
                     </ul>
                     
                 </li>
                 <!-- <li class="sidebar-item  ">
-                    <a href="pricing.php" class='sidebar-link'>
+                    <a href="pricing" class='sidebar-link'>
                         <i data-feather="truck" width="20"></i> 
                         <span>Vehicle Registration</span>
                     </a>
@@ -100,21 +101,21 @@
                 </li> -->
             
                 <li class="sidebar-item">
-                    <a href="activities.php" class='sidebar-link'>
+                    <a href="activities" class='sidebar-link'>
                         <i data-feather="activity" width="20"></i> 
                         <span>Activities</span>
                     </a>
                     
                 </li>
                 <li class="sidebar-item">
-                    <a href="refer.php" class='sidebar-link'>
+                    <a href="refer" class='sidebar-link'>
                         <i data-feather="credit-card" width="20"></i> 
                         <span>Wallet</span>
                     </a>
                     
                 </li>
                 <li class="sidebar-item">
-                    <a href="login.php" class='sidebar-link'>
+                    <a href="login" class='sidebar-link'>
                         <i data-feather="log-out" width="20"></i> 
                         <span>logout</span>
                     </a>

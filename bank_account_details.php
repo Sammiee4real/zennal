@@ -1,8 +1,8 @@
 
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>            
+<?php include("includes/header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Bank Account Details</h3>
@@ -74,6 +74,6 @@
 <script type="text/javascript">
     
 </script>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>
             
 

@@ -1112,15 +1112,18 @@ $(document).ready(function(){
 			success: function(data){
 				//alert(data);
 				if(data == "success"){
-					$("#success_message").empty();
-					$("#success_message").html("Success! You've successfully logged in");
-					toastbox('success_toast', 3000);
-					setTimeout( function(){ window.location.href = "index.php";}, 3000);
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've successfully logged in",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "index.php";}, 3000));
 				}
 				else{
-					$("#error_message").empty();
-					$("#error_message").html("Error! " + data);
-					toastbox('error_toast', 6000);
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
 				}
 			}
 		})

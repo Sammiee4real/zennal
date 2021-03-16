@@ -1,8 +1,8 @@
 
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>
+<?php include("includes/header.php");?>
 <style type="text/css">
 #bar, #others {display:none;}
 </style>
@@ -352,4 +352,4 @@ function show(el, txt){
 <script type="text/javascript">
     
 </script>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>

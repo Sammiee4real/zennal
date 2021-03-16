@@ -1,8 +1,8 @@
 
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>            
+<?php include("includes/header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Successful Loan Application</h3>
@@ -32,6 +32,6 @@ Please check your mail often as a mail will be sent to you to inform you about t
     
 
 </div>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>
             
 
