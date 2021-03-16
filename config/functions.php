@@ -2041,12 +2041,12 @@ function admin_login_user($details){
   }
 }
 
-function get_total_loan($loan_type){
+function get_total_loan($user_id){
   global $dbc;
-  $loan_type = secure_database($loan_type);
-  $get_loan_category = get_one_row_from_one_table_by_id('loan_category','type', $loan_type, 'date_created');
-  $loan_category =$get_loan_category['unique_id'];
-  $get_total_loan = "SELECT SUM(loan_amount) as `amount` FROM `user_loan_details` WHERE `loan_category_id` = '$loan_category'";
+  // $loan_type = secure_database($loan_type);
+  // $get_loan_category = get_one_row_from_one_table_by_id('loan_category','type', $loan_type, 'date_created');
+  // $loan_category =$get_loan_category['unique_id'];
+  $get_total_loan = "SELECT SUM(loan_amount) as `amount` FROM `user_loan_details` WHERE `user_id` = '$user_id'";
   // var_dump($get_total_loan);
   $get_total_loan_query = mysqli_query($dbc, $get_total_loan) or die(mysqli_error($dbc));
   $row = mysqli_fetch_array($get_total_loan_query);
@@ -2829,6 +2829,48 @@ function add_referral($referrer_id, $referred_id, $referral_for, $amount_paid, $
     else{
       echo json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
     }
+  }
+}
+
+function submit_withdrawal_request($user_id, $amount){
+  global $dbc;
+  $user_id = secure_database($user_id);
+  $amount = secure_database($amount);
+  $get_user_balance = get_one_row_from_one_table_by_id('wallet', 'user_id', $user_id, 'date_created');
+  $wallet_balance = $get_user_balance['balance'];
+  $naira = '&#8358;';
+  $unique_id = unique_id_generator($user_id.$amount);
+  if($user_id == '' || $amount == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else if($amount < 100){
+    return json_encode(["status"=>"0", "msg"=>"You cannot withdraw less than 100naira"]);
+  }
+  else if($wallet_balance < 5000){
+    return json_encode(["status"=>"0", "msg"=>"You can only withdraw when your bonus is up to 5000naira"]);
+  }
+  else if($wallet_balance < $amount){
+    return json_encode(["status"=>"0", "msg"=>"Your balance is insufficient"]);
+  }
+  else{
+    $sql = "INSERT INTO `withdrawal_request` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `amount` = '$amount', `date_created` = now()";
+    $query = mysqli_query($dbc, $sql);
+    if($query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function approve_withdrawal($request_id){
+  $request_id = secure_database($request_id);
+  if($request_id == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    
   }
 }
 

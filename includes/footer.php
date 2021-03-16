@@ -24,5 +24,6 @@
     <script src="assets/js/wizard.js"></script>
     <script src="assets/vendors/sweetalert2/package/dist/sweetalert2.min.js"></script>
     <script src="assets/js/scripts.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 </body>
 </html>
