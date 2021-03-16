@@ -1,8 +1,8 @@
 
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>
+<?php include("includes/header.php");?>
 <style type="text/css">
 #bar {display:none;}
 #veh {display:none;}
@@ -271,5 +271,5 @@
 
 
 </div>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>
             

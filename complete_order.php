@@ -1,8 +1,8 @@
 
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>
+<?php include("includes/header.php");?>
 <style type="text/css">
 #bar, #physical {display:none;}
 </style>
@@ -232,6 +232,6 @@ $(document).ready(function(){
  
 
 </div>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>
             
 

@@ -10,6 +10,7 @@
     <link rel="shortcut icon" href="assets/images/logozennal.png" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendors/sweetalert2/package/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -92,7 +93,7 @@
     </div>
 </div>
 </div>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>
 </body>
 
 </html>
