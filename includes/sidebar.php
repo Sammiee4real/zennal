@@ -33,6 +33,7 @@ $user = $_SESSION['user'];
     <!-- Include Choices CSS -->
     <link rel="stylesheet" href="assets/vendors/choices.js/choices.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/vendors/sweetalert2/package/dist/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
     
 </head>
 <style type="text/css">

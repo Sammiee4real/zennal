@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    // $('#myTable').DataTable();
+    $('#myTable').DataTable();
 
 	// if (window.location.href =="component-form-wizard-NextKin.php"){alert("1");}
 	var pageUrl = window.location.href.toLowerCase();
@@ -1116,7 +1116,7 @@ $(document).ready(function(){
                         title: "Congratulations!",
                         text: "You've successfully logged in",
                         icon: "success",
-                    }).then(setTimeout( function(){ window.location.href = "index.php";}, 3000));
+                    }).then(setTimeout( function(){ window.location.href = "index";}, 3000));
 				}
 				else{
 					Swal.fire({
@@ -1124,8 +1124,10 @@ $(document).ready(function(){
                         text: data,
                         icon: "error",
                     });
-					location.reload();
+					// location.reload();
 				}
+				$('#login_submit_btn').attr('disabled', false);
+				$('#login_submit_btn').text('Submit');
 			}
 		})
 	});
@@ -1518,5 +1520,38 @@ $(document).ready(function(){
       });
 
 // -----------------------------------------NEW-------------------------------------------------------------
+	//Tosin
+
+	$("#withdraw_button").click(function(e){
+		e.preventDefault();
+		$('#withdraw_button').attr('disabled', true);
+		$('#withdraw_button').text('Please wait...');
+		$.ajax({
+			url:"ajax/submit_withdrawal.php",
+			method: "POST",
+			data: $("#withdrawal_form").serialize(),
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've submitted your withdrawal request",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "refer";}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					// location.reload();
+				}
+				$('#withdraw_button').attr('disabled', false);
+				$('#withdraw_button').text('Submit Withdrawal');
+			}
+		})
+	});
+
 	/* Badmus */
 });
