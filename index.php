@@ -15,10 +15,12 @@
 <div id="main">
          
 <div class="main-content container-fluid">
+    
     <div class="page-title">
         <h3>Dashboard</h3>
         <p class="text-subtitle text-muted"><?= date("l, d, F, Y ")?></p>
     </div>
+    
     <section class="section mt-5">
         <div class="row mb-2">
 

@@ -1,3 +1,11 @@
+<?php
+include('config/functions.php');
+// session_start();
+if(isset($_SESSION['user'])){
+    header('location: index.php');
+    end();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -50,7 +58,7 @@
                         <div class="form-group position-relative has-icon-left">
                             <label for="email">Email</label>
                             <div class="position-relative">
-                                <input type="text" class="form-control" id="email" name="email">
+                                <input type="text" class="form-control" id="email" name="email" placeholder="Email address">
                                 <div class="form-control-icon">
                                     <i data-feather="mail"></i>
                                 </div>
@@ -64,7 +72,7 @@
                                 </a>
                             </div>
                             <div class="position-relative">
-                                <input type="password" class="form-control" name="password" id="password">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                                 <div class="form-control-icon">
                                     <i data-feather="lock"></i>
                                 </div>

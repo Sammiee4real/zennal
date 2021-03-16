@@ -1124,6 +1124,7 @@ $(document).ready(function(){
                         text: data,
                         icon: "error",
                     });
+					location.reload();
 				}
 			}
 		})
