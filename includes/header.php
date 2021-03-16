@@ -28,6 +28,7 @@
                         </div>
                         <h4 class="card-title "><?php echo $user['first_name']." ".$user['last_name']; ?></h4>
                         <p><?php echo $user['email'];?></p>
+                        <a href="profile">View Profile</a>
                     </div>
                     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
 

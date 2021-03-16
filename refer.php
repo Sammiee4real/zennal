@@ -22,7 +22,13 @@
                                     <p class="card-text text-ellipsis">
                                        Copy your referral link to share with a friend.
                                     </p>
-                                    <h6 id="referral_link">https://www.zennal.com/referee/Az453b</h6>
+                                    <h6 id="referral_link"><?php 
+                                    if(strval($_SERVER['HTTP_HOST']) === 'localhost'){
+                                        echo $_SERVER['HTTP_HOST']."/zennal/register?referrerid=".$user['referral_code'];
+                                    }else{
+                                        echo $_SERVER['HTTP_HOST']."/register?referrerid=".$user['referral_code'];
+                                    }
+                                    ?> </h6>
                                     <button class="btn btn-info" onclick="copy_text(referral_link);">COPY LINK</button>
                                 </div>
                             </div>

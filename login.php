@@ -90,11 +90,10 @@ if(isset($_SESSION['user'])){
                         </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <button id="login_submit_btn" class="btn btn-block mb-2 btn-primary">Submit</button>
+                            <button id="login_submit_btn" class="btn btn-block mb-2 btn-primary">Login</button>
                         </div>
                     </div>
                     </form>
-                   
                 </div>
             </div>
         </div>
