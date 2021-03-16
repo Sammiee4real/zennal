@@ -1,6 +1,6 @@
 <?php include("sidebar.php");
     // $user_id = $_SESSION['user_id'];
-    $user_id = '07bf739aba673b233f89d1a25821870d';
+    // $user_id = '07bf739aba673b233f89d1a25821870d';
     $get_user_loan = get_one_row_from_one_table_by_id('user_loan_details','user_id', $user_id, 'date_created');
 ?>
 <div id="main">

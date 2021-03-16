@@ -1,7 +1,7 @@
 <?php
-include('config/functions.php');
-$user_id = $_SESSION['user']['id'];
-$user = $_SESSION['user'];
+    include('config/functions.php');
+    $user_id = $_SESSION['user']['unique_id'];
+    $user = $_SESSION['user'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,23 +19,21 @@ $user = $_SESSION['user'];
     <!-- <link rel="stylesheet" href="assets/css/appp.css"> -->
     <link rel="stylesheet" type="text/css" href="assets/css/wizard.css">
     <link rel="shortcut icon" href="assets/images/logozennal.png" type="image/x-icon">
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  -->
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+   
+<!-- Include Choices CSS -->
+<link rel="stylesheet" href="assets/vendors/choices.js/choices.min.css" />
+    
 </head>
-
 <style type="text/css">
     .sidebar-item.active{
     /*background-color:#e8f3ff;*/
     /*color:white;*/
    /* display: block;*/
 }
-
 </style>
 <body>
    
     <div id="app">
-
 <div id="sidebar" class='active'>
             <div class="sidebar-wrapper active ps ps--active-y">
     <div class="sidebar-header">
@@ -50,7 +48,6 @@ $user = $_SESSION['user'];
                         <span>Dashboard</span>
                     </a>
                 </li>
-
             
             
                 <li class="sidebar-item ">
@@ -67,7 +64,6 @@ $user = $_SESSION['user'];
                         <span>Insurance</span>
                     </a>
                 </li>
-
                 <li class="sidebar-item has-sub">
                     <a href="#" class='sidebar-link'>
                         <i data-feather="truck" width="20"></i> 
@@ -88,7 +84,6 @@ $user = $_SESSION['user'];
                         <li>
                             <a href="change_ownership.php">Change Vehicle Ownership</a>
                         </li>
-
                         <li>
                             <a href="pricing.php">Get Quote</a>
                         </li>
@@ -96,7 +91,6 @@ $user = $_SESSION['user'];
                     </ul>
                     
                 </li>
-
                 <!-- <li class="sidebar-item  ">
                     <a href="pricing.php" class='sidebar-link'>
                         <i data-feather="truck" width="20"></i> 
@@ -104,7 +98,6 @@ $user = $_SESSION['user'];
                     </a>
                     
                 </li> -->
-
             
                 <li class="sidebar-item">
                     <a href="activities.php" class='sidebar-link'>
@@ -113,7 +106,6 @@ $user = $_SESSION['user'];
                     </a>
                     
                 </li>
-
                 <li class="sidebar-item">
                     <a href="refer.php" class='sidebar-link'>
                         <i data-feather="credit-card" width="20"></i> 
@@ -121,7 +113,6 @@ $user = $_SESSION['user'];
                     </a>
                     
                 </li>
-
                 <li class="sidebar-item">
                     <a href="login.php" class='sidebar-link'>
                         <i data-feather="log-out" width="20"></i> 
@@ -142,14 +133,10 @@ $user = $_SESSION['user'];
 });
 });
 </script>  -->
-
-
-
 <script>
 /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
 var dropdown = document.getElementsByClassName("sidebar-item");
 var i;
-
 for (i = 0; i < dropdown.length; i++) {
   dropdown[i].addEventListener("click", function() {
   this.classList.toggle("active");
@@ -162,4 +149,3 @@ for (i = 0; i < dropdown.length; i++) {
   });
 }
 </script>
-

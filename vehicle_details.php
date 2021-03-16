@@ -69,6 +69,7 @@ function show(el, txt){
                                         <fieldset class="form-group">
                                             <span for="Usagecolumn">Usage</span>
                                         <select class="form-select" id="basicSelect">
+                                            <option value="">Select Usage</option>
                                             <option value="Private">Private</option>
                                             <option value="Business">Business</option>
                                             <option value="pandb">Private and Business</option>
@@ -80,6 +81,7 @@ function show(el, txt){
                                         <fieldset class="form-group">
                                             <span for="Maker">Make of Vehicle</span>
                                         <select id="basicS" name="thename" class="form-select" onChange="show('others', this.options[this.selectedIndex].firstChild.nodeValue)">
+                                            <option value="">Select make</option>
                                             <option value="Honda">Honda</option>
                                             <option value="Toyota">Toyota</option>
                                             <option value="Audi">Audi</option>
@@ -126,7 +128,6 @@ function show(el, txt){
                                            <label class="form-check-label" for="gridRadios1">True</label>
                                            </div>
                                         </div>
-
                                         <div class="col-md-3 col-12">
                                             <div class="form-check">
                                             <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
@@ -147,7 +148,6 @@ function show(el, txt){
                                             <label class="form-check-label" for="Vehicle3"> True </label>
                                            </div>
                                         </div>
-
                                         <div class="col-md-3 col-12">
                                             <div class="form-check">
                                             <input class="form-check-input" type="radio" name="Vehicle" id="Vehicle2" checked="">
@@ -168,7 +168,6 @@ function show(el, txt){
                                            <label class="form-check-label" for="trackRadios1">True</label>
                                            </div>
                                         </div>
-
                                         <div class="col-md-3 col-12">
                                             <div class="form-check">
                                             <input class="form-check-input" type="radio" name="trackRadios" id="trackRadios2" value="option2">
@@ -189,7 +188,6 @@ function show(el, txt){
                                            <label class="form-check-label" for="tRadios1">True</label>
                                            </div>
                                         </div>
-
                                         <div class="col-md-3 col-12">
                                             <div class="form-check">
                                             <input class="form-check-input" type="radio" name="tRadios" id="tRadios2" value="option2">
@@ -235,7 +233,6 @@ function show(el, txt){
                                             <input type="text" id="Location" class="form-control" placeholder="Location of Risk" name="Location">
                                         </div>
                                     </div>
-
                                      <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="OtherLocation">Other Location of Risk</span>
@@ -265,7 +262,7 @@ function show(el, txt){
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="SumInsured">Sum Insured (Value of Vehicle of to be Insured)</span>
+                                            <span for="SumInsured">Sum Insured (Value of Vehicle to be Insured)</span>
                                             <input type="text" id="SumInsured" class="form-control" name="SumInsured" placeholder="Sum Insured">
                                         </div>
                                     </div>
@@ -282,7 +279,7 @@ function show(el, txt){
 
                                         <div id="bar">
                                         <div class="form-group">
-                                            <input type="text" id="" class="form-control" name="" placeholder="Name">
+                                            <input type="text" id="" class="form-control" name="" placeholder="Name of primary user ">
                                             <input type="text" id="" class="form-control" name="" placeholder="Relationship (e.g Sister, Mother)">
                                         </div>
 
@@ -291,14 +288,14 @@ function show(el, txt){
                                    
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="PolicyStartDate">Policy Start Date</span>
+                                            <span for="PolicyStartDate">Policy Start Date (Date of commencement of policy)</span>
                                             <input type="date" id="PolicyStartDate" class="form-control" name="PolicyStartDate" placeholder="Policy Start Date">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="company-column">Risk Images (4 Corners of Car including Plate number)</span>
+                                            <span for="company-column">Vehicle Images (4 sizes of Vehicle including Plate number)</span>
                                             <div class="input-group mb-3">
                                         <div class="form-file">
                                             <input type="file" class="form-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
@@ -356,5 +353,3 @@ function show(el, txt){
     
 </script>
 <?php include("footer.php");?>
-            
-
