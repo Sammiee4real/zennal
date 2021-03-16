@@ -1,6 +1,12 @@
-<!-- {% extends 'layouts/master-auth.html' %}
-{%  set title = "Sign up" %}
-{% block content %} -->
+<?php
+include('config/functions.php');
+// session_start();
+if(isset($_SESSION['user'])){
+    header('location: index.php');
+    end();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,46 +33,73 @@
                         <h3>Register</h3>
                         <p>Please fill the form to join us.</p>
                     </div>
-                    <form action="login.php">
+                    <form id='register_form' method='post'>
                         <div class="row">
                             <div class="">
                                 <div class="form-group">
-                                    <label for="first-name-column">Phone Number</label>
-                                    <input type="number" id="first-name-column" class="form-control"  name="fname-column" placeholder="Enter your phone number">
+                                    <label for="first_name">First name</label>
+                                    <input type="text" id="first_name" class="form-control"  name="first_name" required placeholder="Enter first name">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="email-id-column">Email</label>
-                                    <input type="email" id="email-id-column" class="form-control" name="email-id-column" placeholder="Enter your emial address">
+                                    <label for="last_name">Last name</label>
+                                    <input type="text" id="last_name" class="form-control"  name="last_name" required placeholder="Enter last name">
                                 </div>
+                                <div class="form-group">
+                                    <label for="other_name">Other name</label>
+                                    <input type="text" id="other_name" class="form-control"  name="other_name" placeholder="Enter other names">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Email address</label>
+                                    <input type="email" id="email" class="form-control"  name="email" required placeholder="Enter email address">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone_no">Phone Number</label>
+                                    <input type="number" id="phone_no" class="form-control"  name="phone_no" required placeholder="Enter phone number">
+                                </div>
+                                <div class="card-body" id="phone_alert" style="display:none;">
+                                    <div class="alert alert-light-primary color-primary"><i data-feather="star"></i>Ensure that the phone number supplied is linked to BVN</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" class="form-control" name="password" required placeholder="Enter password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpassword">Confirm Password</label>
+                                    <input type="password" id="cpassword" class="form-control" name="cpassword" required placeholder="Confirm password">
+                                </div>
+                                <?php
+                                if(isset($_GET['referrerid'])){
+                                ?>
+                                <!-- <div class="form-group">
+                                    <label for="referrerid">Referrer Id</label> -->
+                                    <input type="hidden" id="referrerid" class="form-control" name="referrerid" value="<?php echo $_GET['referrerid'] ?>" readonly>
+                                <!-- </div> -->
+                                <?php
+                                }
+                                ?>
                             </div>
 
-                    <div class="card-body">
-                        <div class="alert alert-light-primary color-primary"><i data-feather="star"></i>Ensure that the phone number supplied is linked to BVN</div>
-                    </div>
                 
                         </diV>
 
-                    <a href="login.php">Have an account? Login</a>
+                    <a href="login">Have an account? Login</a>
                         
-                    </form><br>
-                    <div class="row">
+                    <br>
+                    <div class="row mt-3">
                         <div class="col-sm-12">
-                            <button class="btn btn-block mb-2 btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-block mb-2 btn-primary" id="register_submit_btn">Submit</button>
                         </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- {% endblock %} -->
-<script src="assets/js/feather-icons/feather.min.js"></script>
-    <script src="assets/js/app.js"></script>
-    
-    <script src="assets/js/main.js"></script>
-    <script src="assets/vendors/sweetalert2/package/dist/sweetalert2.min.js"></script>
-    <script src="assets/js/scripts.js"></script>
-    </body>
+<?php include("includes/footer.php");?>
+</body>
 
 </html>

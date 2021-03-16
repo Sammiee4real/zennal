@@ -1101,6 +1101,7 @@ $(document).ready(function(){
 
 	});
 
+	// Badmus
 	$("#login_form").submit(function(e){
 		e.preventDefault();
 		$('#login_submit_btn').attr('disabled', true);
@@ -1124,12 +1125,53 @@ $(document).ready(function(){
                         text: data,
                         icon: "error",
                     });
-					location.reload();
+					// location.reload();
+					$('#login_submit_btn').attr('disabled', false);
+					$('#login_submit_btn').text('Login');
+				}
+			}
+		});
+	});
+
+	// Badmus
+	$("#phone_no").focus(function(){
+		$("#phone_alert").show();
+	});
+
+	// Badmus
+	$("#register_form").submit(function(e){
+		e.preventDefault();
+		// alert(1);
+		// console.log($(this).serialize());
+		$("#register_submit_btn").attr('disabled', true);
+		$("#register_submit_btn").text('Please wait');
+
+		$.ajax({
+			url:"ajax/user_registration.php",
+			method: "POST",
+			data: $(this).serialize(),
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've successfully registered",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "index.php";}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					// location.reload();
+					$('#register_submit_btn').attr('disabled', false);
+					$('#register_submit_btn').text('Submit');
 				}
 			}
 		})
 	});
-
 	// Insurance 
 
 	$("#vehicle_info_form").submit(function(e){

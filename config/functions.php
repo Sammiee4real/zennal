@@ -167,7 +167,7 @@ function verify_user($phone, $email){
 
 
 // Register User
-function register_user($data){
+function register_user_initial($data){
   global $dbc;
 
 
@@ -283,6 +283,59 @@ function register_user($data){
 
 
   return json_encode(array("status" => 1, "msg" => "Success"));
+}
+
+// Badmus
+function register_user($post){
+  global $dbc;
+
+  if(isset($post["referrerid"])){
+    $referrer_code = secure_database($post["referrerid"]);
+    
+    $sql = "SELECT id FROM `users` WHERE `referral_code` = '$referrer_code'";
+
+    $exe = mysqli_query($dbc, $sql);
+
+    $count = mysqli_num_rows($exe);
+
+    if (intval($count) === 0) {
+      return json_encode(array("status"=>0, "msg"=>"Invalid referral link"));
+    }
+  }
+  else {
+    $referrer_code = null;
+  }
+
+  $email = secure_database($post["email"]);
+
+  if (user_exists($email) === true) {
+    return json_encode(array("status"=>0, "msg"=>"User already registered"));
+  }
+
+  $password = secure_database($post["password"]);
+  $cpassword = secure_database($post["cpassword"]);
+
+  if($password !== $cpassword){
+    return json_encode(array("status"=>0, "msg"=>"Password does not match"));
+  }
+
+  $first_name = secure_database($post["first_name"]);
+  $last_name = secure_database($post["last_name"]);
+  $other_name = secure_database($post["other_name"]);
+  $phone_no = secure_database($post["phone_no"]);
+
+  $referral_code = substr(md5(microtime()), 0, 6);
+  $unique_id = unique_id_generator($email);
+
+  $hash_password = md5($password);
+
+  $sql = "INSERT INTO `users` SET `unique_id` = '$unique_id', `first_name` = '$first_name', `last_name` = '$last_name', `other_names` = '$other_name', `referral_code` = '$referral_code', `referrer_code` = '$referrer_code', `email` = '$email', `phone` = '$phone_no', `password` = '$hash_password', `registered_on` = now()";
+
+  $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+
+  if($query){
+    return json_encode(array("status"=>1, "msg"=>"success"));
+  }
 }
 
 // Badmus
@@ -1312,10 +1365,10 @@ function get_rows_from_one_table_by_two_params($table,$param,$value,$param2,$val
 // }
 
 // Badmus
-function user_exists($email, $password){
+function user_exists($email){
     global $dbc;
     
-    $sql = "SELECT COUNT(*) AS num FROM `users` WHERE `email`='$email' AND `password`='$password'";
+    $sql = "SELECT COUNT(*) AS num FROM `users` WHERE `email`='$email'";
     $query = mysqli_query($dbc, $sql);
     $re = mysqli_fetch_assoc($query);
 
