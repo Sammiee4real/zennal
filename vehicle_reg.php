@@ -1,4 +1,3 @@
-
 <?php include("sidebar.php");?>
 <div id="main">
 
@@ -170,21 +169,44 @@ $(document).ready(function(){
 
                                 <div class="form-group">
                                             <select name="" class="form-select">
-                                                <option>Preferrred State of Registration</option>
-                                                <option value="state">Abia</option>
+                                                <option>Preferred State of Registration</option>
+                                                <option value="state">Lagos</option><!-- 
                                                 <option value="state">Adamawa</option>
-                                                <option value="state">Oyo</option>
+                                                <option value="state">Oyo</option> -->
                                             </select>
                                         </div>
                                 <div class="state box">
                                     <div class="form-group">
                                         <select name="" class="form-select">
-                                                <option>Preferrred local government</option>
+                                                <option> 1st Preferrred local government</option>
+                                                <option>Oluyole local government</option>
+                                                <option>Ono Ara local government</option>
+                                            </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select name="" class="form-select">
+                                                <option>2nd Preferrred local government</option>
+                                                <option>Oluyole local government</option>
+                                                <option>Ono Ara local government</option>
+                                            </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select name="" class="form-select">
+                                                <option>3rd Preferrred local government</option>
                                                 <option>Oluyole local government</option>
                                                 <option>Ono Ara local government</option>
                                             </select>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <span>Do you want to obtain a Tinted permit?</span>
+                                            <select class="form-select">
+                                                <option>Select</option>
+                                                <option>Yes</option>
+                                                <option>No</option>
+                                            </select>
+                                        </div>
 
                                     </div>
 
@@ -206,5 +228,3 @@ $(document).ready(function(){
 
 </div>
 <?php include("footer.php");?>
-            
-

@@ -1,4 +1,3 @@
-
 <?php include("sidebar.php");?>
 <div id="main">
 
@@ -64,14 +63,17 @@ function show(el, txt){
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Engine number" name="Vehicle-column">
+                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Registration number/Plate number" name="column">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Engine number (optional)" name="Vehicle-column">
                                         </div>
                                         <div class="form-group">
                                             <input type="text" id="chasis" class="form-control" placeholder="Enter Chasis number" name="Vehicle">
                                         </div>
                                         
                                          <div class="form-group">
-                                            <input type="text" id="chasis" class="form-control" placeholder="Name on Vehicle Lisence" name="Vehicle">
+                                            <input type="text" id="chasis" class="form-control" placeholder="Name on Vehicle License" name="Vehicle">
                                         </div>
 
                                         <!-- <div class="form-group">
@@ -113,6 +115,21 @@ function show(el, txt){
                                     </div>
                                 </li>
                             </ul>
+                            <div class="form-group">
+                                        <!-- class="choices form-select multiple-remove" multiple="multiple" -->
+                                        <select class="form-select" > 
+                                            <option>Select type of permit</option>
+                                                <option>Tinted Glass Permit</option>
+                                                <option>S/W Local Government Permits (Motorcycle)</option>
+                                                <option>State Carriage Permit (Motorcycle)</option>
+                                                <option>Rider’s Card (Motorcycle)</option>
+                                                <option>S/W Local Government Permits (Buses)</option>
+                                                <option>Nigeria Government Permits (Cars/Buses)</option>
+                                                <option>Nigeria Government Permits (Trucks)</option>
+                                                <option>Permit to Operate Heavy Motor Vehicle</option>
+                                                <option>Change of Vehicle Engine</option>
+                                        </select>
+                                    </div>
 
                                
                                         <div class="form-group">
@@ -132,7 +149,7 @@ function show(el, txt){
                                             </select>
                                 </div>
                             </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <select name="thename" class="form-select" onChange="show('cus', this.options[this.selectedIndex].firstChild.nodeValue)">
                                                 <option>Type of number plate</option>
                                                 <option> Private number plate</option>
@@ -145,7 +162,7 @@ function show(el, txt){
                                         <span>Preferrred Number Plate</span>
                                         <input type="text" name="plate" class="form-control" placeholder="e.g (KET-123A)">
                                     </div>
-                                </div>
+                                </div> -->
                  </div>
            </div>
                                     <div class="col-12 d-flex justify-content-end">
@@ -164,5 +181,3 @@ function show(el, txt){
 
 </div>
 <?php include("footer.php");?>
-            
-

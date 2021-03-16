@@ -1,7 +1,7 @@
 <?php 
     include("sidebar.php");
-    // $user_id = $_SESSION['user_id'];
-    $user_id = '07bf739aba673b233f89d1a25821870d';
+    // $user_id = $_SESSION['user']['unique_id'];
+    //$user_id = '07bf739aba673b233f89d1a25821870d';
     $get_user_details = get_one_row_from_one_table_by_id('users','unique_id', $user_id, 'registered_on');
     $get_personal_loan = get_one_row_from_one_table_by_id('loan_category','type', 1, 'date_created');
     $get_num_personal_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_category_id',$get_personal_loan['unique_id']);
@@ -10,7 +10,7 @@
     $get_num_running_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_status', 1);
     $get_recent_activities = get_user_recent_activities($user_id);
     $get_wallet_balance = get_one_row_from_one_table_by_id('wallet','user_id', $user_id, 'date_created');
-include("header.php");
+    include("header.php");
 ?>
 <div id="main">
          

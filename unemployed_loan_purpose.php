@@ -1,3 +1,4 @@
+
 <?php include("sidebar.php");?>
 <div id="main">
 
@@ -13,7 +14,7 @@
             <div class="card pt-4">
                 <div class="card-body">
                     
-                    <form action="success.php">
+                    <form action="loan_purpose_.php">
                         <div class="form-group position-relative ">
                             <span for="username">Amount (in naira)</span>
                             <div class="position-relative">
@@ -60,7 +61,7 @@
                         </div>
 
                         <div class="clearfix mt-3">
-                            <button class="btn btn-primary btn-block">Submit</button>
+                            <button class="btn btn-primary btn-block">Proceed</button>
                         </div>
                     </form>
                     
