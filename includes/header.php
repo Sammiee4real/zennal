@@ -1,7 +1,4 @@
 <?php
-    // session_start();
-    // $user_id = $_SESSION['user_id'];
-    $user_id = '07bf739aba673b233f89d1a25821870d';
     $get_recent_activities = get_user_recent_activities($user_id);
 ?>
             <nav class="navbar navbar-header navbar-expand navbar-light">
@@ -29,8 +26,8 @@
                         <div class="avatar avatar-lg ">
                            <img src="assets/images/logozennal.png" alt="" srcset="">
                         </div>
-                        <h4 class="card-title ">Jane Doe</h4>
-                        <p>janedoe@gmail.com</p>
+                        <h4 class="card-title "><?php echo $user['first_name']." ".$user['last_name']; ?></h4>
+                        <p><?php echo $user['email'];?></p>
                     </div>
                     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
 

@@ -12,6 +12,7 @@
     
     <link rel="shortcut icon" href="assets/images/logozennal.png" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="assets/vendors/sweetalert2/package/dist/sweetalert2.min.css">
 </head>
 
 <body>
@@ -46,8 +47,9 @@
 <!-- {% endblock %} -->
 <script src="assets/js/feather-icons/feather.min.js"></script>
     <script src="assets/js/app.js"></script>
-    
     <script src="assets/js/main.js"></script>
+    <script src="assets/vendors/sweetalert2/package/dist/sweetalert2.min.js"></script>
+    <script src="assets/js/scripts.js"></script>
 </body>
 
 </html>

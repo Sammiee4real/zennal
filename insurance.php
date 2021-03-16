@@ -1,8 +1,8 @@
 
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>            
+<?php include("includes/header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Insurance</h3>
@@ -63,5 +63,5 @@
 
 
 </div>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>
             

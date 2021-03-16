@@ -1,8 +1,7 @@
-
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>            
+<?php include("includes/header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Loan Purpose</h3>
@@ -44,11 +43,23 @@
                                 <option value="manual_upload">Manual Upload</option>
                                 <option value="online_generation">Generate Bank Statement</option>
                             </select>
-                                
                             </div>
+
+                            <div class="form-group">
+                                <br>
+                                <li class="d-inline-block mr-2 mb-1">
+                                    <div class="form-check">
+                                        <div class="checkbox">
+                                            <input type="checkbox" class="form-check-input" id="checkbox2">
+                                            <label for="checkbox2">I agree to Terms & Conditions</label>
+                                        </div>
+                                    </div>
+                                </li>    
+                            </div>
+
                         </div>
 
-                        <div class="clearfix mt-5">
+                        <div class="clearfix mt-3">
                             <button class="btn btn-primary btn-block">Submit</button>
                         </div>
                     </form>
@@ -61,6 +72,4 @@
     
 
 </div>
-<?php include("footer.php");?>
-            
-
+<?php include("includes/footer.php");?>

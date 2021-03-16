@@ -1,8 +1,9 @@
+  
 
-<?php include("sidebar.php");?>
+<?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("header.php");?>
+<?php include("includes/header.php");?>
 <style type="text/css">
 #bar, #cus {display:none;}
 </style>
@@ -34,7 +35,24 @@ function show(el, txt){
                                          <div class="mt-3 mb-3">
                                           <h4 class="card-title">Vehicle Permit</h4>
                                         </div>
+
                                         <div class="form-group">
+                                        <select class=" form-select"> 
+                                                <option>Select type of permit</option> 
+                                                <option>Tinted Glass Permit</option>
+                                                <option>S/W Local Government Permits (Motorcycle)</option>
+                                                <option>State Carriage Permit (Motorcycle)</option>
+                                                <option>Rider’s Card (Motorcycle)</option>
+                                                <option>S/W Local Government Permits (Buses)</option>
+                                                <option>Nigeria Government Permits (Cars/Buses)</option>
+                                                <option>Nigeria Government Permits (Trucks)</option>
+                                                <option>Permit to Operate Heavy Motor Vehicle</option>
+                                                <option>Change of Vehicle Engine</option>
+                                        </select>
+                                    </div>
+
+
+                                        <!-- <div class="form-group">
                                             <select class="form-select">
                                                 <option>Select type of permit</option>
                                                 <option>Tinted Glass Permit</option>
@@ -47,7 +65,7 @@ function show(el, txt){
                                                 <option>Permit to Operate Heavy Motor Vehicle</option>
                                                 <option>Change of Vehicle Engine</option>
                                             </select>
-                                        </div>
+                                        </div> -->
 
                                         <div class="form-group">
                                             <select class="form-select">
@@ -62,6 +80,7 @@ function show(el, txt){
                                                 <option>Trucks 30 Tons (10+ Tyres)</option>
                                             </select>
                                         </div>
+
                                         <div class="form-group">
                                             <select class="form-select">
                                                 <option>Vehicle make</option>
@@ -78,6 +97,9 @@ function show(el, txt){
                                             </select>
                                         </div>
                                         <div class="form-group">
+                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Vehicle registration number/Plate number" name="column">
+                                        </div>
+                                        <div class="form-group">
                                             <input type="text" id="Vehicle" class="form-control" placeholder="Enter Engine number" name="Vehicle-column">
                                         </div>
                                         <div class="form-group">
@@ -85,7 +107,7 @@ function show(el, txt){
                                         </div>
                                         
                                          <div class="form-group">
-                                            <input type="text" id="chasis" class="form-control" placeholder="Name on Vehicle Lisence" name="Vehicle">
+                                            <input type="text" id="chasis" class="form-control" placeholder="Name on Vehicle License" name="Vehicle">
                                         </div>
 
                                         <!-- <div class="form-group">
@@ -98,69 +120,31 @@ function show(el, txt){
                                             </select>
                                         </div>
 
-
-                          <!--  <ul class="list-unstyled mb-0">
-                            <h6>Check all that applies</h6>
-                                <li class="d-inline-block mr-2 mb-1">
-                                    <div class="form-check">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="form-check-input form-check-primary"  name="customCheck" id="customColorCheck1">
-                                            <label class="form-check-label" for="customColorCheck1">Road Worthiness</label>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="d-inline-block mr-2 mb-1">
-                                    <div class="form-check">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="form-check-input form-check-success"  name="customCheck" id="customColorCheck3">
-                                            <label class="form-check-label" for="customColorCheck3">Hackney Permit</label>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="d-inline-block mr-2 mb-1">
-                                    <div class="form-check">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="form-check-input form-check-danger"  name="customCheck" id="customColorCheck4">
-                                            <label class="form-check-label" for="customColorCheck4">Vehicle License</label>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-
-                               
-                                        <div class="form-group">
-                                            <select name="thename" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
-                                                <option>Insurance type</option>
-                                                <option>3rd Party Insurance</option>
-                                                <option>Comprehensive Insurance</option>
-                                                <option>(No Insurance)</option>
-                                            </select>
-                                        </div>
-                            <div id="bar">
-                                 <div class="form-group">
-                                   <select class="form-select">
-                                                <option>Select Plan</option>
-                                                <option> Bronze</option>
-                                                <option> Silver</option>
-                                            </select>
+                                <div class="mt-3 mb-3">
+                                          <h4 class="card-title">Expiry Dates</h4>
                                 </div>
-                            </div>
-                                        <div class="form-group">
-                                            <select name="thename" class="form-select" onChange="show('cus', this.options[this.selectedIndex].firstChild.nodeValue)">
-                                                <option>Type of number plate</option>
-                                                <option> Private number plate</option>
-                                                <option> Commercial number plate</option>
-                                                <option>Custom number plate</option>
-                                            </select>
+
+                                         <div class="form-group">
+                                            <span>Vehicle License Expiry</span>
+                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
                                         </div>
-                                <div id="cus">
-                                    <div class="form-group">
-                                        <span>Preferrred Number Plate</span>
-                                        <input type="text" name="plate" class="form-control" placeholder="e.g (KET-123A)">
-                                    </div>
-                                </div> -->
-                                        
+                                        <div class="form-group">
+                                            <span>Insurance Expiry</span>
+                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>Road Worthiness Expiry</span>
+                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>Hackney Permit Expiry (If applicable)</span>
+                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>Heavy Duty Permit Expiry (If applicable)</span>
+                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                        </div>
+
                                     </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-end">
@@ -179,6 +163,4 @@ function show(el, txt){
  
 
 </div>
-<?php include("footer.php");?>
-            
-
+<?php include("includes/footer.php");?>

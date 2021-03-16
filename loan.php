@@ -1,11 +1,11 @@
-<?php include("sidebar.php");
+<?php include("includes/sidebar.php");
     // $user_id = $_SESSION['user_id'];
-    $user_id = '07bf739aba673b233f89d1a25821870d';
+    // $user_id = '07bf739aba673b233f89d1a25821870d';
     $get_user_loan = get_one_row_from_one_table_by_id('user_loan_details','user_id', $user_id, 'date_created');
 ?>
 <div id="main">
 
-<?php include("header.php");?>            
+<?php include("includes/header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Zennal Loans</h3>
@@ -123,6 +123,6 @@
 </section>   
 
 </div>
-<?php include("footer.php");?>
+<?php include("includes/footer.php");?>
             
 
