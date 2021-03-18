@@ -110,7 +110,7 @@
       $temp.val($(element).text()).select();
       document.execCommand("copy");
       $temp.remove();
-      alert("Text copied");
+      alert("Link copied");
     }
 </script>
             
