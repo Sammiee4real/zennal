@@ -2446,6 +2446,42 @@ function flutterwave_transfer($loan_id,$user_id, $amount){
  $transfer_id = $response_dec['data']['id'];
 }
 
+function flutterwave_transfer2($request_id, $user_id, $amount){
+  $user_id = secure_database($user_id);
+  $url = 'https://api.flutterwave.com/v3/transfers';
+  $get_bank_details = get_one_row_from_one_table_by_id('user_financial_details', 'user_id', $user_id, 'date_created');
+  $bank_code = $get_bank_details['bank_name'];
+  $account_no = $get_bank_details['account_number'];
+  $currency = 'NGN';
+  $fullname = $get_bank_details['account_name'];
+  $reference = md5(uniqid(rand(0000, 9999)));
+  $data = [
+    'account_bank' => $bank_code,
+    'account_number' => $account_no,
+    'amount' => $amount,
+    'narration' => 'Zennal Wallet Withdrawal',
+    'currency' => $currency,
+    'debit_currency' => $currency,
+    'reference'=> $reference,
+    'callback_url' => "http://localhost/zennal/admin/ajax_admin/withdrawal_callback.php?request_id=".$request_id
+  ];
+  
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($curl, CURLOPT_POST, true);
+  curl_setopt($curl, CURLOPT_POSTFIELDS,  json_encode($data));
+  curl_setopt($curl, CURLOPT_HTTPHEADER, [
+  'Authorization: Bearer FLWSECK_TEST-0c1450bff1fe587e3164a42ef28e90be-X',
+  'Content-Type: application/json'
+  ]);
+  echo $response = curl_exec($curl);
+  curl_close($curl);
+  $response_dec = json_decode($response,true);
+  $response_status = $response_dec['status'];
+  $response_message = $response_dec['message'];
+  $transfer_id = $response_dec['data']['id'];
+}
+
 
 function insert_payment_transaction($user_id, $tx_ref, $transaction_id){
   global $dbc;
@@ -2870,7 +2906,9 @@ function approve_withdrawal($request_id){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    
+    $get_withdrawal_request = get_one_row_from_one_table_by_id('withdrawal_request', 'unique_id', $request_id, 'date_created');
+    $get_user_balance = get_one_row_from_one_table_by_id('wallet', 'user_id', $get_withdrawal_request['user_id'], 'date_created');
+    $flutter_transfer = flutterwave_transfer2($request_id, $get_withdrawal_request['user_id'], $get_withdrawal_request['amount']);
   }
 }
 

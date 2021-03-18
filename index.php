@@ -83,7 +83,7 @@
                             <div class='px-3 py-3 d-flex justify-content-between'>
                                 <h3 class='card-title'>WALLET</h3>
                                 <div class="card-right d-flex align-items-center">
-                                    <p>&#8358;<?= $get_wallet_balance['balance'];?></p>
+                                    <p>&#8358;<?= number_format($get_wallet_balance['balance']);?></p>
                                 </div>
                             </div>
                             <div class="px-3 py-3 d-flex justify-content-between">
