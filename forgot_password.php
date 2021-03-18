@@ -25,31 +25,27 @@
                     <div class="text-center mb-5">
                         <img src="assets/images/logozennal.png" height="48" class='mb-4'>
                         <h3>Forgot Password</h3>
-                        <p>Please enter your email to receive password reset link.</p>
+                        <p>Please enter your registered email address.</p>
                     </div>
-                    <form action="login.php">
+                    <form id="forgot_password_form">
                         <div class="form-group">
-                            <label for="first-name-column">Email</label>
-                            <input type="email" id="first-name-column" class="form-control" name="fname-column" placeholder="Enter your email">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" name="email" placeholder="Email address" required>
                         </div>
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <button class="btn btn-block mb-2 btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-block mb-2 btn-primary" id="forgot_password_btn">Submit</button>
                         </div>
                     </div>
+                    <a href="login">Go to login</a>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- {% endblock %} -->
-<script src="assets/js/feather-icons/feather.min.js"></script>
-    <script src="assets/js/app.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/vendors/sweetalert2/package/dist/sweetalert2.min.js"></script>
-    <script src="assets/js/scripts.js"></script>
+<?php include("includes/footer.php");?>
 </body>
 
 </html>

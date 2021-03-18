@@ -1172,7 +1172,114 @@ $(document).ready(function(){
 					$('#register_submit_btn').text('Submit');
 				}
 			}
-		})
+		});
+	});
+
+	// Badmus
+	$("#update_profile_form").submit(function(e){
+		e.preventDefault();
+		$("#update_profile_btn").attr('disabled', true);
+		$("#update_profile_btn").text('Please wait');
+
+		$.ajax({
+			url:"ajax/user_update_profile.php",
+			method: "POST",
+			data: $(this).serialize(),
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "User profile has been updated successfully",
+                        icon: "success",
+                    });
+					$('#update_profile_btn').attr('disabled', false);
+					$('#update_profile_btn').text('Update Profile');
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					$('#update_profile_btn').attr('disabled', false);
+					$('#update_profile_btn').text('Update Profile');
+				}
+			}
+		});
+	});
+
+	// Badmus
+	$("#forgot_password_form").submit(function(e){
+		e.preventDefault();
+		$("#forgot_password_btn").attr('disabled', true);
+		$("#forgot_password_btn").text('Please wait');
+
+		let url = "ajax/forgot_password.php";
+
+		$.ajax({
+			url:url,
+			method: "GET",
+			data: $(this).serialize(),
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Password reset link has been sent to your email",
+                        icon: "success",
+                    });
+					$('#forgot_password_btn').attr('disabled', false);
+					$('#forgot_password_btn').text('Submit');
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					$('#forgot_password_btn').attr('disabled', false);
+					$('#forgot_password_btn').text('Submit');
+				}
+			}
+		});
+	});
+
+	// Badmus
+
+	$("#password_reset_form").submit(function(e){
+		e.preventDefault();
+		$("#forgot_password_btn").attr('disabled', true);
+		$("#forgot_password_btn").text('Please wait');
+
+		let url = "ajax/reset_password.php";
+
+		$.ajax({
+			url:url,
+			method: "GET",
+			data: $(this).serialize(),
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Password has been reset successfully",
+                        icon: "success",
+                    });
+					$('#forgot_password_btn').attr('disabled', false);
+					$('#forgot_password_btn').text('Submit');
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					$('#forgot_password_btn').attr('disabled', false);
+					$('#forgot_password_btn').text('Submit');
+				}
+			}
+		});
 	});
 	// Insurance 
 

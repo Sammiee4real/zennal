@@ -23,26 +23,6 @@ if(isset($_SESSION['user'])){
 
 <body>
 
-<div id="success_toast" class="toast-box toast-center">
-    <div class="in">
-        <ion-icon name="checkmark-circle" class="text-success"></ion-icon>
-        <div class="text" id="success_message">
-            
-        </div>
-    </div>
-    <button type="button" class="btn btn-sm btn-text-light close-button">CLOSE</button>
-</div>
-
-<div id="error_toast" class="toast-box toast-center bg-danger">
-    <div class="in">
-        <ion-icon name="close-circle" class="text-white"></ion-icon>
-        <div class="text" id="error_message">
-            
-        </div>
-    </div>
-    <button type="button" class="btn btn-sm btn-text-light close-button">OK</button>
-</div>
-
 <div id="auth">
         
 <div class="container">
@@ -55,6 +35,18 @@ if(isset($_SESSION['user'])){
                         <h3>Sign In</h3>
                     </div>
                     <form id="login_form" method="post">
+                    <?php
+                    if (isset($_SESSION['error'])) {
+                    ?>
+                        <div class="alert alert-warning my-2" role="alert">
+                            <?php 
+                            echo $_SESSION['error']; 
+                            unset($_SESSION['error']);
+                            ?>
+                        </div>  
+                   <?php
+                   }
+                   ?>
                         <div class="form-group position-relative has-icon-left">
                             <label for="email">Email</label>
                             <div class="position-relative">
