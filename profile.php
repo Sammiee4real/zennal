@@ -35,9 +35,9 @@
                         <p><?php echo $user['email'];?></p>
                     </div>
                     <?php 
-                    if ($user['address'] === null || $user['dob'] === null || $user['gender'] === null || 
-                        $user['marital_status'] === null || $user['employment_status'] === null || 
-                        $user['occupation'] === null) 
+                    if ($user['address'] == null || $user['dob'] == null || $user['gender'] == null || 
+                        $user['marital_status'] == null || $user['employment_status'] == null || 
+                        $user['occupation'] == null) 
                     {
                     ?>
                     <div class="container">
@@ -51,77 +51,63 @@
                     <div class="card-content">
                         <div class="card-body">
 
-                            <form class="form" action="complete_order.php">
+                            <form class="form" id="update_profile_form" method="post">
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="address">Contact address</label>
-                                            <textarea name="address" class="form-control" id="address" cols="30" rows="3"><?php echo $user['address'];?></textarea>
+                                            <textarea name="address" class="form-control" id="address" cols="30" rows="3"><?php echo $user['address'] != null ? $user['address'] : 'Enter address';?></textarea>
                                         </div>
 
                                         <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Select vehicle type</option>
-                                                <option>Motorcycle/Tricycle</option>
-                                                <option>Saloon Car - Med (1.4-1.9L) e.g. Picanto, Corolla, Almera</option>
-                                                <option>Saloon Car - Maxi (1.4-1.9L) e.g. Camry, Benz, Accord</option>
-                                                <option>SUV/Jeep/Bus/Pick-up</option>
-                                                <option>Coaster Bus</option>
-                                                <option>Mini Trucks/ Trucks 15 Tons (Tippers)</option>
-                                                <option>Trucks 20 Tons (6-10 Tyres)</option>
-                                                <option>Trucks 30 Tons (10+ Tyres)</option>
+                                            <label for="dob">Date of Birth</label>
+                                            <input type="date" id="dob" class="form-control" value="<?php echo $user['dob'] ?? null;?>" name="dob">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="gender">Gender:&nbsp;</label>
+                                            <input type="radio" id="male" class="form-check-input" name="gender" value="m" <?php echo $user['gender'] === 'm' ? 'checked' : null;?>>
+                                            <label class="form-check-label" for="male">
+                                                Male
+                                            </label>
+                                            <input type="radio" id="female" class="form-check-input" name="gender" value="f" <?php echo $user['gender'] === 'f' ? 'checked' : null;?>>
+                                            <label class="form-check-label" for="female">
+                                                Female
+                                            </label>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="marital_status">Marital Status</label>
+                                            <select class="form-select" name="marital_status">
+                                                <option>Select Status</option>
+                                                <option <?php if($user['marital_status'] === 'single') echo 'selected';?> value="single">Single</option>
+                                                <option <?php if($user['marital_status'] === 'engaged') echo 'selected';?> value="engaged">Engaged</option>
+                                                <option <?php if($user['marital_status'] === 'married') echo 'selected';?> value="married">Married</option>
+                                                <option <?php if($user['marital_status'] === 'divorced') echo 'selected';?> value="divorced">Divorced</option>
+                                                <option <?php if($user['marital_status'] === 'widow') echo 'selected';?> value="widow">Widow</option>
+                                                <option <?php if($user['marital_status'] === 'widower') echo 'selected';?> value="widower">Widower</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Vehicle make</option>
+                                            <label for="employment_status">Employment Status</label>
+                                            <select class="form-select" name="employment_status">
+                                                <option>Select Status</option>
+                                                <option <?php if($user['employment_status'] === 'employed') echo 'selected';?> value="employed">Employed</option>
+                                                <option <?php if($user['employment_status'] === 'unemployed') echo 'selected';?> value="unemployed">Unemployed</option>
+                                                <option <?php if($user['employment_status'] === 'nysc') echo 'selected';?> value="nysc">NYSC</option>
+                                                <option <?php if($user['employment_status'] === 'self_employed') echo 'selected';?> value="self_employed">Self Employed</option>
                                             </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Select Vehicle  model</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Select  year of make</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Registration number/Plate number" name="column">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Engine number (optional)" name="Vehicle-column">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" id="chasis" class="form-control" placeholder="Enter Chasis number" name="Vehicle">
                                         </div>
                                         
-                                         <div class="form-group">
-                                            <input type="text" id="chasis" class="form-control" placeholder="Name on Vehicle License" name="Vehicle">
-                                        </div>
-                               
                                         <div class="form-group">
-                                            <select name="thename" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
-                                                <option>Insurance type</option>
-                                                <option>3rd Party Insurance</option>
-                                                <option>Comprehensive Insurance</option>
-                                                <option>(No Insurance)</option>
-                                            </select>
+                                            <label for="occupation">Occupation</label>
+                                            <input type="text" id="occupation" class="form-control" placeholder="Occupation" name="occupation" value="<?php echo $user['occupation'] ?? null;?>">
                                         </div>
-                            <div id="bar">
-                                 <div class="form-group">
-                                   <select class="form-select">
-                                                <option>Select Plan</option>
-                                                <option> Bronze</option>
-                                                <option> Silver</option>
-                                            </select>
-                                </div>
+                                        
+                                    </div>
                             </div>
-                 </div>
-           </div>
                         <div class="col-12 d-flex justify-content-center">
-                            <button type="submit" class="btn btn-primary mr-1 mb-1">Update Profile</button>
+                            <button type="submit" id="update_profile_btn" class="btn btn-primary mr-1 mb-1">Update Profile</button>
                         </div>
                         
                         </form>

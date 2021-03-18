@@ -406,6 +406,89 @@ function send_verification_link($user){
   }
 }
 
+// Badmus
+function update_user_profile($post){
+  global $dbc;
+
+  $address = secure_database($post["address"]);
+  $dob = secure_database($post["dob"]);
+  $gender = strtolower(secure_database($post["gender"]));
+  $marital_status = strtolower(secure_database($post["marital_status"]));
+  $employment_status = strtolower(secure_database($post["employment_status"]));
+  $occupation = secure_database($post["occupation"]);
+
+  $user_id = $_SESSION['user']['unique_id'];
+
+  $sql = "UPDATE `users` SET `address`='$address', `dob`='$dob', `gender`='$gender', `marital_status`='$marital_status', `employment_status`='$employment_status', `occupation`='$occupation' WHERE `unique_id`='$user_id'";
+
+  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+  if ($exe) {
+    return json_encode(array("status"=>1, "msg"=>"success"));
+  }
+}
+
+// Badmus
+function forgot_password($data){
+
+  $email = $data['email'];
+
+  if (user_exists($email) !== true) {
+    return json_encode(array("status"=>0, "msg"=>"Unknown email"));
+  }
+  else{
+    $get_user = get_one_row_from_one_table('users', 'email', $email);
+    $unique_id = base64_encode($get_user['unique_id']);
+
+    $actual_link = "http://$_SERVER[HTTP_HOST]"."/reset_password?unique_id=$unique_id";
+
+    $email_subject = 'Password Reset Link';
+
+    $content = '<p>Please click the link below to reset your password</p>';
+    $content .= '<p>'.$actual_link.'</p>';
+    $content .= 'Thank you';
+    
+    if(email_function($email, $email_subject, $content)){
+      return json_encode(array("status"=>1));
+    }else{
+      return json_encode(array("status"=>0, "msg"=>"Password reset link not sent"));
+    }
+  }
+}
+
+// Badmus
+function reset_password($data){
+  global $dbc;
+  
+  $password = secure_database($data['password']);
+  $confirm_password = secure_database($data['cpassword']);
+  $unique_id = secure_database($data['unique_id']);
+  
+  if($password == "" || $confirm_password == ""){
+    return json_encode(array("status"=>0, "msg"=>"Password fields are required"));
+  }
+  else if ($password !== $confirm_password){
+    return json_encode(array("status"=>0, "msg"=>"Passwords do not match"));
+  }
+  else if (strlen($password) < 8) {
+    return json_encode(array("status"=>0, "msg"=>"Your Password Must Contain At Least 8 Characters!"));
+  }
+  else if($unique_id == null){
+    return json_encode(array("status"=>0, "msg"=>"Failed resetting password"));
+  }
+
+  $enc_password = md5($password);
+  $sql = "UPDATE `users` SET `status` = 1, `password` = '$enc_password' WHERE `unique_id` = '$unique_id'";
+  $query = mysqli_query($dbc, $sql);
+
+  if($query){
+    return json_encode(array("status"=>1, "msg"=>"Password has been reset successfully"));
+  }
+  else{
+    return json_encode(array("status"=>0, "msg"=>"Failed resetting password"));
+  }
+
+}
+
 function insurance_packages(){
   global $dbc;
   $sql = "SELECT * FROM insurance_packages";
@@ -2830,6 +2913,24 @@ function add_referral($referrer_id, $referred_id, $referral_for, $amount_paid, $
       echo json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
     }
   }
+}
+
+function get_one_row_from_one_table($table,$param,$value){
+  global $dbc;
+
+  $table = secure_database($table);
+  $param = secure_database($param);
+  $value = secure_database($value);
+  $sql = "SELECT * FROM `$table` WHERE `$param` = '$value'";
+  $query = mysqli_query($dbc, $sql);
+  $num = mysqli_num_rows($query);
+ if($num > 0){
+      $row = mysqli_fetch_array($query);
+      return $row;
+    }
+    else{
+       return null;
+    }
 }
 
 function submit_withdrawal_request($user_id, $amount){
