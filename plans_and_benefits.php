@@ -10,14 +10,13 @@
     </div>
 
     <div class="row">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb breadcrumb-right">
-                          <li class="breadcrumb-item"><a href="vehicle_insurance.php">Insurance Provider
-</a></li>
-                            <li class="breadcrumb-item"><a href="">Old Mutual</a></li>
-                        </ol>
-                    </nav>
-        </div>
+      <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-right">
+            <li class="breadcrumb-item"><a href="compare_insurance.php">Compare Insurance</a></li>
+            <li class="breadcrumb-item"><a href="#">Old Mutual</a></li>
+        </ol>
+      </nav>
+    </div>
 
     <section class="section mt-1">
       <div class="row">

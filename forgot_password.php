@@ -1,6 +1,3 @@
-<!-- {% extends 'layouts/master-auth.html' %}
-{%  set title = "Forgot Password" %}
-{% block content %} -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,5 +44,4 @@
 </div>
 <?php include("includes/footer.php");?>
 </body>
-
 </html>
