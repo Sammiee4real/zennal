@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$data = ['package_name'];
 	//$unique_id = $_POST['product_id'];
 	$package_name = $_POST['package_name'];

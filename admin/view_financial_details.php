@@ -1,6 +1,6 @@
 <?php
 //session_start();
-include("../config/database_functions.php");
+include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $user_id = $_GET['user_id'];

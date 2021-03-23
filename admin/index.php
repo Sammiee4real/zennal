@@ -1,6 +1,6 @@
 <?php
 //session_start();
-  include("../config/database_functions.php");
+  include("../config/functions.php");
   include("inc/header.php");
   $admin_id =$_SESSION['admin_id'];
   $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');

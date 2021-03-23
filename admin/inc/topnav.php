@@ -49,7 +49,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $admin_details['fullname']?></span>
                 <div class="image-wrapper">
-                  <img src="../assets/img/user.jpg" alt="image" class="img-profile rounded-circle">
+                  <img src="../assets/images/profile.png" alt="image" class="img-profile rounded-circle">
                 </div>
               </a>
               <!-- Dropdown - User Information -->

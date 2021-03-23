@@ -1,0 +1,33 @@
+[24-Nov-2020 16:55:08 Africa/Lagos] PHP Fatal error:  Uncaught Error: Call to undefined function update_existing_row_with_mult_params() in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/edit_insurance_pricing_plan.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/edit_insurance_pricing_plan.php on line 8
+[04-Dec-2020 10:01:24 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 667
+[04-Dec-2020 10:01:24 Africa/Lagos] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 668
+[04-Dec-2020 10:01:24 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 10:01:24 Africa/Lagos] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 10:05:59 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 667
+[04-Dec-2020 10:05:59 Africa/Lagos] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 668
+[04-Dec-2020 10:05:59 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 10:05:59 Africa/Lagos] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 10:07:36 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 667
+[04-Dec-2020 10:07:36 Africa/Lagos] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 668
+[04-Dec-2020 10:07:36 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 10:07:36 Africa/Lagos] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 10:09:18 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 667
+[04-Dec-2020 10:09:18 Africa/Lagos] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 668
+[04-Dec-2020 10:09:18 Africa/Lagos] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 10:09:18 Africa/Lagos] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, null given in /home/stagingcloudware/zennal.staging.cloudware.ng/config/database_functions.php on line 675
+[04-Dec-2020 12:48:45 Africa/Lagos] PHP Fatal error:  Uncaught Error: Call to undefined function add_insurance_benefit() in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/ajax_add_insurance_benefit.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/ajax_add_insurance_benefit.php on line 5
+[04-Jan-2021 16:12:46 Africa/Lagos] PHP Fatal error:  Uncaught Error: Call to undefined function htmlentitees() in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/ajax_add_insurance_benefit.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/ajax_add_insurance_benefit.php on line 3
+[04-Jan-2021 16:20:13 Africa/Lagos] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_real_escape_string() in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/ajax_add_insurance_benefit.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/ajax_add_insurance_benefit.php on line 3
+[04-Jan-2021 16:22:28 Africa/Lagos] PHP Warning:  mysqli_real_escape_string() expects exactly 2 parameters, 1 given in /home/stagingcloudware/zennal.staging.cloudware.ng/admin/ajax_admin/ajax_add_insurance_benefit.php on line 3

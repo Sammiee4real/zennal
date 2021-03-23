@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$document_id = $_POST['document_id'];
 	$document_url = $_POST['document_url'];
 	$delete_document = delete_a_row('admin_document','unique_id',$document_id);

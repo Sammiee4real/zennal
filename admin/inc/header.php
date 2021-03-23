@@ -29,8 +29,8 @@
 <?php
     @session_start();
     if(!isset($_SESSION['admin_id'])){
-        header("Location: login_admin.php");
-      // echo "<script>window.location.href = 'login_user.php'</script>";
+        //header("Location: login_admin.php");
+      echo "<script>window.location.href = 'login_admin.php'</script>";
     }
     //echo "<script>window.location.href = 'login_user.php'</script>";
 ?>

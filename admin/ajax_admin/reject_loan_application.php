@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$data = ["approval_status"];
 	$unique_id = $_POST['unique_id'];
 	$get_user_id = get_one_row_from_one_table_by_id('personal_loan_application','unique_id', $unique_id, 'date_created');

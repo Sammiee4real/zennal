@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../../config/database_functions.php');
+require_once('../../config/functions.php');
     $password = $_POST['new_password'];
 
     $hash = md5($password);

@@ -7,7 +7,7 @@
           <i class="fas fa-laugh-wink"></i>
         </div>
         <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div> -->
-        <img src="../assets/img/logozennal.PNG" class="img-fluid">
+        <img src="../assets/images/logozennal.png" class="img-fluid">
       </a>
 
       <!-- Divider -->
@@ -92,8 +92,10 @@
             <a class="collapse-item" href="add_vendor.php">Add Vendors</a>
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Insurance Setting</h6>
-            <a class="collapse-item" href="set_insurance_packages.php">Add Insurance Packages</a>
-            <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plans</a>
+            <a class="collapse-item" href="set_insurance_packages.php">Add Insurance Package</a>
+            <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plan</a>
+            <a class="collapse-item" href="add_insurance_category.php">Add Insurance Category</a>
+            <a class="collapse-item" href="add_insurance_benefit.php">Add Insurance Benefit</a>
           </div>
         </div>
       </li>

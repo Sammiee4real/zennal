@@ -1,6 +1,6 @@
 <?php 
   // session_start();
-  require_once('../../config/database_functions.php');
+  require_once('../../config/functions.php');
 
   $post = $_POST;
 
