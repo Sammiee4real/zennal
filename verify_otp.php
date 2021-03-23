@@ -1,4 +1,3 @@
-
 <?php include("includes/sidebar.php");?>
 <div id="main">
 
@@ -81,7 +80,7 @@
 
                             <div class="form-group boxed">
                                 <div class="input-wrapper">
-                                    <input type="text" class="form-control verify-input" name="otp" id="otp" placeholder="••••••" maxlength="6">
+                                    <input type="password" class="form-control verify-input" name="otp" id="otp" placeholder="••••••" maxlength="6">
                                 </div>
                             </div>
 

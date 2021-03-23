@@ -4,7 +4,7 @@ $table = "";
 $app_name = 'ZENNAL';
 require_once("db_connect.php");
 require_once("tcpdf/tcpdf.php");
-// require_once('generic_functions.php');
+require_once('generic_functions.php');
 // require_once("config_settings.php");
 global $dbc;
 
@@ -1511,18 +1511,36 @@ function secure_database($value){
 function save_employment_details($user_id, array $employment_array){
   global $dbc;
   $user_id = secure_database($user_id);
+  $get_user = get_one_row_from_one_table_by_id('users', 'unique_id', $user_id, 'registered_on');
   $unique_id = unique_id_generator($user_id);
-  $employment_status = $employment_array['employment_status'];
-  $name_of_organization = $employment_array['name_of_organization'];
-  $contact_address_of_organization = $employment_array['contact_address_of_organization'];
-  $employment_type = $employment_array['employment_type'];
-  $job_title = $employment_array['job_title'];
-  $employment_duration = $employment_array['employment_duration'];
-  $years_of_experience = $employment_array['years_of_experience'];
-  $industry_type = $employment_array['industry_type'];
-  $monthly_salary = $employment_array['monthly_salary'];
-  $salary_payday = $employment_array['salary_payday'];
-  $official_email_address = $employment_array['official_email_address'];
+  $employment_status = isset($employment_array['employment_status']) ? $employment_array['employment_status'] : '';
+  $name_of_organization = isset($employment_array['name_of_organization'])? $employment_array['name_of_organization'] : '';
+  $contact_address_of_organization = isset($employment_array['contact_address_of_organization'])? $employment_array['contact_address_of_organization'] : '';
+  $employment_type = isset($employment_array['employment_type'])? $employment_array['employment_type'] : '';
+  $job_title = isset($employment_array['job_title'])? $employment_array['job_title'] : '';
+  $employment_duration = isset($employment_array['employment_duration'])? $employment_array['employment_duration'] : '';
+  $years_of_experience = isset($employment_array['years_of_experience'])? $employment_array['years_of_experience'] : '';
+  $industry_type =isset( $employment_array['industry_type'])? $employment_array['industry_type'] : '';
+  $monthly_salary = isset($employment_array['monthly_salary'])? $employment_array['monthly_salary'] : '';
+  $salary_payday = isset($employment_array['salary_payday'])? $employment_array['salary_payday'] : '';
+  $official_email_address = isset($employment_array['official_email_address']) ? $employment_array['official_email_address'] : '';
+  $education = isset($employment_array['education'])? $employment_array['education'] : '';
+  $home_address = isset($employment_array['home_address'])? $employment_array['home_address'] : '';
+  $city = isset($employment_array['city'])? $employment_array['city'] : '';
+  $state = isset($employment_array['state'])? $employment_array['state'] : '';
+  $residence_type = isset($employment_array['residence_type'])? $employment_array['residence_type'] : '';
+  $years_of_stay = isset($employment_array['years_of_stay'])? $employment_array['years_of_stay'] : '';
+  $marital_status = isset($employment_array['marital_status'])? $employment_array['marital_status'] : '';
+  $name_of_spouse = isset($employment_array['name_of_spouse'])? $employment_array['name_of_spouse'] : '';
+  $phone_of_spouse = isset($employment_array['phone_of_spouse'])? $employment_array['phone_of_spouse'] : '';
+  $no_of_kids = isset($employment_array['no_of_kids']) ? $employment_array['no_of_kids'] : '';
+  $professional_category = isset($employment_array['professional_category'])? $employment_array['professional_category'] : '';
+  $professional_subcategory = isset($employment_array['professional_subcategory'])? $employment_array['professional_subcategory'] : '';
+  $cac_number = isset($employment_array['cac_number']) ? $employment_array['cac_number'] : '';
+  $company_name = isset($employment_array['company_name'])? $employment_array['company_name'] : '';
+  $company_address = isset($employment_array['company_address'])? $employment_array['company_address'] : '';
+  $monthly_income = isset($employment_array['monthly_income'])? $employment_array['monthly_income'] : '';
+  $months_of_stay = isset($employment_array['months_of_stay'])? $employment_array['months_of_stay'] : '';
   $otp = rand(111111, 999999);
   $_SESSION['otp'] = md5($otp);
   $_SESSION['start'] = time();
@@ -1530,18 +1548,55 @@ function save_employment_details($user_id, array $employment_array){
   $subject = 'Email Verification - Zennal';
   $content = "The token for your transaction is ".$otp."<br> Thanks, Regards";
 
-  if($user_id == '' || $unique_id == '' || $employment_status == '' || $name_of_organization == '' || $contact_address_of_organization == '' || $employment_type == '' || $employment_duration == '' || $years_of_experience == '' || $industry_type == '' || $job_title == '' || $monthly_salary == '' || $salary_payday == '' || $official_email_address == ''){
-    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  if($employment_status == 1 || $employment_status == 4 || $employment_status == 5 || $employment_status == 6){
+    if($user_id == '' || $education == '' || $home_address == '' || $city == '' || $state == '' || $residence_type == '' || $years_of_stay == '' || $months_of_stay == '' || $marital_status == '' || $professional_category == '' || $professional_subcategory == '' || $monthly_income == ''){
+      return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+    }
   }
-  else if (!filter_var($official_email_address, FILTER_VALIDATE_EMAIL)) {
-    return json_encode(["status"=>"0", "msg"=>"Please provide a valid E-mail Address"]);
+  else if ($employment_status == 2 || $employment_status == 3) {
+    if($user_id == '' || $unique_id == '' || $employment_status == '' || $name_of_organization == '' || $contact_address_of_organization == '' || $employment_type == '' || $employment_duration == '' || $years_of_experience == '' || $industry_type == '' || $job_title == '' || $monthly_salary == '' || $salary_payday == '' || $official_email_address == ''){
+      return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+    }
+    else if (!filter_var($official_email_address, FILTER_VALIDATE_EMAIL)) {
+      return json_encode(["status"=>"0", "msg"=>"Please provide a valid E-mail Address"]);
+    }
   }
-  else{
+
+  // else{
     $check_row_exist = check_record_by_one_param('user_employment_details', 'user_id', $user_id);
     if($check_row_exist == true){
       $send_mail = email_function($official_email_address, $subject, $content);
-      $update_data_sql = "UPDATE `user_employment_details` SET `employment_status`='$employment_status', `name_of_organization`='$name_of_organization', `contact_address_of_organization`='$contact_address_of_organization', `employment_type`='$employment_type', `employment_duration`='$employment_duration', `years_of_experience`='$years_of_experience', `industry_type`='$industry_type', `job_title`='$job_title', `monthly_salary`='$monthly_salary', `salary_payday`='$salary_payday', `official_email_address`='$official_email_address' WHERE `user_id`='$user_id'";
-      $update_data_query = mysqli_query($dbc, $update_data_sql);
+      $update_data_sql = "UPDATE `user_employment_details` SET 
+      `employment_status`='$employment_status', 
+      `name_of_organization`='$name_of_organization', 
+      `contact_address_of_organization`='$contact_address_of_organization', 
+      `employment_type`='$employment_type', 
+      `employment_duration`='$employment_duration', 
+      `years_of_experience`='$years_of_experience',
+      `industry_type`='$industry_type',
+      `job_title`='$job_title',
+      `monthly_salary`='$monthly_salary',
+      `salary_payday`='$salary_payday', 
+      `official_email_address`='$official_email_address',
+      `education`='$education',
+      `home_address`='$home_address' ,
+      `city`='$city' ,
+      `state`='$state' ,
+      `residence_type`='$residence_type' ,
+      `years_of_stay`='$years_of_stay' ,
+      `months_of_stay`='$months_of_stay' ,
+      `marital_status`='$marital_status' ,
+      `name_of_spouse`='$name_of_spouse' ,
+      `phone_of_spouse`='$phone_of_spouse' ,
+      `no_of_kids`='$no_of_kids' ,
+      `professional_category`='$professional_category',
+      `professional_subcategory`='$professional_subcategory' ,
+      `cac_number`='$cac_number' ,
+      `company_name`='$company_name' ,
+      `company_address`='$company_address' ,
+      `monthly_income`='$monthly_income'    
+      WHERE `user_id`='$user_id'";
+      $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
       if($update_data_query){
         return json_encode(["status"=>"1", "msg"=>"success"]);
       }else{
@@ -1550,7 +1605,37 @@ function save_employment_details($user_id, array $employment_array){
     }
     else{
       $send_mail = email_function($official_email_address, $subject, $content);
-      $insert_data_sql = "INSERT INTO `user_employment_details` SET `unique_id` = '$unique_id', `user_id` = '$user_id',  `employment_status`='$employment_status', `name_of_organization`='$name_of_organization', `contact_address_of_organization`='$contact_address_of_organization', `employment_type`='$employment_type', `employment_duration`='$employment_duration', `years_of_experience`='$years_of_experience', `industry_type`='$industry_type', `monthly_salary`='$monthly_salary', `salary_payday`='$salary_payday', `official_email_address`='$official_email_address', `date_created` = now()";
+      $insert_data_sql = "INSERT INTO `user_employment_details` SET 
+      `unique_id` = '$unique_id', 
+      `user_id` = '$user_id',  
+      `employment_status`='$employment_status', 
+      `name_of_organization`='$name_of_organization',
+      `contact_address_of_organization`='$contact_address_of_organization',
+      `employment_type`='$employment_type', 
+      `employment_duration`='$employment_duration', 
+      `years_of_experience`='$years_of_experience', 
+      `industry_type`='$industry_type', 
+      `monthly_salary`='$monthly_salary', 
+      `salary_payday`='$salary_payday', 
+      `official_email_address`='$official_email_address',
+      `education`='$education',
+      `home_address`='$home_address' ,
+      `city`='$city' ,
+      `state`='$state' ,
+      `residence_type`='$residence_type' ,
+      `years_of_stay`='$years_of_stay' ,
+      `months_of_stay`='$months_of_stay' ,
+      `marital_status`='$marital_status' ,
+      `name_of_spouse`='$name_of_spouse' ,
+      `phone_of_spouse`='$phone_of_spouse' ,
+      `no_of_kidso`='$no_of_kidso' ,
+      `professional_category`='$professional_category',
+      `professional_subcategory`='$professional_subcategory' ,
+      `cac_number`='$cac_number' ,
+      `company_name`='$company_name' ,
+      `company_address`='$company_address' ,
+      `monthly_income`='$monthly_income' 
+      `date_created` = now()";
       $insert_data_query = mysqli_query($dbc, $insert_data_sql);
       if($insert_data_query){
         return json_encode(["status"=>"1", "msg"=>"success"]);
@@ -1558,7 +1643,7 @@ function save_employment_details($user_id, array $employment_array){
         return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
       }
     }
-  }
+  // }
 }
 
 
@@ -1566,7 +1651,7 @@ function save_employment_details($user_id, array $employment_array){
 function verify_otp($otp){
     $now = time();
     if($otp == ''){
-        return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+      return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
         
     }
     else if($now > $_SESSION['expire']){
@@ -1600,7 +1685,7 @@ function verify_otp($otp){
 //    }
 // }
 
-function save_financial_record($user_id, array $financial_details_array, $file_name, $size, $tmpName,$type){
+function save_financial_record($user_id, array $financial_details_array){
   global $dbc;
   $user_id = secure_database($user_id);
   $unique_id = unique_id_generator($user_id);
@@ -1611,21 +1696,19 @@ function save_financial_record($user_id, array $financial_details_array, $file_n
   $bvn = $financial_details_array['bvn'];
   $existing_loan = $financial_details_array['existing_loan'];
   $monthly_repayment = $financial_details_array['monthly_repayment'];
+  $image_path = $financial_details_array['image_path'];
   //$get_user_financial_details = get_one_row_from_one_table_by_id('user_financial_details','user_id', $user_id, 'date_created');
   // $acctno = $financial_details_array['account_number'];
   // $bankcode = $get_user_financial_details['bank_name'];
   //$id_card = $financial_details_array['id_card'];
-  $imgchange = image_upload($file_name, $size, $tmpName, $type);
-  $img_dec = json_decode($imgchange, true);
-  if($user_id == '' || $unique_id == '' || $bank_name == '' || $account_number == '' || $account_type == '' || $bvn == '' || $existing_loan == ''){
+  //$imgchange = image_upload($file_name, $size, $tmpName, $type);
+  //$img_dec = json_decode($imgchange, true);
+  if($user_id == '' || $unique_id == '' || $bank_name == '' || $account_number == '' || $account_type == '' || $bvn == '' || $existing_loan == '' || $image_path == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    if($img_dec['status'] == 0){
-      return json_encode(["status"=>"0", "msg"=>$img_dec['status']]);
-    }
-    else{
-      $image_path = $img_dec['msg'];
+    // else{
+      // $image_path = $img_dec['msg'];
       $check_row_exist = check_record_by_one_param('user_financial_details', 'user_id', $user_id);
       $verify_account_number = validate_acctno($account_number,$bank_name);
       $verify_account_number_decode = json_decode($verify_account_number, true);
@@ -1656,7 +1739,7 @@ function save_financial_record($user_id, array $financial_details_array, $file_n
       }
     }
     }
-  }
+  // }
 }
 
 function loan_calculations($user_id, $loan_package_id, $loan_id){
