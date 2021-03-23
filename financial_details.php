@@ -1,5 +1,9 @@
 
-<?php include("includes/sidebar.php");?>
+<?php include("includes/sidebar.php");
+    $get_financial_details = get_one_row_from_one_table_by_id('user_financial_details','user_id',$user_id, 'date_created');
+    $get_bank_name = list_of_banks();
+    $get_bank_name_decode = json_decode($get_bank_name, true);
+?>
 <div id="main">
 
 <?php include("includes/header.php");?>            
@@ -73,7 +77,7 @@
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="span" for="name1">Bank Name</span>
-                            <select name="bank_name" id="bank_name" class="form-select">
+                            <select name="bank_name" id="bank_name2" class="form-select">
                                 <option value="">Select Bank Name</option>
                                 <?php foreach ($get_bank_name_decode['data'] as $value){ ?>
                                 <option value="<?php echo $value['code']?>"><?php echo $value['name']?></option>
@@ -151,15 +155,16 @@
                         <div class="input-wrapper">
                             <span class="span" for="email1">Upload a Government Issued ID</span>
                              <div class="custom-file-upload">
-                        <input type="file" id="fileuploadInput" accept=".png, .jpg, .jpeg" name="image">
-                        <label for="fileuploadInput">
+                        <input type="file" id="file" accept=".png, .jpg, .jpeg" name="image">
+                        <label for="file">
                             <span>
                                 <strong>
                                     <ion-icon name="cloud-upload-outline"></ion-icon>
-                                    <i>Tap to Upload</i>
+                                    <i id="uploaded_image">Tap to Upload</i>
                                 </strong>
                             </span>
                         </label>
+                        <input type="hidden" name="image_path" id="image_url">
                     </div>
                         </div>
                     </div>
@@ -185,5 +190,52 @@
     
 </script>
 <?php include("includes/footer.php");?>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("select#current_repayment").change(function(){
+            var selected_value = $("select#current_repayment").children("option:selected").val();
+            if(selected_value == 1){
+                $("#current_repayment_amount").css("display", "block");
+            }else{
+                $("#current_repayment_amount").css("display", "none");
+            }
+        });
+    });
+
+    $(document).on('change', '#file', function(){
+        let unique_id3 = "<?php echo $user_id;?>";
+        var property = document.getElementById("file").files[0];
+        var image_name = property.name;
+        var image_size = property.size;
+        var image_extension = image_name.split(".").pop().toLowerCase();
+        if(jQuery.inArray(image_extension, ['png', 'jpg', 'jpeg']) == -1){
+          alert("Invalid Image File");
+          $('#uploaded_image').html("Image Upload failed, please try again");
+        }
+        else if(image_size > 5000000){
+          alert("Image File size is very big");
+          $('#uploaded_image').html("Image Upload failed, please try again");
+        }else{
+          var form_data = new FormData();
+          form_data.append("file", property);
+          form_data.append("unique_id3", unique_id3);
+          $.ajax({
+            url: "upload_image.php",
+            method: "POST",
+            data: form_data,
+            contentType:false,
+            cache:false,
+            processData:false,
+            beforeSend:function(){
+              $('#uploaded_image').html("Image Uploading, please wait...");
+            },
+            success: function(data){
+              $('#uploaded_image').html("Image Uploaded");
+              $('#image_url').val(data);
+            }
+          })
+        }
+    });
+</script>
             
 

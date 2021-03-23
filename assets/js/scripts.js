@@ -29,25 +29,34 @@ $(document).ready(function(){
 	}
 
 
-	$("#submit_employment_details").click(function(e){
+	$(".submit_employment_details").click(function(e){
 		e.preventDefault();
 		//toastbox('toast-11', 5000);
 		$.ajax({
-			url:"ajax/submit_employment_detail.php",
+			url:"ajax/submit_employment_details.php",
 			method: "POST",
 			data: $("#submit_employment_details_form").serialize(),
+			beforeSend: function(){
+				$('.submit_employment_details').attr('disabled', true);
+				$('.submit_employment_details').text('Please wait...');
+			},
 			success: function(data){
 				if(data == "success"){
-					$("#success_message").empty();
-					$("#success_message").html("Your employment details have been successfully submitted and a verification code has been sent to the provided email address");
-					toastbox('success_toast', 6000);
-					setTimeout( function(){ window.location.href = "verify_otp.php";}, 6000);
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your employment details have been successfully submitted and a verification code has been sent to your email address",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "verify_otp";}, 5000));
 				}
 				else{
-					$("#error_message").empty();
-					$("#error_message").html("Error! " + data);
-					toastbox('error_toast', 6000);
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
 				}
+				$('.submit_employment_details').attr('disabled', false);
+				$('.submit_employment_details').text('Next');
 			}
 		})
 	});
@@ -60,18 +69,27 @@ $(document).ready(function(){
 			url:"ajax/verify_otp.php",
 			method: "POST",
 			data: $("#verify_otp_form").serialize(),
+			beforeSend: function(){
+				$("#verify_otp").attr("disabled", true);
+				$("#verify_otp").text("Please wait...");
+			},
 			success: function(data){
 				if(data == "success"){
-					$("#success_message").empty();
-					$("#success_message").html("Success! Your Email Address has been verified, you will be redirected soon");
-					toastbox('success_toast', 6000);
-					setTimeout( function(){ window.location.href = "financial_records.php";}, 6000);
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your Email Address has been verified, you will be redirected soon",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "financial_details";}, 5000));
 				}
 				else{
-					$("#error_message").empty();
-					$("#error_message").html("Error! " + data);
-					toastbox('error_toast', 6000);
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
 				}
+				$("#verify_otp").attr("disabled", false);
+				$("#verify_otp").text("Verify");
 			}
 		})
 	});
@@ -1126,8 +1144,8 @@ $(document).ready(function(){
                         icon: "error",
                     });
 					// location.reload();
-					$('#login_submit_btn').attr('disabled', false);
-					$('#login_submit_btn').text('Login');
+					// $('#login_submit_btn').attr('disabled', false);
+					// $('#login_submit_btn').text('Login');
 				}
 				$('#login_submit_btn').attr('disabled', false);
 				$('#login_submit_btn').text('Submit');
@@ -1591,6 +1609,37 @@ $(document).ready(function(){
 				}
 				$('#withdraw_button').attr('disabled', false);
 				$('#withdraw_button').text('Submit Withdrawal');
+			}
+		})
+	});
+
+	$("#submit_financial_details").click(function(e){
+		e.preventDefault();
+		$('#submit_financial_details').attr('disabled', true);
+		$('#submit_financial_details').text('Please wait...');
+		$.ajax({
+			url:"ajax/submit_financial_details.php",
+			method: "POST",
+			data: $("#submit_financial_details_form").serialize(),
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've submitted your financial details",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "loan_purpose";}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					// location.reload();
+				}
+				$('#submit_financial_details').attr('disabled', false);
+				$('#submit_financial_details').text('Submit');
 			}
 		})
 	});
