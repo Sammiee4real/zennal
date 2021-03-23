@@ -91,35 +91,69 @@ function get_rows_form_table($table){
   return $data;     
 }
 
-function add_insurance_benefit($benefit_name, $data){
+function get_rows_form_table_with_one_params($table, $param, $value){
+  global $dbc;
+  $table = secure_database($table);
+  $sql= "SELECT * FROM `$table` WHERE `$param` = '$value'";
+  $query = mysqli_query($dbc, $sql);
+  $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
+  return $data;     
+}
+
+function add_insurance_benefit($data){
     
     global $dbc;
     
-    
-    $sql = "SELECT * FROM insurance_benefits WHERE benefit = '$benefit_name'";
-    
-    $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
-    
-    if(mysqli_num_rows($exe) >= 1){
-        return json_encode(array("status"=>0, "msg"=>"Benefit exist"));
-    }
-    
-    $benefit_unique_id = unique_id_generator($benefit_name);
-    
-    $sql = "INSERT INTO insurance_benefits (unique_id, benefit, datetime)
-            VALUES ('$benefit_unique_id', '$benefit_name', now())";
+    $insurer_id = $data['insurer_id'];
+
+    $sql = "SELECT unique_id FROM insurance_plans WHERE `insurer_id` = '$insurer_id'";
     
     $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
     
-    unset($data["benefit_name"]);
-    
-    foreach($data as $k => $v){
-        $unique_id = unique_id_generator($k);
-        $sql = "INSERT INTO insurance_info (unique_id, benefit_id, category_id, description, datetime)
-            VALUES ('$unique_id', '$benefit_unique_id', '$k', '$v', now())";
-        $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    $insurance_plans = mysqli_fetch_all($exe);
+
+    foreach($insurance_plans as $plan_in_arr){
+      $actual_plan = $plan_in_arr[0];
+      $status = "status_".$actual_plan;
+      $narration = "narr_".$actual_plan;
+      if(array_key_exists($status, $data) && array_key_exists($narration, $data)){
+        // print(1);
+        // die();
+        $status_val = intval($data[$status]);
+        $narr_val = $data[$narration];
+        $benefit = $data['benefit_name'];
+        $plan_id = $actual_plan;
+        $insurer_id = $data['insurer_id'];
+
+        $unique_id = unique_id_generator($narration);
+
+        $sql = "INSERT INTO `insurance_benefits` SET `unique_id` = '$unique_id', `benefit` = '$benefit', `plan_id` = '$plan_id', `status` = '$status_val', `description` = '$narr_val', `insurer_id` = '$insurer_id', `datetime` = now()";
+
+        mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+      }
     }
     return json_encode(array("status"=>1));
+
+    // if(mysqli_num_rows($exe) >= 1){
+    //     return json_encode(array("status"=>0, "msg"=>"Benefit exist"));
+    // }
+    
+    // $benefit_unique_id = unique_id_generator($benefit_name);
+    
+    // $sql = "INSERT INTO insurance_benefits (unique_id, benefit, datetime)
+    //         VALUES ('$benefit_unique_id', '$benefit_name', now())";
+    
+    // $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    
+    // unset($data["benefit_name"]);
+    
+    // foreach($data as $k => $v){
+    //     $unique_id = unique_id_generator($k);
+    //     $sql = "INSERT INTO insurance_info (unique_id, benefit_id, category_id, description, datetime)
+    //         VALUES ('$unique_id', '$benefit_unique_id', '$k', '$v', now())";
+    //     $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    // }
+    // return json_encode(array("status"=>1));
 }
 
 
@@ -486,6 +520,25 @@ function reset_password($data){
   else{
     return json_encode(array("status"=>0, "msg"=>"Failed resetting password"));
   }
+
+}
+
+
+// Badmus 
+function add_insurer($insurer_name, $file_name){
+  global $dbc;
+
+  
+
+      $unique_id = unique_id_generator($insurer_name);
+      $sql = "INSERT INTO insurers SET `unique_id` = '$unique_id', `name` = '$insurer_name', `image` = '$file_name', `datetime` = now()";
+
+      if(mysqli_query($dbc, $sql)){
+        return json_encode(array("status"=>1, "msg"=>"Insurer added successfully"));
+      }else{
+        return json_encode(array("status"=>0, "msg"=>"Insurer data cannot be saved"));
+      }
+      
 
 }
 
@@ -889,17 +942,24 @@ function update_insurance($data){
   return $res;
 }
 
-function insert_insurance_category($category_name, $category_rate){
+function insert_insurance_plan($insurer_id, $plan_name, $plan_rate){
     global $dbc;
-    $sql = "SELECT * FROM insurance_categories WHERE category_name ='$category_name'";
+
+    if($insurer_id == null || $plan_id = null || $plan_rate == null){
+      return json_encode(array("status"=>0, "msg"=>"All fields are required"));
+    }
+
+    $sql = "SELECT * FROM insurance_plans WHERE `plan_name` = '$plan_name' AND `insurer_id` = '$insurer_id'";
     
     $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+
     if (mysqli_num_rows($exe) >= 1){
-        return json_encode(array("status"=>0, "msg"=>"Category exist"));
+        return json_encode(array("status"=>0, "msg"=>"Plan already exist"));
     }
-    $uniqueid = unique_id_generator($category_name);
-    $sql = "INSERT INTO insurance_categories (unique_id, category_name, category_percentage, datetime)
-            VALUES ('$uniqueid', '$category_name', '$category_rate', now())";
+    $uniqueid = unique_id_generator($plan_name);
+
+    $sql = "INSERT INTO insurance_plans (`unique_id`, `plan_name`, `insurer_id`, `plan_percentage`, `datetime`)
+            VALUES ('$uniqueid', '$plan_name', '$insurer_id', '$plan_rate', now())";
             
     $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
     $res = json_encode(array("status"=>1));

@@ -2,11 +2,8 @@
 //session_start();
 include("../config/functions.php");
 include("inc/header.php");
-$admin_id =$_SESSION['admin_id'];
+$admin_id = $_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-$get_insurers = get_rows_form_table('insurers');
-//$get_users_employment = get_one_row_from_one_table_by_id('user_employment_details','user_id', $user_id, 'date_created');
-//$get_loan_category = get_rows_from_one_table('loan_category','date_created');
 ?>
 
 <body id="page-top">
@@ -29,37 +26,26 @@ $get_insurers = get_rows_form_table('insurers');
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Insurance</h1>
+          <h1 class="h3 mb-2 text-gray-800">Insurerance</h1>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Add Insurance Plan</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Add New Insurer</h6>
             </div>
             <div class="card-body">
-              <form method="post" id="add_insurance_plan_form">
+              <form method="post" id="add_insurer_form" enctype="multipart/form-data">
                 <div class="row justify-content-center">
                   <div class="col-md-8 mt-3">
-                    <label>Insurer</label>
-                    <select type="text" name="insurer" class="form-control" required>
-                      <option value="">Select Insurer</option>
-                      <?php
-                        foreach($get_insurers as $insurer){
-                          echo "<option value='".$insurer['unique_id']."'>".$insurer['name']."</option>";
-                        }
-                      ?>
-                    </select>
+                    <label>Insurer Name</label>
+                    <input type="text" name="insurer_name" class="form-control">
                   </div>
                   <div class="col-md-8 mt-3">
-                    <label>Plan name</label>
-                    <input type="text" name="plan_name" class="form-control" placeholder="Enter name" required>
-                  </div>
-                  <div class="col-md-8 mt-3">
-                    <label>Plan rate</label>
-                    <input type="text" name="plan_rate" class="form-control" placeholder="%" required>
+                    <label>Insurer Image</label>
+                    <input type="file" name="insurer_image" class="form-control">
                   </div>
                    <div class="col-md-8 mt-3">
-                    <button type="submit" class="btn btn-secondary" id="add_insurance_plan">Create plan</button>
+                    <button type="submit" class="btn btn-secondary" id="submit_insurer_form">Submit</button>
                   </div>
                 </div>
               </form>
@@ -67,11 +53,8 @@ $get_insurers = get_rows_form_table('insurers');
           </div>
 
         </div>
-        <!-- /.container-fluid -->
 
       </div>
-      <!-- End of Main Content -->
-
       <!-- Footer -->
       <?php include("inc/footer.php");?>
       <!-- End of Footer -->
