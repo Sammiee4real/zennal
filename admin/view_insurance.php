@@ -1,6 +1,6 @@
 <?php
 //session_start();
-include("../config/database_functions.php");
+include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
@@ -46,6 +46,7 @@ $get_insurance = get_rows_from_one_table('insurance','datetime');
                     <th scope="col">Fullname</th>
                     <th scope="col">Insurance Package</th>
                     <th scope="col">Insurance Pricing Plan</th>
+                    <th scope="col">Insurance Payment Plan</th>
                     <th scope="col">Date of Application</th>
 
                   </tr>
@@ -65,6 +66,9 @@ $get_insurance = get_rows_from_one_table('insurance','datetime');
                         </td>
                         <td>
                             <?php echo $get_insurance_pricing['pricing_type'];?>
+                        </td>
+                        <td>
+                          <?php echo $value['insurance_payment_plan']." Months";?>
                         </td>
                         <td>
                           <?php echo $value['datetime'];?>

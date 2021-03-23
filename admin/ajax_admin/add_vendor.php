@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$name = $_POST['name'];
 	$description = $_POST['description'];
 	$website_url = $_POST['website_url'];

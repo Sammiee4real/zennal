@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$no_of_month = $_POST['no_of_month'];
 	$loan_category = $_POST['loan_category'];
 	$interest_per_month = $_POST['interest_per_month'];

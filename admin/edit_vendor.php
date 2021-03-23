@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$data = ['name', 'description', 'website_url'];
 	$unique_id = $_POST['vendor_id'];
 	$edit_vendor = update_db($unique_id, $data);

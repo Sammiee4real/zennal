@@ -1,6 +1,6 @@
 <?php
 //session_start();
-include("../config/database_functions.php");
+include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
@@ -46,7 +46,7 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                     
                     <th scope="col">Package Name</th>
                     <th scope="col">Date Created</th>
-                    <th>Action</th>
+                    <th colspan = 2>Action</th>
 
                   </tr>
                 </thead>
@@ -62,6 +62,11 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                         </td>
                         <td>
                           <button class="btn btn-primary btn-sm edit_insurance_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['package_name'];?>">Edit</button>
+                          
+                        </td>
+
+                        <td>
+                          <button class="btn btn-danger btn-sm delete_insurance_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['package_name'];?>">Delete</button>
                         </td>
                       </tr>
                     <?php } } ?>
@@ -72,36 +77,58 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
           </div>
         </div>
         <div class="modal" tabindex="-1" role="dialog" id="modal">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Edit Insurance</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form method="post" id="edit_insurance_plan_form">
-                    <div class="row justify-content-center">
-                      <div class="col-md-10 mt-3">
-                        <label>Package Name</label>
-                        <input type="text" name="package_name" id="package_name" class="form-control">
-                      </div>
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Insurance</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form method="post" id="edit_insurance_plan_form">
+                  <div class="row justify-content-center">
+                    <div class="col-md-10 mt-3">
+                      <label>Package Name</label>
+                      <input type="text" name="package_name" id="package_name" class="form-control">
                     </div>
-                    <input type="hidden" name="package_id"  id="package_id" value="">
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" id="edit_insurance_plan_btn">Edit</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+                  </div>
+                  <input type="hidden" name="package_id"  id="package_id" value="">
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="edit_insurance_plan_btn">Edit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
+        </div>
         <!-- /.container-fluid -->
+        <!-- Delete Modal -->
+
+        <div class="modal" tabindex="-1" role="dialog" id="delete-dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <!-- <div class="modal-header">
+                <h5 class="modal-title">Edit Insurance</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div> -->
+              <div class="modal-body">
+                <h5 class="package-plan">Delete ?</h5>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="delete_insurance_plan_btn">Confirm</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
-      <!-- End of Main Content -->
+      
+      
 
       <!-- Footer -->
         <?php include("inc/footer.php");?>
@@ -128,6 +155,14 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
         // console.log(package_name);
         $("#package_id").val(package_id);
         $("#package_name").val(package_name);
+      });
+
+      $(".delete_insurance_plan").click(function(){
+        let package_id = $(this).attr('id');
+        let package_name = $(this).data('name');
+        $("#delete_insurance_plan_btn").attr("data-packageid", package_id);
+        $(".package-plan").html(`Delete ${package_name} package?`);
+        $("#delete-dialog").modal("show");
       });
     });
   </script>

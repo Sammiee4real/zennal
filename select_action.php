@@ -78,7 +78,7 @@
                                 Compare plans of several insurance providers.
                             </p>
                             <div class=" d-flex justify-content-center ">
-                        <a href="vehicle_insurance.php"><button class="btn btn-primary white">Select</button></a>
+                        <a href="compare_insurance.php"><button class="btn btn-primary white">Select</button></a>
                     </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 <?php 
   session_start();
-  require_once('../admin/config/database_functions.php');
+  require_once('../admin/config/functions.php');
   $password =  $_POST['password'];
   $email =  $_POST['email'];
   $fname =  $_POST['fname'];

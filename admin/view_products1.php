@@ -1,6 +1,6 @@
 <?php
     include('inc/header.php');
-    include('config/database_functions.php');
+    include('config/functions.php');
     //echo md5(uniqid());
     $vendor_id = isset($_GET['vendor_id']) ? $_GET['vendor_id'] : "";
     $get_products = get_rows_from_one_table_by_id('products','vendor_id', $vendor_id, 'date_created');

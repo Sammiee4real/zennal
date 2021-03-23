@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$data = ['product_name', 'description', 'price'];
 	$unique_id = $_POST['product_id'];
 	//$name = $_POST['name'];

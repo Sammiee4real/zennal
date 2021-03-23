@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$document_name = $_POST['document_name'];
 	$document_url = $_POST['document_url'];
 	$admin_id = $_SESSION['admin_id'];

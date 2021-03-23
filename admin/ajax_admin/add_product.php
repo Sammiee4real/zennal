@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config/database_functions.php');
+	require_once('../../config/functions.php');
 	$product_name = $_POST['product_name'];
 	$vendor_id = $_POST['vendor_id'];
 	$description = $_POST['description'];
