@@ -528,18 +528,71 @@ function reset_password($data){
 function add_insurer($insurer_name, $file_name){
   global $dbc;
 
-  
+  $unique_id = unique_id_generator($insurer_name);
+  $sql = "INSERT INTO insurers SET `unique_id` = '$unique_id', `name` = '$insurer_name', `image` = '$file_name', `datetime` = now()";
 
-      $unique_id = unique_id_generator($insurer_name);
-      $sql = "INSERT INTO insurers SET `unique_id` = '$unique_id', `name` = '$insurer_name', `image` = '$file_name', `datetime` = now()";
+  if(mysqli_query($dbc, $sql)){
+    return json_encode(array("status"=>1, "msg"=>"Insurer added successfully"));
+  }else{
+    return json_encode(array("status"=>0, "msg"=>"Insurer data cannot be saved"));
+  }
+}
 
-      if(mysqli_query($dbc, $sql)){
-        return json_encode(array("status"=>1, "msg"=>"Insurer added successfully"));
-      }else{
-        return json_encode(array("status"=>0, "msg"=>"Insurer data cannot be saved"));
+// Badmus
+
+function get_insurance_benefits($insurer_id){
+  global $dbc;
+
+  $outer_arr = array();
+  // $benefits_arr = array(
+  //   'single_benefit' => array(
+  //     'benefit' => null,
+  //     'details' => array()
+  //   )
+  // );
+
+  $benefit_name = null;
+
+  $sql = "SELECT * FROM `insurance_benefits` WHERE `insurer_id` = '$insurer_id'";
+
+  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+
+  $data = mysqli_fetch_all($exe, MYSQLI_ASSOC);
+
+  $benefit_arr = array(
+    'benefit' => null,
+    'details' => array()
+  );
+
+  foreach ($data as $benefit) {
+    // $benefit_name = $benefit['benefit']
+    // if ($benefit_arr['benefit'] != $benefit_name) {
+    //   $benefit_arr['benefit'] = $benefit_name
+    //   $benefit_name = $benefit['benefit'];
+    //   $benefit_plan['plan_id'] = $benefit['plan_id'];
+    //   $benefit_plan['status'] = $benefit['status'];
+    //   $benefit_plan['description'] = $benefit['description'];
+    //   array_push($benefit_details, $benefit_plan);
+    if ($benefit_arr['benefit'] != $benefit['benefit']) {
+      $benefit_arr['benefit'] = $benefit['benefit'];
+
+      foreach ($data as $inner_benefit) {
+        if($inner_benefit['benefit'] == $benefit_arr['benefit']){
+          $details_arr = array(
+            'plan_id' => $inner_benefit['plan_id'],
+            'status' => $inner_benefit['status'],
+            'description' => $inner_benefit['description'],
+          );
+          array_push($benefit_arr['details'], $details_arr);
+        }
       }
-      
+      array_push($outer_arr, $benefit_arr);
+    }
+    
+  }
+  // }
 
+  return $outer_arr;
 }
 
 function insurance_packages(){

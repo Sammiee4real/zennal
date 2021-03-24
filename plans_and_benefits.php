@@ -1,11 +1,17 @@
 
-<?php include("includes/sidebar.php");?>
-<div id="main">
+<?php 
+include("includes/sidebar.php");
+include("includes/header.php");
+$insurer_id = $_GET['insurer_id'] ?? null;
+$get_plans = get_rows_form_table_with_one_params('insurance_plans', 'insurer_id', $insurer_id);
+$get_benefits = get_insurance_benefits($insurer_id);
+$get_insurer = get_rows_form_table_with_one_params('insurers', 'unique_id', $insurer_id);
 
-<?php include("includes/header.php");?>            
+?>      
+<div id="main">    
 <div class="main-content container-fluid">
     <div class="page-title">
-        <h3>Old Mutual</h3>
+        <h3>Old Mutual <?php print_r($get_insurer);?></h3>
         <p class="text-subtitle text-muted">Plans and Benefits</p>
     </div>
 
@@ -75,15 +81,38 @@
                        <img src="assets/images/old.png" width="52px">
                     </div>
                 </th>
-                <th>Bronze (2.35%)</th>
-                <th>Silver (2.85%)</th>
-                <th>Gold (3.25%)</th>
-                <th>Diamond (3.75%)</th>
-                <th>Platinum (4.00%)</th>
+                <?php
+                  foreach($get_plans as $plan){
+                    echo "<th>".$plan["plan_name"]." (".$plan["plan_percentage"]."%)</th>";
+                    // <th>Silver (2.85%)</th>
+                    // <th>Gold (3.25%)</th>
+                    // <th>Diamond (3.75%)</th>
+                    // <th>Platinum (4.00%)</th>
+                  }
+                  // print_r($get_plans);
+                ?>
               </tr>
             </thead>
             <tbody>
-              <tr>
+            <pre>
+            <?php 
+            // print_r($get_benefits); 
+            foreach($get_benefits as $benefit){
+            ?>
+            <tr>
+                <td><?php echo $benefit['benefit'] ?></td>
+                <?php 
+                foreach($benefit['details'] as $benefit_plan){
+                ?>
+                  <td><i data-feather="<?php echo $benefit_plan['status'] == 1 ? 'check':'x'; ?>" width="32" height="32" style="<?php echo $benefit_plan['status'] == 1 ? 'color: green':'color: red'; ?>;"></i><?php echo $benefit_plan['description']?></td>
+                <?php
+                }
+                ?>
+              </tr>
+            <?php
+            }
+            ?>
+              <!-- <tr>
                 <td>TOWING VEHICLE BENEFITS</td>
                 <td><i data-feather="check" width="32" height="32" style=" color: green;"></i>₦25,000(INTRA), ₦30,000(INTER)</td>
                 <td><i data-feather="check" width="32" height="32" style=" color: green;"></i>₦25,000(INTRA), ₦30,000(INTER)</td>
@@ -172,15 +201,20 @@
                 <td><i data-feather="check" width="32" height="32" style=" color: green;"></i></td>
                 <td><i data-feather="check" width="32" height="32" style=" color: green;"></i></td>
                 <td><i data-feather="check" width="32" height="32" style=" color: green;"></i></td>
-              </tr>
+              </tr> -->
               <tfooter>
               <tr>
                 <th></th>
+                <?php
+                  foreach($get_plans as $plan){
+                    echo "<th> <a href='select_plan?plan_id=".$plan["unique_id"]."' class='btn btn-primary'>Select Package</a></th>";
+                  }
+                ?>
+                <!-- <th><a href="#" class="btn btn-primary">Select Package</a></th>
                 <th><a href="#" class="btn btn-primary">Select Package</a></th>
                 <th><a href="#" class="btn btn-primary">Select Package</a></th>
                 <th><a href="#" class="btn btn-primary">Select Package</a></th>
-                <th><a href="#" class="btn btn-primary">Select Package</a></th>
-                <th><a href="#" class="btn btn-primary">Select Package</a></th>
+                <th><a href="#" class="btn btn-primary">Select Package</a></th> -->
               </tr>
             </tfooter>
             </tbody>
