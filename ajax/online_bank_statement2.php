@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	include('../config/functions.php');
-	$user_id = $_SESSION['uid'];
+	$user_id = $_SESSION['user']['unique_id'];
 	$id = $_POST['id'];
 	$amount = 2100;
 	$generate_bank_statement = generate_bank_statement2($user_id, $amount, $id);

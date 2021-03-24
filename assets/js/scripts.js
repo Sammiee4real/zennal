@@ -228,22 +228,38 @@ $(document).ready(function(){
 	$("#submit_loan_purpose").click(function(e){
 		e.preventDefault();
 		//toastbox('toast-11', 5000);
+		var employment_status = $("#employment_status").val();
+		if(employment_status == 1 || employment_status == 4 || employment_status == 5 || employment_status == 6){
+			var location = "submit_guarantor";
+		}
+		else if(employment_status == 2 || employment_status == 3){
+			var location = "success";
+		}
 		$.ajax({
 			url:"ajax/submit_loan_purpose.php",
 			method: "POST",
 			data: $("#submit_loan_purpose_form").serialize(),
+			beforeSend: function(){
+				$('#submit_loan_purpose').attr('disabled', true);
+				$('#submit_loan_purpose').text('Submitting...');
+			},
 			success: function(data){
 				if(data == "success"){
-					$("#success_message").empty();
-					$("#success_message").html("Success! Your loan application has been submitted successfully, you will be contacted soon");
-					toastbox('success_toast', 3000);
-					setTimeout( function(){ window.location.href = "successful_loan_application.php";}, 5000);
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your loan application has been submitted successfully",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = location;}, 3000));
 				}
 				else{
-					$("#error_message").empty();
-					$("#error_message").html("Error! " + data);
-					toastbox('error_toast', 6000);
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
 				}
+				$('#submit_loan_purpose').attr('disabled', false);
+				$('#submit_loan_purpose').text('Submit');
 			}
 		})
 	});
@@ -890,31 +906,68 @@ $(document).ready(function(){
       });
 
 	$("#online_bank_statement").click(function(){
+		// var redirect_url = '<?php echo "http://$_SERVER[HTTP_HOST]"."zennal_callback.php?transaction_id="?>'
         $.ajax({
-              url: "ajax/online_bank_statement.php",
-              method: "POST",
-              data: $("#submit_loan_purpose_form").serialize(),
-              beforeSend:function(){
-                // $("#online_bank_statement_btn").attr("disabled", true);
-                $("#online_bank_statement").text("Please wait...");
-              },
-              success: function(data){
-                // if(data == "success"){
-                //   $("#success_message").empty();
-                //   $("#success_message").html("Success! You've successfully rejected this loan application");
-                //   toastbox('success_toast', 3000);
-                setTimeout( function(){ window.location.href = data;}, 1000);
-                // }
-                // else{
-                //   $("#error_message").empty();
-                //   $("#error_message").html("Error! " + data);
-                //   toastbox('error_toast', 6000);
-                // }
-                // $("#online_bank_statement_btn").attr("disabled", false);
-                // $("#online_bank_statement_btn").text("Yes");
-                $("#online_bank_statement").text("Click here to pay");
-              }
-         });
+          url: "ajax/online_bank_statement.php",
+          method: "POST",
+          data: $("#submit_loan_purpose_form").serialize(),
+          beforeSend:function(){
+            // $("#online_bank_statement_btn").attr("disabled", true);
+            $("#online_bank_statement").text("Please wait...");
+          },
+          success: function(data){
+            $("#online_bank_statement").text("Click here to pay");
+            Okra.buildWithOptions({
+                name: 'Cloudware Technologies',
+                env: 'production-sandbox',
+                key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+                token: '5f5a2e5f140a7a088fdeb0ac', 
+                source: 'link',
+                color: '#ffaa00',
+                limit: '24',
+                // amount: 5000,
+                // currency: 'NGN',
+                garnish: true,
+                charge: {
+                  type: 'one-time',
+                  amount: 2100*100,
+                  note: '',
+                  currency: 'NGN',
+                  account: '5ecfd65b45006210350becce'
+                },
+                corporate: null,
+                connectMessage: 'Which account do you want to connect with?',
+                products: ["auth", "transactions", "balance"],
+                //callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+                //callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+                //redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+                logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+                filter: {
+                    banks: [],
+                    industry_type: 'all',
+                },
+                widget_success: 'Your account was successfully linked to Cloudware Technologies',
+                widget_failed: 'An unknown error occurred, please try again.',
+                currency: 'NGN',
+                exp: null,
+                success_title: 'Cloudware Technologies!',
+                success_message: 'You are doing well!',
+                onSuccess: function (data) {
+                    console.log('success', data);
+                    // window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+                    window.location.href = 'http://localhost/new_zennal/online_generation_callback?payment_id='+data.payment_id;
+                    //window.location.href = '<?php //echo $redirect_url?>';
+                    //console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+                },
+                onClose: function () {
+                    console.log('closed')
+                }
+            })
+          }
+        });
+
+        // function connectViaOptions3() {
+        // }
     });
 
     $("#online_bank_statement_asset").click(function(){
@@ -950,29 +1003,30 @@ $(document).ready(function(){
 		let id = $(this).attr('id');
 		//console.log(id);
 		$.ajax({
-			beforeSend: function(){
-				$("#submit_guarantor").attr("disabled", "true");
-				$("#button_spinner").css('display', 'block');
-				$("#submit_guarantor").text("Submitting...");
-			},
 			url:"ajax/submit_guarantor.php",
 			method: "POST",
+			beforeSend: function(){
+				$("#submit_guarantor").attr("disabled", "true");
+				$("#submit_guarantor").text("Submitting...");
+			},
 			data: $("#submit_guarantor_form").serialize(),
 			success: function(data){
-				if(data == "error"){
-					$("#error_message").empty();
-					$("#error_message").html("Error! " + data);
-					toastbox('error_toast', 6000);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your Guarantors details have been submitted successfully",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "success";}, 3000));
 				}
 				else{
-					$("#success_message").empty();
-					$("#success_message").html("Your Guarantors details have been submitted successfully, you will be redirected to pay your equity contribution shortly ");
-					toastbox('success_toast', 10000);
-					setTimeout( function(){ window.location.href = data;}, 3000);
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
 				}
 				$("#submit_guarantor").attr("disabled", false);
 				$("#submit_guarantor").text("Submit");
-
 			}
 		})
 	});

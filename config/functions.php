@@ -2096,6 +2096,7 @@ function submit_loan_purpose($user_id, $loan_amount, $loan_purpose, $bank_statem
   $user_id = secure_database($user_id);
   $loan_amount = secure_database($loan_amount);
   $loan_purpose = secure_database($loan_purpose);
+  $bank_statement = secure_database($bank_statement);
   $unique_id = unique_id_generator($user_id);
   $get_loan_category = get_one_row_from_one_table_by_id('loan_category','type', 1 ,'date_created');
   $get_loan_package = get_one_row_from_one_table_by_id('loan_packages','loan_category', $get_loan_category['unique_id'], 'date_created');
@@ -2509,7 +2510,8 @@ function generate_bank_statement($user_id, $amount){
   // $name = $get_user_details['first_name'].' '.$get_user_details['last_name'].' '.$get_user_details['other_names'];
   // $transaction_ref = md5(uniqid().rand(1000, 9999));
   $get_unused_payment = get_rows_from_one_table_by_id('online_bank_statement', 'user_id',$user_id, 'date_created');
-  $redirect_url = "http://zennal.staging.cloudware.ng/online_generation_callback.php";
+  // $redirect_url = "http://zennal.staging.cloudware.ng/online_generation_callback.php";
+  $redirect_url = 'http:localhost/new_zennal/online_generation_callback.php';
   if($get_unused_payment != null){
     foreach ($get_unused_payment as $value) {
       if($value['use_status'] == 1){
@@ -2649,16 +2651,17 @@ function flutterwave_transfer2($request_id, $user_id, $amount){
 }
 
 
-function insert_payment_transaction($user_id, $tx_ref, $transaction_id){
+function insert_payment_transaction($user_id, $payment_id){
   global $dbc;
   $user_id = secure_database($user_id);
-  $tx_ref = secure_database($tx_ref);
-  $unique_id = unique_id_generator($tx_ref.$user_id);
-  if($user_id == '' || $tx_ref == ''){
+  $payment_id = secure_database($payment_id);
+  // $tx_ref = secure_database($tx_ref);
+  $unique_id = unique_id_generator($payment_id.$user_id);
+  if($user_id == '' || $payment_id == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    $insert_data_sql = "INSERT INTO `online_bank_statement` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `transaction_ref` = '$tx_ref', `transaction_id` = '$transaction_id', `use_status` = 0, `date_created` = now()";
+    $insert_data_sql = "INSERT INTO `online_bank_statement` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `transaction_id` = '$payment_id', `use_status` = 0, `date_created` = now()";
     $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
       return json_encode(["status"=>"1", "msg"=>"success"]);
@@ -2672,44 +2675,23 @@ function insert_payment_transaction($user_id, $tx_ref, $transaction_id){
 function submit_guarantor($user_id, array $guarantor_array){
   global $dbc;
   $user_id = secure_database($user_id);
-  $unique_id1 = unique_id_generator($user_id);
-  $unique_id2 = unique_id_generator($user_id.rand(0000, 9999));
-  $guarantor_name1 = $guarantor_array['guarantor_name1'];
-  $home_address1 = $guarantor_array['home_address1'];
-  $phone_number1 = $guarantor_array['phone_number1'];
-  $name_of_organization1 = $guarantor_array['name_of_organization1'];
-  $address_of_organization1 = $guarantor_array['address_of_organization1'];
-  $guarantor_name2 = $guarantor_array['guarantor_name2'];
-  $home_address2 = $guarantor_array['home_address2'];
-  $phone_number2 = $guarantor_array['phone_number2'];
-  $name_of_organization2 = $guarantor_array['name_of_organization2'];
-  $address_of_organization2 = $guarantor_array['address_of_organization2'];
-  $loan_id = $guarantor_array['loan_id'];
+  $unique_id = unique_id_generator($user_id);
+  $guarantor_name = $guarantor_array['guarantor_name'];
+  $relationship = $guarantor_array['relationship'];
+  $phone = $guarantor_array['phone'];
+  $loan_details = $guarantor_array['loan_details'];
+  // $loan_id = $guarantor_array['loan_id'];
 
-  if($user_id == '' || $unique_id1 == '' || $unique_id2 == '' || $guarantor_name1 == '' || $home_address1 == '' || $phone_number1 == '' || $name_of_organization1 == '' || $address_of_organization1 == '' || $guarantor_name2 == '' || $home_address2 == '' || $phone_number2 == '' || $name_of_organization2 == '' || $address_of_organization2 == ''){
+  if($user_id == ''  || $guarantor_name == '' || $phone == '' || $relationship == '' || $loan_details == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    $insert_data_sql1 = "INSERT INTO `user_guarantor` SET `unique_id` = '$unique_id1', `user_id` = '$user_id',  `guarantor_name`='$guarantor_name1', `home_address`='$home_address1', `phone_number`='$phone_number1', `name_of_organization`='$name_of_organization1', `address_of_organization`='$address_of_organization1', `date_created` = now()";
-    $insert_data_sql2 = "INSERT INTO `user_guarantor` SET `unique_id` = '$unique_id2', `user_id` = '$user_id',  `guarantor_name`='$guarantor_name2', `home_address`='$home_address2', `phone_number`='$phone_number2', `name_of_organization`='$name_of_organization2', `address_of_organization`='$address_of_organization2', `date_created` = now()";
-    $insert_data_query1 = mysqli_query($dbc, $insert_data_sql1);
-    $insert_data_query2 = mysqli_query($dbc, $insert_data_sql2);
-    if($insert_data_query1 AND $insert_data_query2){
-      //return json_encode(["status"=>"1", "msg"=>"success"]);
-      $get_loan_details = get_one_row_from_one_table_by_id('asset_finance_application', 'unique_id', $loan_id, 'date_created');
-      $get_product = get_one_row_from_one_table_by_id('products', 'unique_id', $get_loan_details['product_id'], 'date_created');
-      $user_approved_equity_con = $get_loan_details['user_approved_equity_con'];
-      $equity_amount = ($user_approved_equity_con / 100) * $get_product['price'];
-      $redirect_url = "http://localhost/zennal/asset_callback.php";
-      $checkout = flutterwave_checkout($user_id, $equity_amount, $redirect_url);
-      $checkout_decode = json_decode($checkout, true);
-      if($checkout_decode['status'] == "1"){
-        return json_encode(["status"=>"1", "msg"=>$checkout_decode['msg']]);
-      }
-      else{
-        return json_encode(["status"=>"0", "msg"=>$checkout_decode['msg']]);
-      }
-    }else{
+    $insert_data_sql = "INSERT INTO `user_guarantor` SET `unique_id` = '$unique_id', `user_id` = '$user_id',  `guarantor_name`='$guarantor_name', `phone_number`='$phone', `relationship`='$relationship', `loan_details`='$loan_details', `date_created` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql);
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
       return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
     }
   }

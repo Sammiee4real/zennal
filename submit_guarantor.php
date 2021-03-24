@@ -27,7 +27,7 @@ function show(el, txt){
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form" action="success.php">
+                            <form class="form" id="submit_guarantor_form">
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="mt-3 mb-3">
@@ -38,7 +38,7 @@ function show(el, txt){
 
                         <div class="form-group">
                             <span class="" for="name">Guarantor's name</span>
-                            <input type="text" name="" value="" class="form-control" placeholder="Guarantor's name">
+                            <input type="text" name="guarantor_name" value="" class="form-control" placeholder="Guarantor's name">
                         </div>
 
                         <!-- <div class="form-group">
@@ -49,7 +49,7 @@ function show(el, txt){
                         <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="" for="name">Relationship </span>
-                            <select name=""  class="form-select" >
+                            <select name="relationship"  class="form-select" >
                                 <option value="">Select your relationship with guarantor </option>
                                 <option value="">Wife</option>
                                 <option>Husband</option>
@@ -67,15 +67,15 @@ function show(el, txt){
 
                         <div class="form-group">
                             <span class="" for="name">Phone number</span>
-                            <input type="number" name="" value="" class="form-control" placeholder="Phone number">
+                            <input type="number" name="phone" value="" class="form-control" placeholder="Phone number">
                         </div>
 
                         <div class="form-group">
                             <span class="" for="name">Loan details</span>
-                            <input type="text" name="" value="" class="form-control" placeholder="Loan details">
+                            <input type="text" name="loan_details" value="" class="form-control" placeholder="Loan details">
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <span class="" for="name">How much do you want to borrow?</span>
                             <input type="number" name="" value="" class="form-control" placeholder="How much do you want to borrow">
                         </div>
@@ -83,16 +83,16 @@ function show(el, txt){
                         <div class="form-group">
                             <span class="" for="name">Purpose of Loan</span>
                             <input type="text" name="" value="" class="form-control" placeholder="Purpose of Loan">
+                        </div> -->
+
+                        </div>
+                        </div>
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary mr-1 mb-1" id="submit_guarantor">Submit</button>
                         </div>
 
-                                    </div>
-                                 </div>
-                                    <div class="col-12 d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-primary mr-1 mb-1">Submit</button>
-                                    </div>
-                                    
-                                    </form>
-                                </div>
+                        </form>
+                        </div>
                         </div>
                     </div>
                 </div>
