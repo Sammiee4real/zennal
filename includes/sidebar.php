@@ -1,7 +1,7 @@
 <?php
 include('config/functions.php');
 if(!isset($_SESSION['user'])){
-    header('location: login.php');
+    header('location: login');
     end();
 }
 $user_id = $_SESSION['user']['unique_id'];

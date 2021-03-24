@@ -25,5 +25,6 @@
     <script src="assets/vendors/sweetalert2/package/dist/sweetalert2.min.js"></script>
     <script src="assets/js/scripts.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src='https://cdn.okra.ng/v2/bundle.js'></script>
 </body>
 </html>
