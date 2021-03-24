@@ -11,7 +11,7 @@ $get_insurer = get_rows_form_table_with_one_params('insurers', 'unique_id', $ins
 <div id="main">    
 <div class="main-content container-fluid">
     <div class="page-title">
-        <h3>Old Mutual <?php print_r($get_insurer);?></h3>
+        <h3><?php echo $get_insurer[0]['name'];?></h3>
         <p class="text-subtitle text-muted">Plans and Benefits</p>
     </div>
 
@@ -19,7 +19,7 @@ $get_insurer = get_rows_form_table_with_one_params('insurers', 'unique_id', $ins
       <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-right">
             <li class="breadcrumb-item"><a href="compare_insurance.php">Compare Insurance</a></li>
-            <li class="breadcrumb-item"><a href="#">Old Mutual</a></li>
+            <li class="breadcrumb-item"><a href="#"><?php echo $get_insurer[0]['name'];?></a></li>
         </ol>
       </nav>
     </div>
@@ -78,7 +78,7 @@ $get_insurer = get_rows_form_table_with_one_params('insurers', 'unique_id', $ins
               <tr>
                 <th>
                     <div class="col-md-4">
-                       <img src="assets/images/old.png" width="52px">
+                       <img src="assets/images/<?php echo $get_insurer[0]['image'];?>" width="52px">
                     </div>
                 </th>
                 <?php

@@ -1,4 +1,7 @@
-<?php include("includes/sidebar.php");?>
+<?php include("includes/sidebar.php");
+    $get_employment_details =  get_one_row_from_one_table_by_id('user_employment_details','user_id', $user_id, 'date_created');
+    $get_user_details  =  get_one_row_from_one_table_by_id('users','unique_id', $user_id, 'registered_on');
+?>
 <div id="main">
 
 <?php include("includes/header.php");?> 
@@ -41,13 +44,20 @@ function show(el, txt){
     $(function() {
   $('#colorselector').change(function(){
     $('.colors').hide();
-    $('#' + $(this).val()).show();
+    var color = $("#colorselector").children("option:selected").val();
+    if(color == 1 || color == 4 || color == 5 || color == 6){
+        $("#yellow").show();
+    }else if(color == 2 || color == 3 ){
+        $("#red").show();
+    }
+    //$('#' + option_class).show();
   });
 });
 
 </script>
 <script>
 $(document).ready(function(){
+     $(".show_martial").hide();
     $("select").change(function(){
         $(this).find("option:selected").each(function(){
             var optionValue = $(this).attr("value");
@@ -59,6 +69,13 @@ $(document).ready(function(){
             }
         });
     }).change();
+    $('#marital_status').change(function(){
+        var status = $("select#marital_status").children("option:selected").val();
+        if(status == 2){
+            $(".show_martial").show();
+        }
+        //$('#' + option_class).show();
+    });
 });
 </script>
 
@@ -83,7 +100,6 @@ $(document).ready(function(){
                             <span class="">
                                 <i data-feather="briefcase" width="100"></i>
                                 <p>Employment Details</p>
-                                
                             </span>
                         </a>
                     </li>
@@ -127,30 +143,30 @@ $(document).ready(function(){
              <div class="wizard">
                 <div class="tab-content">
                     <div class="tab-pane active" role="tabpanel" id="step1">
-                        <form>
-<div class="button dropdown"> 
-    <div class="form-group">
-                            <span class="" for="city5">Employment Status</span>
-                            <select name="employment_status" class="form-select" id="colorselector">
-                                <option value="">Select</option>
-                                <option value="yellow">Student (Must be above 18yrs)</option>
-                                <option value="red">NYSC</option>
-                                <option value="red">Employed</option>
-                                <option value="yellow">Self employed</option>
-                                <option value="yellow">Unemployed</option>
-                                <option value="yellow">Business Owner</option>
-                            </select>
-      </div>
-</div>
+                        <small class="text-warning">All fields are required</small>
+   <form method="post" id="submit_employment_details_form">
+        <div class="button dropdown"> 
+            <div class="form-group">
+                <span class="" for="city5">Employment Status</span>
+                <select name="employment_status" class="form-select" id="colorselector">
+                    <option value="">Select</option>
+                    <option class="yellow" value="1">Student (Must be above 18yrs)</option>
+                    <option class="red" value="2">NYSC</option>
+                    <option class = "red" value="3">Employed</option>
+                    <option class="yellow" value="4">Self employed</option>
+                    <option class="yellow" value="5">Unemployed</option>
+                    <option class="yellow" value="6">Business Owner</option>
+                </select>
+              </div>
+        </div>
 
-<div class="output">
+            <div class="output">
 
-  <div id="red" class="colors red">
-
+            <div id="red" class="colors red">
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="" for="city5">Name of Organization</span>
-                            <input type="text" class="form-control" id="name_of_organization" name="name_of_organization" placeholder="Enter the name of your Organization">  
+                            <input type="text" class="form-control" id="name_of_organization" name="name_of_organization" placeholder="Enter the name of your Organization" value="<?= $get_employment_details['name_of_organization']?>">  
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -161,6 +177,7 @@ $(document).ready(function(){
                         <div class="input-wrapper">
                             <span class="p" for="name1">Contact Address of Organization</span>
                             <textarea name="contact_address_of_organization" class="form-control" rows="2"placeholder="Organization's Contact Address">
+                                <?= $get_employment_details['contact_address_of_organization']?>
                             </textarea>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -171,7 +188,7 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Job Title</span>
-                            <input type="text" class="form-control" id="job_title" name="job_title" placeholder="Enter your job title" >
+                            <input type="text" class="form-control" id="job_title" name="job_title" placeholder="Enter your job title" value="<?= $get_employment_details['job_title']?>">
                            <!--  value="<?= $get_employment_details['job_title']?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -183,8 +200,8 @@ $(document).ready(function(){
                             <span class="p" for="name1">Employment Type</span>
                             <select name="employment_type" class="form-select">
                                 <option value="">Select Employment Type</option>
-                                <option value="permanent">Permanent</option>
-                                <option value="contract">Contract</option>
+                                <option value="1">Permanent</option>
+                                <option value="2">Contract</option>
                             </select>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -231,7 +248,7 @@ $(document).ready(function(){
                      <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Type of Industry</span>
-                            <input type="text" class="form-control" id="industry_type" name="industry_type" placeholder="Type of Industry (Banking, Other fin. Services, Telecoms, Oil and Gas etc.)" >
+                            <input type="text" class="form-control" id="industry_type" name="industry_type" placeholder="Type of Industry (Banking, Other fin. Services, Telecoms, Oil and Gas etc.)" value="<?= $get_employment_details['industry_type']?>">
                             <!-- value="<?= $get_employment_details['industry_type']?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -242,7 +259,7 @@ $(document).ready(function(){
                       <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="span" for="name1">Current Monthly Salary (Net)</span>
-                            <input type="text" class="form-control" id="monthly_salary" name="monthly_salary" placeholder="Current Monthly Salary (Net) in naira">
+                            <input type="text" class="form-control" id="monthly_salary" name="monthly_salary" placeholder="Current Monthly Salary (Net) in naira" value="<?= $get_employment_details['monthly_salary']?>">
                              <!-- value="<?= $get_employment_details['monthly_salary']?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -252,7 +269,7 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Payday</span>
-                            <input type="text" class="form-control" id="salary_payday" name="salary_payday" placeholder="Salary Payday (from 1st to 31st)" >
+                            <input type="text" class="form-control" id="salary_payday" name="salary_payday" placeholder="Salary Payday (from 1st to 31st)" value="<?= $get_employment_details['salary_payday']?>">
                             <!-- value="<?= $get_employment_details['salary_payday']?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -262,7 +279,7 @@ $(document).ready(function(){
                      <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="span" for="lastname1">Email Address</span>
-                            <input type="email" class="form-control" id="official_email_address" name="official_email_address" placeholder="Official Email Address" >
+                            <input type="email" class="form-control" id="official_email_address" name="official_email_address" placeholder="Official Email Address" value="<?= $get_user_details['email']?>">
                             <!-- value="<?= $get_user_details['email']?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -273,15 +290,15 @@ $(document).ready(function(){
                     </div>
                    
                     <div class="mt-3 mb-3">
-                        <button type="button" class="btn btn-primary btn-block btn-lg" id="submit_employment_details" name="submit_employment_details">Next</button>
+                        <button type="button" class="btn btn-primary btn-block btn-lg submit_employment_details" id="" name="submit_employment_details">Next</button>
                     </div>
-  </div>
+                </div>
 
-<div id="yellow" class="colors yellow"> 
- <div class="form-group boxed">
+                <div id="yellow" class="colors yellow"> 
+                    <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Education</span>
-                            <select name="years_of_experience" class="form-select">
+                            <select name="education" class="form-select">
                                 <option value="">Select qualification</option>
                                 <option value="Primary">Primary</option>
                                 <option value="Secondary">Secondary</option>
@@ -297,15 +314,14 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Home Address</span>
-                            <input type="text" name="address" placeholder="Home Address" class="form-control">
+                            <input type="text" name="home_address" placeholder="Home Address" class="form-control" value="<?= $get_user_details['address']?>">
                         </div>
                     </div>
 
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">City</span>
-                            <select name="" class="form-select">
-                            <option>Select the City you live in</option>
+                            <input type="text" name="city" class="form-control" value="<?=$get_employment_details['city'];?>">
                         </select>
                         </div>
                     </div>
@@ -313,8 +329,7 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">State</span>
-                            <select name="" class="form-select">
-                            <option>Select the State you live in</option>
+                            <input type="text" name="state" class="form-control" value="<?=$get_employment_details['state'];?>">
                         </select>
                         </div>
                     </div>
@@ -322,11 +337,11 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Type of residence</span>
-                            <select name="years_of_experience" class="form-select">
+                            <select name="residence_type" class="form-select">
                                 <option value="">Select residence </option>
-                                <option value="Rented">Rented</option>
-                                <option value="Owner">Owner</option>
-                                <option value="Shared apartment">Shared apartment</option>
+                                <option value="1">Rented</option>
+                                <option value="2">Owner</option>
+                                <option value="3">Shared apartment</option>
                             </select>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -340,11 +355,11 @@ $(document).ready(function(){
                             <div class="row">
                                 <div class="col-md-6">
                                    <span>How many years?</span> 
-                                   <input type="number" name="" class="form-control">
+                                   <input type="" name="years_of_stay" class="form-control" value="<?=$get_employment_details['years_of_stay'];?>">
                                 </div>
                                 <div class="col-md-6">
                                     <span>How many months?</span> 
-                                   <input type="number" name="" class="form-control">
+                                   <input type="number" name="months_of_stay" class="form-control" value="<?=$get_employment_details['months_of_stay'];?>">
                                 </div>
                             </div>
                         </div>
@@ -352,33 +367,33 @@ $(document).ready(function(){
 
                     <div class="form-group">
                             <span class="p" for="name1">Marital Status</span>
-                            <select name=""  class="form-select" >
+                            <select name="marital_status" id="marital_status"  class="form-select" >
                                 <option value="">Select Status</option>
-                                <option value="">Single</option>
-                                <option value="one">Married</option>
-                                <option value="one">Divorced</option>
-                                <option value="one">Widowed</option>
+                                <option value="1">Single</option>
+                                <option value="2">Married</option>
+                                <option value="3">Divorced</option>
+                                <option value="4">Widowed</option>
                             </select>
                         </div>
-            <div class="one box">
+            <div class="show_martial">
                               <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Name of Spouse</span>
-                            <input type="text" name="address" placeholder="Name of Spouse" class="form-control">
+                            <input type="text" name="name_of_spouse" placeholder="Name of Spouse" class="form-control"value="<?=$get_employment_details['name_of_spouse'];?>">
                         </div>
                     </div>
 
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Phone number of Spouse</span>
-                            <input type="text" name="address" placeholder="Phone number of Spouse" class="form-control">
+                            <input type="text" name="phone_of_spouse" placeholder="Phone number of Spouse" class="form-control" value="<?=$get_employment_details['phone_of_spouse'];?>">
                         </div>
                     </div>
 
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Number of Kids</span>
-                            <input type="text" name="address" placeholder="Phone number of Spouse" class="form-control">
+                            <input type="number" name="no_of_kids" placeholder="Phone number of Spouse" class="form-control" value="<?=$get_employment_details['no_of_kids'];?>">
                         </div>
                     </div>
              </div>
@@ -386,23 +401,23 @@ $(document).ready(function(){
 
              <div class="form-group">
                             <span class="" for="name">Professional Category</span>
-                            <select name=""  class="form-select" >
+                            <select name="professional_category"  class="form-select" >
                                 <option value="">Select category</option>
-                                <option value="">Agency/Contract Workers</option>
-                                <option value="">Sales/ Shop/ Restaurant</option>
-                                <option value="">Artisans</option>
-                                <option value="">Religious organization</option>
+                                <option value="1">Agency/Contract Workers</option>
+                                <option value="2">Sales/ Shop/ Restaurant</option>
+                                <option value="3">Artisans</option>
+                                <option value="4">Religious organization</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <span class="" for="name">Professional subcategory</span>
-                            <select name=""  class="form-select" >
+                            <select name="professional_subcategory"  class="form-select" >
                                 <option value="">Select Subcategory</option>
-                                <option value="">Information Technology</option>
-                                <option value="">Marketing Sales</option>
-                                <option value="">Communication</option>
-                                <option value="">Corporate Services</option>
+                                <option value="1">Information Technology</option>
+                                <option value="2">Marketing Sales</option>
+                                <option value="3">Communication</option>
+                                <option value="4">Corporate Services</option>
                             </select>
                         </div>
 
@@ -431,33 +446,31 @@ $(document).ready(function(){
                 <div class="green box">
                       <div class="form-group">
                             <span class="" for="name">CAC number</span>
-                            <input type="text" name="" value="RC" class="form-control">
+                            <input type="text" name="cac_number" class="form-control" value="<?= $get_employment_details['cac_number'];?>">
                         </div>
 
                         <div class="form-group">
                             <span class="" for="name">Company Name</span>
-                            <input type="text" name="" value="" class="form-control" placeholder="Company Name">
+                            <input type="text" name="company_name" value="" class="form-control" placeholder="Company Name" value="<?= $get_employment_details['company_name'];?>">
                         </div>    
 
                         <div class="form-group">
                             <span class="" for="name">Company address</span>
-                            <input type="text" name="" value="" class="form-control" placeholder="Company address">
+                            <input type="text" name="company_address" value="" class="form-control" placeholder="Company address" value="<?= $get_employment_details['company_address'];?>">
                         </div>  
                 </div>
 
                         <div class="form-group">
                             <span class="" for="name">Estimated Monthly income</span>
-                            <input type="text" name="" value="" class="form-control" placeholder="Monthly income">
+                            <input type="text" name="monthly_income" class="form-control" placeholder="Monthly income" value="<?= $get_employment_details['monthly_income'];?>">
                         </div>
 
                         <div class="mt-3 mb-3">
-                        <button type="button" class="btn btn-primary btn-block btn-lg" id="submit_employment_details" name="submit_employment_details">Next</button>
+                        <button type="button" class="btn btn-primary btn-block btn-lg submit_employment_details" id="" >Next</button>
                     </div>
-
-
-</div>
-</div>
-                        </form>
+                    </div>
+                    </div>
+    </form>
 
                     </div>
                 </div>
