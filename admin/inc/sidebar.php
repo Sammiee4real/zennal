@@ -92,6 +92,7 @@
             <a class="collapse-item" href="add_vendor.php">Add Vendors</a>
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Insurance Setting</h6>
+            <a class="collapse-item" href="add_insurer.php">Add Insurer</a>
             <a class="collapse-item" href="set_insurance_packages.php">Add Insurance Package</a>
             <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plan</a>
             <a class="collapse-item" href="add_insurance_category.php">Add Insurance Category</a>

@@ -666,6 +666,7 @@ $(document).ready(function(){
           });
       });
 
+	
 	$("#set_insurance_package").click(function(){
           $.ajax({
               url: "ajax_admin/set_insurance_package.php",
@@ -1632,19 +1633,20 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("#add_insurance_category").click(function(){
+	$("#add_insurance_plan_form").submit(function(e){
+		e.preventDefault();
           $.ajax({
-              url: "ajax_admin/ajax_add_insurance_category.php",
+              url: "ajax_admin/add_insurance_pan.php",
               method: "POST",
-              data:$("#set_packages_form").serialize(),
+              data:$(this).serialize(),
               beforeSend:function(){
-                $("#add_insurance_category").attr("disabled", true);
-                $("#add_insurance_category").text("Adding...");
+                $("#add_insurance_plan").attr("disabled", true);
+                $("#add_insurance_plan").text("Please wait");
               },
               success: function(data){
                 if(data == "success"){
                   $("#success_message").empty();
-                  $("#success_message").html("Success! Insurance category has been created successfully");
+                  $("#success_message").html("Success! Insurance plan has been created successfully");
                   toastbox('success_toast', 3000);
                   setTimeout( function(){ window.location.href = "add_insurance_category.php";}, 3000);
                 }
@@ -1653,27 +1655,28 @@ $(document).ready(function(){
                   $("#error_message").html("Error! " + data);
                   toastbox('error_toast', 6000);
                 }
-                $("#add_insurance_category").attr("disabled", false);
-                $("#add_insurance_category").text("Create Category");
+                $("#add_insurance_plan").attr("disabled", false);
+                $("#add_insurance_plan").text("Create plan");
               }
           });
       });
       
-      $("#add_insurance_benefit").click(function(){
+      $("#insurance_benefit_form").submit(function(e){
+		  e.preventDefault();
           $.ajax({
-              url: "ajax_admin/ajax_add_insurance_benefit.php",
+              url: "ajax_admin/add_insurance_benefit.php",
               method: "POST",
-              data:$("#insurance_benefit_form").serialize(),
+              data:$(this).serialize(),
               beforeSend:function(){
                 $("#add_insurance_benefit").attr("disabled", true);
-                $("#add_insurance_benefit").text("Adding...");
+                $("#add_insurance_benefit").text("Please wait");
               },
               success: function(data){
                 if(data == "success"){
                   $("#success_message").empty();
                   $("#success_message").html("Success! Insurance benefit has been created successfully");
                   toastbox('success_toast', 3000);
-                  setTimeout( function(){ window.location.href = "add_insurance_benefit.php";}, 3000);
+                //   setTimeout( function(){ window.location.href = "add_insurance_benefit.php";}, 3000);
                 }
                 else{
                   $("#error_message").empty();
@@ -1720,6 +1723,7 @@ $(document).ready(function(){
 		})
 	});
 
+
 	$("#submit_financial_details").click(function(e){
 		e.preventDefault();
 		$('#submit_financial_details').attr('disabled', true);
@@ -1747,6 +1751,43 @@ $(document).ready(function(){
 				}
 				$('#submit_financial_details').attr('disabled', false);
 				$('#submit_financial_details').text('Submit');
+			}
+		})
+	});
+
+	// Badmus
+	$('#add_insurer_form').submit(function(e){
+		e.preventDefault();
+		$('#submit_insurer_form').attr('disabled', true);
+		$('#submit_insurer_form').text('Please wait...');
+		var formData = new FormData(this);
+		$.ajax({
+			url:"ajax_admin/add_insurer.php",
+			method: "POST",
+			data: formData,
+			contentType: false,
+			cache: false,
+			processData:false,
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Insurer added successfully",
+                        icon: "success",
+                    })
+					// .then(setTimeout( function(){ window.location.href = "refer";}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					// location.reload();
+				}
+				$('#submit_insurer_form').attr('disabled', false);
+				$('#submit_insurer_form').text('Submit');
 			}
 		})
 	});
