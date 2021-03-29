@@ -17,7 +17,7 @@ $get_insurers = get_rows_form_table('insurers');
     <div class="row">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-right">
-                <li class="breadcrumb-item"><a href="select_action.php">Home</a></li>
+                <li class="breadcrumb-item"><a href="select_action.php">Back</a></li>
                 <li class="breadcrumb-item"><a href="">Insurance Provider</a></li>
             </ol>
         </nav>
@@ -36,10 +36,10 @@ $get_insurers = get_rows_form_table('insurers');
                 foreach($get_insurers as $insurer){
             ?>
             <div class="col-xl-4 col-sm-6 col-12">
-                <div class="card text-center ">
+                <div class="card text-center">
                     <div class="card-content text-white">
                         <div class="card-body mb-3">
-                            <a href="plans_and_benefits.php?insurer_id=<?php echo $insurer['unique_id']?>"><img src="assets/images/<?php echo $insurer['image']?>" width="80px" height="50px"></a>
+                            <a href="plans_and_benefits.php?insurer_id=<?php echo base64_encode($insurer['unique_id'])?>"><img src="assets/images/<?php echo $insurer['image']?>" width="80px" height="50px"></a>
                         </div>
                     </div>
                 </div>

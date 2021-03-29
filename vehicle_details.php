@@ -21,6 +21,16 @@ function show(el, txt){
         <h3>Provide Vehicle Details</h3>
         <p class="text-subtitle text-muted">Complete the information to purchase your insurance plan</p>
     </div>
+</div>
+
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-right">
+            <li class="breadcrumb-item"><a href="select_action.php">Back</a></li>
+            <li class="breadcrumb-item"><a href="#">Vehicle Details</a></li>
+        </ol>
+    </nav>
+</div>
 
 
  <section class="section mt-5">
@@ -35,7 +45,6 @@ function show(el, txt){
                             <span class="">
                                 <i data-feather="book" width="100"></i>
                                 <p>Vehicle Details</p>
-                                
                             </span>
                         </a>
                     </li>
@@ -63,16 +72,16 @@ function show(el, txt){
 
                     <div class="tab-content">
                     <div class="tab-pane active" role="tabpanel" id="step1">
-                        <form class="form" action="buy_package.php">
+                        <form class="form" action="buy_package.php" method="get" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <fieldset class="form-group">
                                             <span for="Usagecolumn">Usage</span>
-                                        <select class="form-select" id="basicSelect">
+                                            <select class="form-select" name="usage" id="basicSelect">
                                             <option value="">Select Usage</option>
                                             <option value="Private">Private</option>
                                             <option value="Business">Business</option>
-                                            <option value="pandb">Private and Business</option>
+                                            <option value="PrivateAndBusiness">Private and Business</option>
                                         </select>
                                     </fieldset>
                                     </div>
@@ -80,33 +89,30 @@ function show(el, txt){
                                     <div class="col-md-6 col-12">
                                         <fieldset class="form-group">
                                             <span for="Maker">Make of Vehicle</span>
-                                        <select id="basicS" name="thename" class="form-select" onChange="show('others', this.options[this.selectedIndex].firstChild.nodeValue)">
-                                            <option value="">Select make</option>
-                                            <option value="Honda">Honda</option>
-                                            <option value="Toyota">Toyota</option>
-                                            <option value="Audi">Audi</option>
-                                            <option value="Others">Others</option>
-                                        </select>
-                                    </fieldset>
+                                            <select id="basicS" name="make_of_vehicle" class="form-select" onChange="show('others', this.options[this.selectedIndex].firstChild.nodeValue)">
+                                                <option value="">Select make</option>
+                                                <option value="Honda">Honda</option>
+                                                <option value="Toyota">Toyota</option>
+                                                <option value="Audi">Audi</option>
+                                                <option value="Others">Others</option>
+                                            </select>
+                                        </fieldset>
                                     </div>
 
                                     <div id="others">
                                         <div class="form-group">
                                             <span for="Makecolumn">Other Maker of Vehicle</span>
-                                            <input type="text" id="Vehiclename" class="form-control" placeholder="Other Make of Vehicle" name="vname-column">
+                                            <input type="text" id="Vehiclename" class="form-control" placeholder="Other Make of Vehicle" name="other_make_of_vehicle">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="VehicleType">Vehicle Type</span>
-                                            <select id=""  class="form-select">
-                                                <option value="Honda">Select Type</option>
-                                            <option value="Honda">Bus</option>
-                                            <option value="Toyota">Car</option>
-                                            <option value="Audi">Motorcycle</option>
-                                            <option value="Others">Truck</option>
-                                        </select>
+                                            <select id="" name="vehicle_type"  class="form-select">
+                                                <option value="">Select Type</option>
+                                                <option value="323">323</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -208,22 +214,23 @@ function show(el, txt){
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="RegistrationNumber">Vehicle Registration Number</span>
-                                            <input type="text" id="Registration" class="form-control" name="Vehicle" placeholder="Vehicle Registration Number">
+                                            <input type="text" id="Registration" class="form-control" name="vehicle_reg_no" placeholder="Vehicle Registration Number">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="Modelcolumn">Vehicle Model</span>
-                                            <select class="form-select">
-                                            <option value="Honda">Select Model</option>
+                                            <select class="form-select" name="vehicle_model">
+                                            <option value="">Select Model</option>
+                                            <option value="Accord">Accord</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="Year-column">Year of Make</span>
-                                            <input type="date" id="Yearcolumn" class="form-control" placeholder="Year of Make" name="Yearcolumn">
+                                            <span for="year_of_make">Year of Make</span>
+                                            <input type="text" id="year_of_make" class="form-control" placeholder="Year of Make" name="year_of_make">
                                         </div>
                                     </div>
 
@@ -242,38 +249,44 @@ function show(el, txt){
                                     
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="ChassisNumber">Chassis Number</span>
-                                            <input type="number" id="Chassis" class="form-control" name="ChassisNumber" placeholder="Chassis Number">
+                                            <span for="chassis_number">Chassis Number</span>
+                                            <input type="text" id="Chassis" class="form-control" name="chassis_number" placeholder="Chassis Number">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="EngineNumber">Engine Number</span>
-                                            <input type="number" id="EngineNumber" class="form-control" name="EngineNumber" placeholder="Engine Number">
+                                            <input type="text" id="EngineNumber" class="form-control" name="engine_number" placeholder="Engine Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <span for="risk_location">Location Of Risk</span>
+                                            <input type="text" id="risk_location" class="form-control" name="risk_location" placeholder="Engine Risk Location">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="InsuredName"> Insured Name</span>
-                                            <input type="text" id="InsuredName" class="form-control" name="InsuredName" placeholder="Insured Name">
+                                            <span for="InsuredName">Insured Name</span>
+                                            <input type="text" id="InsuredName" class="form-control" name="insured_name" placeholder="Insured Name">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="SumInsured">Sum Insured (Value of Vehicle to be Insured)</span>
-                                            <input type="text" id="SumInsured" class="form-control" name="SumInsured" placeholder="Sum Insured">
+                                            <input type="text" id="SumInsured" class="form-control" name="sum_insured" placeholder="Sum Insured">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="SumInsured">Insured Type (Are you the Primary User)</span>
-                                            <select name="thename" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
-                                                <option>Select Insured Type</option>
-                                                <option>Yes</option>
-                                                <option>No</option>
+                                            <select name="insured_type" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
+                                                <option value="">Select Insured Type</option>
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
                                             </select>
                                         </div>
 
@@ -289,24 +302,48 @@ function show(el, txt){
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="PolicyStartDate">Policy Start Date (Date of commencement of policy)</span>
-                                            <input type="date" id="PolicyStartDate" class="form-control" name="PolicyStartDate" placeholder="Policy Start Date">
+                                            <input type="date" id="PolicyStartDate" class="form-control" name="policy_start_date" placeholder="Policy Start Date">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="company-column">Vehicle Images (4 sizes of Vehicle including Plate number)</span>
+                                            <span for="PolicyStartDate">Policy End Date (Policy expiry date)</span>
+                                            <input type="date" id="PolicyStartDate" class="form-control" name="policy_end_date" placeholder="Policy Start Date">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <span for="company-column">Risk Image (Upload vehicle image)</span>
                                             <div class="input-group mb-3">
                                         <div class="form-file">
-                                            <input type="file" class="form-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                            <input type="file" name="risk_image" class="form-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
                                             <label class="form-file-label" for="inputGroupFile01">
                                                 <span class="form-file-text">Choose file...</span>
                                                 <span class="form-file-button">Browse</span>
                                             </label>
                                         </div>
                                     </div>
+
+                                    </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <span for="identity-image">Identity Image (Upload a valid ID)</span>
+                                            <div class="input-group mb-3">
+                                        <div class="form-file">
+                                            <input type="file" name="identity_image" class="form-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                            <label class="form-file-label" for="inputGroupFile01">
+                                                <span class="form-file-text">Choose file...</span>
+                                                <span class="form-file-button">Browse</span>
+                                            </label>
                                         </div>
                                     </div>
+
+
+                                        
 
 
                                     <!-- <div class="col-md-6 col-12">
@@ -329,9 +366,10 @@ function show(el, txt){
                                             <input type="text" id="Currency" class="form-control" name="Currency" placeholder="Currency">
                                         </div>
                                     </div> -->
-                                    
-                                    <div class="col-12 d-flex justify-content-end">
-                                      <a href=""><button type="submit" class="btn btn-primary mr-1 mb-1">Submit</button></a>
+                                    </div>
+                                    </div>
+                                    <div class="text-center">
+                                      <button type="submit" name="submit_vehicle_details" class="btn btn-primary mr-1 mb-1">Submit</button>
                                     </div>
                                
                                 </div>

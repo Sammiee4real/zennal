@@ -12,7 +12,7 @@
     </div>
 
     <section class="section mt-5">
-        <div class="row">    
+        <div class="row">
             <div class="col-xl-6 col-md-5 col-12">
                 <div class="card">
                     <div class="card-content">

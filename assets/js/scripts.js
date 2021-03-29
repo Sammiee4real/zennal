@@ -1792,5 +1792,73 @@ $(document).ready(function(){
 		})
 	});
 
+
+	$(".select-insurers").change(function(){
+		const insurerId = $(this)[0].value;
+		console.log(insurerId);
+		let plans = $(".selectPackagePlan");
+		$(plans).empty();
+		plans.append(`<option>Select package</option>`);
+		$.ajax({
+			url:"admin/ajax_admin/get_insurance_plans.php",
+			method: "GET",
+			data:{insurerId},
+			success: function(res){
+				const data = JSON.parse(res);
+				data.map(plan => {
+					plans.append(`
+					<option value="${plan.unique_id}">${plan.plan_name}</option>
+					`);
+				});
+			}
+		});
+	});
+
+	$("#payment-option").change(function(){
+		const insurerPlanId = $(".selectPackagePlan")[0].value;
+		console.log(insurerPlanId);
+		let oneTimePay = $("#one-time-payment");
+		let installmetalPay = $("#installment-payment");
+		oneTimePay.empty();
+		installmetalPay.empty();
+		
+		$.ajax({
+			url:"ajax/get_insurance_quote.php",
+			method: "GET",
+			data:{insurerPlanId},
+			success: function(res){
+
+				const data = JSON.parse(res);
+				console.log(data.data.status);
+				if (data.data.status == '1'){
+					let installment = data.data.installment;
+					oneTimePay.append(`
+					<tr>
+						<td class="text-bold-500">ANNUAL (ONE-TIME PAYMENT)</td>
+						<td>₦ ${data.data.one_time.annual_due}</td>
+						<td><a href="bank_details.php"><button class="btn btn-primary">BUY NOW</button></a></td>
+				  	</tr>
+					`)
+
+					if(installment.length > 0){
+						installment.map(payment => {
+							installmetalPay.append(`
+							<tr>
+								<td class="text-bold-500">TWO INSTALLMENTS</td>
+								<td>₦29,750</td>
+								<td><a href="apply_loan.php"><button class="btn btn-primary">BUY NOW</button></a></td>
+						  	</tr>
+							`)
+						})
+					}
+				}
+				// data.map(plan => {
+				// 	plans.append(`
+				// 	<option value="${plan.unique_id}">${plan.plan_name}</option>
+				// 	`);
+				// });
+			}
+		});
+	})
 	/* Badmus */
 });

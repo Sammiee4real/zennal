@@ -1,4 +1,5 @@
 <?php
+    $user_id = $_SESSION['user']['unique_id'];
     $get_recent_activities = get_user_recent_activities($user_id);
 ?>
             <nav class="navbar navbar-header navbar-expand navbar-light">

@@ -56,7 +56,7 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="address">Contact address</label>
-                                            <textarea name="address" class="form-control" id="address" cols="30" rows="3"><?php echo $user['address'] != null ? $user['address'] : 'Enter address';?></textarea>
+                                            <textarea name="address" class="form-control" id="address" cols="30" rows="3"><?php echo $user['address'] != null ? $user['address'] : null ;?></textarea>
                                         </div>
 
                                         <div class="form-group">

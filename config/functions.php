@@ -82,7 +82,7 @@ function get_number_of_rows($table){
   return $count;     
 }
 
-function get_rows_form_table($table){
+function get_rows_from_table($table){
   global $dbc;
   $table = secure_database($table);
   $sql= "SELECT * FROM `$table`";
@@ -91,7 +91,7 @@ function get_rows_form_table($table){
   return $data;     
 }
 
-function get_rows_form_table_with_one_params($table, $param, $value){
+function get_rows_from_table_with_one_params($table, $param, $value){
   global $dbc;
   $table = secure_database($table);
   $sql= "SELECT * FROM `$table` WHERE `$param` = '$value'";
@@ -353,6 +353,7 @@ function register_user($post){
     return json_encode(array("status"=>0, "msg"=>"Password does not match"));
   }
 
+  $title = secure_database($post["title"]);
   $first_name = secure_database($post["first_name"]);
   $last_name = secure_database($post["last_name"]);
   $other_name = secure_database($post["other_name"]);
@@ -363,7 +364,7 @@ function register_user($post){
 
   $hash_password = md5($password);
 
-  $sql = "INSERT INTO `users` SET `unique_id` = '$unique_id', `first_name` = '$first_name', `last_name` = '$last_name', `other_names` = '$other_name', `referral_code` = '$referral_code', `referrer_code` = '$referrer_code', `email` = '$email', `phone` = '$phone_no', `password` = '$hash_password', `registered_on` = now()";
+  $sql = "INSERT INTO `users` SET `unique_id` = '$unique_id', `title` = '$title' `first_name` = '$first_name', `last_name` = '$last_name', `other_names` = '$other_name', `referral_code` = '$referral_code', `referrer_code` = '$referrer_code', `email` = '$email', `phone` = '$phone_no', `password` = '$hash_password', `registered_on` = now()";
 
   $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
 
@@ -593,6 +594,144 @@ function get_insurance_benefits($insurer_id){
   // }
 
   return $outer_arr;
+}
+
+// Badmus
+function get_insurance_quote($packageId){
+  if (! isset($_SESSION['vehicle_details'])) {
+    return json_encode(array('status'=>0, 'msg'=>"Vehicle details not provided"));
+  }
+
+  $first_name = $_SESSION['user']['first_name'];
+  $last_name = $_SESSION['user']['last_name'];
+  $gender = $_SESSION['user']['gender'];
+  $dob = $_SESSION['user']['dob'];
+  $title = $_SESSION['user']['title'];
+  $email = $_SESSION['user']['email'];
+
+  $usage = $_SESSION['vehicle_details']['usage'];
+  $make_of_vehicle = $_SESSION['vehicle_details']['make_of_vehicle'];
+  $other_make_of_vehicle = $_SESSION['vehicle_details']['other_make_of_vehicle'];
+  $vehicle_type = $_SESSION['vehicle_details']['vehicle_type'];
+  $vehicle_reg_no = $_SESSION['vehicle_details']['vehicle_reg_no'];
+  $vehicle_model = $_SESSION['vehicle_details']['vehicle_model'];
+  $year_of_make = $_SESSION['vehicle_details']['year_of_make'];
+  $chassis_number = $_SESSION['vehicle_details']['chassis_number'];
+  $engine_number = $_SESSION['vehicle_details']['engine_number'];
+  $risk_location = $_SESSION['vehicle_details']['risk_location'];
+  $insured_name = $_SESSION['vehicle_details']['insured_name'];
+  $sum_insured = $_SESSION['vehicle_details']['sum_insured'];
+  $insured_type = $_SESSION['vehicle_details']['insured_type'];
+  $policy_start_date = $_SESSION['vehicle_details']['policy_start_date'];
+  $policy_end_date = $_SESSION['vehicle_details']['policy_end_date'];
+  $risk_img = $_SESSION['vehicle_details']['risk_img'];
+  $identity_img = $_SESSION['vehicle_details']['identity_img'];
+
+  // -----------------------------------------------------------------------------
+  $curl = curl_init();
+    
+    $data = array("RiskDetails" => [
+     array(
+       "ComprehensiveMotorDetails"=> array(
+         "Usage"=> $usage,
+         "FloodCoverRequired"=> false, 
+         "ExcessBuyBackValue"=> 15000,
+         "VehicleReplacementRequired"=> true,
+         "TrackerDiscountEnabled"=> true,
+         "TrackerRequired"=> false,
+         "TrackerAmount"=> 50,
+         "VehicleRegistrationNumber"=> $vehicle_reg_no,
+         "MakeOfVehicle"=> $make_of_vehicle,
+         "OtherMakeOfVehicle"=> $other_make_of_vehicle,
+         "VehicleModel"=> $vehicle_model, 
+         "YearOfMake"=> $year_of_make, 
+         "LocationOfRisk"=> $risk_location, 
+         "OtherLocationOfRisk"=> "", 
+         "ChassisNumber"=> $chassis_number, 
+         "EngineNumber"=> $engine_number, 
+         "VehicleType"=> $vehicle_type, 
+        //  "VideoUrl"=> "http://test.video" 
+       ),
+       "SumInsured"=> $sum_insured, 
+       "InsuredType"=> "MainContact", 
+    //   "AddonAnswers"=> [ 
+    //      array( 
+    //       "ID"=> 12, 
+    //       "Key"=> 1, 
+    //       "Value"=> 1500, 
+    //       "ValueTypeText"=> "Number" 
+    //      ) 
+    //   ], 
+       "RiskImages"=> [ 
+         array( 
+           "Filename"=> "RiskImage.jpg", 
+           "Image"=> $risk_img
+         )
+       ], 
+       "InsuredName"=> $first_name." ".$last_name
+     ) 
+   ], 
+   "ProductUid"=> "40739515-8e6b-4217-b78d-26e750ca249a", 
+   "PolicyStartDate"=> $policy_start_date,
+    "PolicyEndDate"=> $policy_end_date,
+   "Account"=> array( 
+     "FirstName"=> $first_name, 
+     "LastName"=> $last_name, 
+    //  "AddressLine1"=> "902 Long Street", 
+    //  "AddressLine2"=> "Maitama", 
+    //  "City"=> "Abuja", 
+    //  "StateName"=> "FCT", 
+    //  "Lga"=> "Maitama", 
+     "IdentityImage"=> $identity_img,
+     "Gender"=> $gender, 
+    //  "MaritialStatus"=> "Married", 
+     "BirthDate"=> $dob,
+     "Title"=> $title, 
+    //  "Position"=> "Builder", 
+    //  "Phone"=> "+234 31 534 512", 
+     "Email"=> "Umar.Garba%40Testing.ng",
+    //  "IndustrySector"=> "Construction", 
+    //  "FullName"=> "Umar Garba", 
+    //  "ThirdpartyAccountUid"=> "00000000-0000-0000-0000-000000000000" 
+   ), 
+   "Payment"=> array(
+     "SumInsuredType"=> "Individual", 
+     "Currency"=> "Naira" 
+   ) 
+ );
+    
+curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/GetQuoteComprehensiveMotorInsurance",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "POST",
+    CURLOPT_POSTFIELDS =>json_encode($data),
+    CURLOPT_HTTPHEADER => array(
+        "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
+        "Content-Type: application/json"
+    ),
+));
+
+$response = json_decode(curl_exec($curl), true);
+curl_close($curl);
+// echo $response;
+$res = array(
+  'data'=> array(
+    'one_time' => array(
+      'annual_due' => $response['Quote']['PaymentDue'],
+      'quote_number' => $response['Quote']['QuoteNumber'],
+      'validation_result' => $response['ValidationResult']
+    ),
+    'installment' => array(),
+    'status'=>1
+  )
+);
+echo json_encode($res);
+    // -------------------------------------------------------------------------
 }
 
 function insurance_packages(){
@@ -2981,35 +3120,35 @@ function get_active_insurance_products(){
 }
 
 
-function get_insurance_quote($post_data){
+// function get_insurance_quote($post_data){
     
-    // Prepare json structure
+//     // Prepare json structure
     
-    $curl = curl_init();
+//     $curl = curl_init();
     
-    $data = array(
-        $form_data=>null
-      );
+//     $data = array(
+//         $form_data=>null
+//       );
     
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/GetQuoteComprehensiveMotorInsurance",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS =>json_encode($data),
-        CURLOPT_HTTPHEADER => array(
-            "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
-            "Content-Type: application/json"
-        ),
-    ));
+//     curl_setopt_array($curl, array(
+//         CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/GetQuoteComprehensiveMotorInsurance",
+//         CURLOPT_RETURNTRANSFER => true,
+//         CURLOPT_ENCODING => "",
+//         CURLOPT_MAXREDIRS => 10,
+//         CURLOPT_TIMEOUT => 0,
+//         CURLOPT_FOLLOWLOCATION => true,
+//         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//         CURLOPT_CUSTOMREQUEST => "POST",
+//         CURLOPT_POSTFIELDS =>json_encode($data),
+//         CURLOPT_HTTPHEADER => array(
+//             "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
+//             "Content-Type: application/json"
+//         ),
+//     ));
     
-    $response = curl_exec($curl);
-    curl_close($curl);
-}
+//     $response = curl_exec($curl);
+//     curl_close($curl);
+// }
 
 
 function pay_insurance_quote($quote_number){
