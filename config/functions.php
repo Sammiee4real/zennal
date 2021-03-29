@@ -2092,7 +2092,7 @@ function submit_loan_application($user_approved_amount, $loan_id){
   $update_data_sql = "UPDATE `personal_loan_application` SET `user_approved_amount`='$user_approved_amount', `amount_to_repay`='$amount_to_repay', `approval_status` = 3  WHERE `unique_id`='$loan_id'";
   $update_data_query = mysqli_query($dbc, $update_data_sql) or mysqli_error($dbc);
   if($update_data_query){
-    $flutter_transfer = flutterwave_transfer($loan_id, $get_loan_details['user_id'], $user_approved_amount);
+    // $flutter_transfer = flutterwave_transfer($loan_id, $get_loan_details['user_id'], $user_approved_amount);
     return json_encode(["status"=>"1", "msg"=>"success", "data"=>$amount_to_repay]);
   }else{
     return json_encode(["status"=>"0", "msg"=>"Please try again"]);
@@ -2716,10 +2716,11 @@ function flutterwave_transfer($loan_id,$user_id, $amount){
   ]);
   
   // Execute cURL request with all previous settings
- //echo $response = curl_exec($curl);
+ $response = curl_exec($curl);
   
   // Close cURL session
   curl_close($curl);
+  return $response;
 
  $response_dec = json_decode($response,true);
  $response_status = $response_dec['status'];
@@ -2755,12 +2756,12 @@ function flutterwave_transfer2($request_id, $user_id, $amount){
   'Authorization: Bearer FLWSECK_TEST-0c1450bff1fe587e3164a42ef28e90be-X',
   'Content-Type: application/json'
   ]);
-  echo $response = curl_exec($curl);
+  return $response = curl_exec($curl);
   curl_close($curl);
-  $response_dec = json_decode($response,true);
-  $response_status = $response_dec['status'];
-  $response_message = $response_dec['message'];
-  $transfer_id = $response_dec['data']['id'];
+  // $response_dec = json_decode($response,true);
+  // $response_status = $response_dec['status'];
+  // $response_message = $response_dec['message'];
+  // $transfer_id = $response_dec['data']['id'];
 }
 
 
@@ -2775,6 +2776,26 @@ function insert_payment_transaction($user_id, $payment_id){
   }
   else{
     $insert_data_sql = "INSERT INTO `online_bank_statement` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `transaction_id` = '$payment_id', `use_status` = 0, `date_created` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function insert_disbursed_loan($user_id, $loan_id, $amount){
+  global $dbc;
+  $user_id = secure_database($user_id);
+  $loan_id = secure_database($loan_id);
+  // $tx_ref = secure_database($tx_ref);
+  $unique_id = unique_id_generator($loan_id.$user_id);
+  if($user_id == '' || $loan_id == '' || $amount == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $insert_data_sql = "INSERT INTO `disbured_loan` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `loan_id` = '$loan_id', `amount` = '$amount', `date_created` = now()";
     $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
       return json_encode(["status"=>"1", "msg"=>"success"]);
@@ -3179,7 +3200,7 @@ function submit_withdrawal_request($user_id, $amount){
   }
 }
 
-function approve_withdrawal($request_id){
+function approve_withdrawal($request_id, $amount){
   $request_id = secure_database($request_id);
   if($request_id == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
@@ -3187,9 +3208,30 @@ function approve_withdrawal($request_id){
   else{
     $get_withdrawal_request = get_one_row_from_one_table_by_id('withdrawal_request', 'unique_id', $request_id, 'date_created');
     $get_user_balance = get_one_row_from_one_table_by_id('wallet', 'user_id', $get_withdrawal_request['user_id'], 'date_created');
-    $flutter_transfer = flutterwave_transfer2($request_id, $get_withdrawal_request['user_id'], $get_withdrawal_request['amount']);
+    if($get_user_balance['balance'] < $amount){
+      return json_encode(["status"=>"0", "msg"=>"Wallet Balance is insufficient"]);
+    }
+    else{
+      $flutter_transfer = flutterwave_transfer2($request_id, $get_withdrawal_request['user_id'], $get_withdrawal_request['amount']);
+      $response_decode = json_decode($flutter_transfer, true);
+      if($response_decode['status'] == "error"){
+        $new_balance = $get_user_balance['balance'] - $get_withdrawal_request['amount'];
+        $update_wallet = update_by_one_param('wallet','balance', $new_balance, 'user_id', $get_withdrawal_request['user_id']);
+        $update_request_status = update_by_one_param('withdrawal_request','status', 1, 'unique_id', $request_id);
+        if($update_wallet AND $update_request_status){
+          return json_encode(["status"=>"1", "msg"=>"error"]);
+        }else{
+          return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+        }
+      }
+      else{
+        return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+      }
+    }
   }
 }
+
+function repayment_cron(){}
 
 /////// MOST IMPORTANT FUNCTIONS END HERE
 

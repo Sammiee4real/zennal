@@ -24,7 +24,7 @@ include("includes/sidebar.php");
     </div>
 <section class="section mt-5">
 <div class="col-md-8 col-sm-12 mx-auto">
-             <?php
+            <?php
                 if(isset($_GET['message'])){
                     if($_GET['message'] == 'transaction_failed'){
                         $message = "Your transaction failed, please try again";

@@ -173,19 +173,21 @@ $(document).ready(function(){
 			data: $("#submit_loan_application_form").serialize(),
 			success: function(data){
 				if(data == "success"){
-					$("#success_message").empty();
-					$("#success_message").html("Sucessful, your repayment details has been sent to your mail, you will be redirected shortly");
-					toastbox('success_toast', 6000);
-					setTimeout( function(){ window.location.href = "okra_debit_confirmation.php?loan_id="+loan_id}, 6000);
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your repayment details has been sent to your mail, you will be redirected shortly",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "okra_debit_confirmation.php?loan_id="+loan_id}, 5000));
 				}
 				else{
-					$("#error_message").empty();
-					$("#error_message").html("Error! " + data);
-					toastbox('error_toast', 6000);
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
 				}
 				$("#submit_loan_application").attr("disabled", false);
 				$("#submit_loan_application").text("Submit");
-
 			}
 		})
 	});
@@ -1805,6 +1807,68 @@ $(document).ready(function(){
 				}
 				$('#submit_financial_details').attr('disabled', false);
 				$('#submit_financial_details').text('Submit');
+			}
+		})
+	});
+
+	$("#approve_withdrawal").click(function(e){
+		e.preventDefault();
+		
+		$.ajax({
+			url:"ajax_admin/approve_withdrawal.php",
+			method: "POST",
+			data: $("#approve_withdrawal_form").serialize(),
+			beforeSend: function(){
+				$("#approve_withdrawal").attr("disabled", true);
+				$("#approve_withdrawal").text("Approving...");
+			},
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					$("#success_message").empty();
+					$("#success_message").html("Success! You've successfully approved this withdrawal request");
+					toastbox('success_toast', 3000);
+					setTimeout( function(){ window.location.href = "withdrawal_requests.php";}, 3000);
+				}
+				else{
+					$("#error_message").empty();
+					$("#error_message").html("Error! " + data);
+					toastbox('error_toast', 6000);
+				}
+				$("#modal").modal('hide');
+				$("#approve_withdrawal").attr("disabled", false);
+				$("#approve_withdrawal").text("Approve");
+			}
+		})
+	});
+
+	$("#reject_withdrawal").click(function(e){
+		e.preventDefault();
+		
+		$.ajax({
+			url:"ajax_admin/reject_withdrawal.php",
+			method: "POST",
+			data: $("#reject_withdrawal_form").serialize(),
+			beforeSend: function(){
+				$("#reject_withdrawal").attr("disabled", true);
+				$("#reject_withdrawal").text("Rejecting...");
+			},
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					$("#success_message").empty();
+					$("#success_message").html("Success! You've rejected this withdrawal request");
+					toastbox('success_toast', 3000);
+					setTimeout( function(){ window.location.href = "withdrawal_requests.php";}, 3000);
+				}
+				else{
+					$("#error_message").empty();
+					$("#error_message").html("Error! " + data);
+					toastbox('error_toast', 6000);
+				}
+				$("#modal").modal('hide');
+				$("#reject_withdrawal").attr("disabled", false);
+				$("#reject_withdrawal").text("Reject");
 			}
 		})
 	});
