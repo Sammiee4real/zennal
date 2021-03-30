@@ -37,6 +37,18 @@ if(isset($_SESSION['user'])){
                         <div class="row">
                             <div class="">
                                 <div class="form-group">
+                                    <label for="title">Title</label>
+                                    <!-- <input type="text" id="first_name" class="form-control"  name="first_name" required placeholder="Enter first name"> -->
+                                    <select name="title" id="title" class="form-control">
+                                        <option value="mr">Mr</option>
+                                        <option value="mrs">Mrs</option>
+                                        <option value="miss">Miss</option>
+                                        <option value="dr">Dr</option>
+                                        <option value="prof">Prof</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="first_name">First name</label>
                                     <input type="text" id="first_name" class="form-control"  name="first_name" required placeholder="Enter first name">
                                 </div>
