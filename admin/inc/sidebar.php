@@ -72,11 +72,10 @@
             <!-- <a class="collapse-item" href="view_repayment.php">View Repayments</a> -->
             <a class="collapse-item" href="view_insurance.php">View Insurance Bought</a>
             <a class="collapse-item" href="view_loan_packages.php">View Loan Packages</a>
-            <a class="collapse-item" href="view_vendors.php">View Vendors</a>
             <a class="collapse-item" href="view_insurance_plans.php">View Insurance Plans</a>
             <a class="collapse-item" href="view_insurance_pricing.php">View Insurance Pricing Plans</a>
             <a class="collapse-item" href="personal_loan_application_requests.php">Personal Loan Requests</a>
-            <a class="collapse-item" href="asset_finance_requests.php">Asset Finance Requests</a>
+            <a class="collapse-item" href="withdrawal_requests.php">Withdrawal Requests</a>
           </div>
       </li>
      <li class="nav-item">

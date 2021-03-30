@@ -60,15 +60,23 @@ $user = $_SESSION['user'];
                         <span>Dashboard</span>
                     </a>
                 </li>
-            
-            
-                <li class="sidebar-item ">
-                    <a href="loan" class='sidebar-link'>
+
+                <li class="sidebar-item has-sub">
+                    <a href="#" class='sidebar-link'>
                         <i data-feather="twitch" width="20"></i> 
                         <span>Loan</span>
                     </a>
+                    
+                    <ul class="submenu">
+                        <li>
+                            <a href="loan">Apply for Loan</a>
+                        </li>
+                        <li>
+                            <a href="current_loan_application">View Approved Loan</a>
+                        </li>
+                    </ul>
+                    
                 </li>
-            
             
                 <li class="sidebar-item ">
                     <a href="insurance" class='sidebar-link'>
