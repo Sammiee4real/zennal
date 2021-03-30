@@ -1949,11 +1949,13 @@ $(document).ready(function(){
 				const data = JSON.parse(res);
 				console.log(data.data.status);
 				if (data.data.status == '1'){
+					alert(1);
 					let installment = data.data.installment;
+					let amount = formatNumber(data.data.one_time.annual_due);
 					oneTimePay.append(`
 					<tr>
 						<td class="text-bold-500">ANNUAL (ONE-TIME PAYMENT)</td>
-						<td>₦ ${data.data.one_time.annual_due}</td>
+						<td>₦ ${amount}</td>
 						<td><a href="bank_details.php"><button class="btn btn-primary">BUY NOW</button></a></td>
 				  	</tr>
 					`)
@@ -1979,4 +1981,8 @@ $(document).ready(function(){
 		});
 	})
 	/* Badmus */
+
+	function formatNumber(num){
+		return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g,'$1,');
+	}
 });
