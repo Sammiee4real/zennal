@@ -3,7 +3,7 @@ include("includes/sidebar.php");
 include("includes/header.php");
 
 if(isset($_POST["submit_vehicle_details"])){
-  $_SESSION['vehicle_details'] = $_GET;
+  $_SESSION['vehicle_details'] = $_POST;
 }
 
 if(isset($_FILES["risk_image"]) && isset($_FILES["identity_image"])){
@@ -107,7 +107,7 @@ function show(el, txt){
       </div>
       <!-- <pre> -->
       <?php
-      // echo json_encode($_FILES["risk_image"]);
+      // echo json_encode($_FILES);
       
       // Display the output
       // echo "<br />";

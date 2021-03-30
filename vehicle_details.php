@@ -2,7 +2,12 @@
 <?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("includes/header.php");?>
+<?php
+ include("includes/header.php");
+ if (isset($_SESSION['vehicle_details'])) {
+    $vehicle_details = $_SESSION['vehicle_details'];
+ }
+?>
 <style type="text/css">
 #bar, #others {display:none;}
 </style>
@@ -72,16 +77,16 @@ function show(el, txt){
 
                     <div class="tab-content">
                     <div class="tab-pane active" role="tabpanel" id="step1">
-                        <form class="form" action="buy_package.php" method="get" enctype="multipart/form-data">
+                        <form class="form" action="buy_package.php" method="post" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <fieldset class="form-group">
                                             <span for="Usagecolumn">Usage</span>
                                             <select class="form-select" name="usage" id="basicSelect">
                                             <option value="">Select Usage</option>
-                                            <option value="Private">Private</option>
-                                            <option value="Business">Business</option>
-                                            <option value="PrivateAndBusiness">Private and Business</option>
+                                            <option value="Private" <?php echo isset($vehicle_details["usage"]) && $vehicle_details["usage"] == "Private"?"selected":""; ?>>Private</option>
+                                            <option value="Business" <?php echo isset($vehicle_details["usage"]) && $vehicle_details["usage"] == "Private"?"selected":""; ?>>Business</option>
+                                            <option value="PrivateAndBusiness" <?php echo isset($vehicle_details["usage"]) && $vehicle_details["usage"] == "PrivateAndBusiness"?"selected":""; ?>>Private and Business</option>
                                         </select>
                                     </fieldset>
                                     </div>
@@ -91,10 +96,10 @@ function show(el, txt){
                                             <span for="Maker">Make of Vehicle</span>
                                             <select id="basicS" name="make_of_vehicle" class="form-select" onChange="show('others', this.options[this.selectedIndex].firstChild.nodeValue)">
                                                 <option value="">Select make</option>
-                                                <option value="Honda">Honda</option>
-                                                <option value="Toyota">Toyota</option>
-                                                <option value="Audi">Audi</option>
-                                                <option value="Others">Others</option>
+                                                <option value="Honda" <?php echo isset($vehicle_details["make_of_vehicle"]) && $vehicle_details["make_of_vehicle"] == "Honda"?"selected":""; ?>>Honda</option>
+                                                <option value="Toyota" <?php echo isset($vehicle_details["make_of_vehicle"]) && $vehicle_details["make_of_vehicle"] == "Toyota"?"selected":""; ?>>Toyota</option>
+                                                <option value="Audi" <?php echo isset($vehicle_details["make_of_vehicle"]) && $vehicle_details["make_of_vehicle"] == "Audi"?"selected":""; ?>>Audi</option>
+                                                <option value="Others" <?php echo isset($vehicle_details["make_of_vehicle"]) && $vehicle_details["make_of_vehicle"] == "Others"?"selected":""; ?>>Others</option>
                                             </select>
                                         </fieldset>
                                     </div>
@@ -102,7 +107,7 @@ function show(el, txt){
                                     <div id="others">
                                         <div class="form-group">
                                             <span for="Makecolumn">Other Maker of Vehicle</span>
-                                            <input type="text" id="Vehiclename" class="form-control" placeholder="Other Make of Vehicle" name="other_make_of_vehicle">
+                                            <input type="text" id="Vehiclename" class="form-control" value="<?php $vehicle_details["other_make_of_vehicle"] ?? ""; ?>" placeholder="Other Make of Vehicle" name="other_make_of_vehicle">
                                         </div>
                                     </div>
 
@@ -111,7 +116,7 @@ function show(el, txt){
                                             <span for="VehicleType">Vehicle Type</span>
                                             <select id="" name="vehicle_type"  class="form-select">
                                                 <option value="">Select Type</option>
-                                                <option value="323">323</option>
+                                                <option value="323" <?php echo isset($vehicle_details["vehicle_type"]) && $vehicle_details["vehicle_type"] == "323"?"selected":""; ?>>323</option>
                                             </select>
                                         </div>
                                     </div>
@@ -214,7 +219,7 @@ function show(el, txt){
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="RegistrationNumber">Vehicle Registration Number</span>
-                                            <input type="text" id="Registration" class="form-control" name="vehicle_reg_no" placeholder="Vehicle Registration Number">
+                                            <input type="text" id="Registration" class="form-control" name="vehicle_reg_no" value="<?php echo $vehicle_details["vehicle_reg_no"] ?? ""; ?>" placeholder="Vehicle Registration Number">
                                         </div>
                                     </div>
 
@@ -223,14 +228,14 @@ function show(el, txt){
                                             <span for="Modelcolumn">Vehicle Model</span>
                                             <select class="form-select" name="vehicle_model">
                                             <option value="">Select Model</option>
-                                            <option value="Accord">Accord</option>
+                                            <option value="Accord" <?php echo isset($vehicle_details["vehicle_model"]) && $vehicle_details["vehicle_model"] == "Accord"?"selected":""; ?>>Accord</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="year_of_make">Year of Make</span>
-                                            <input type="text" id="year_of_make" class="form-control" placeholder="Year of Make" name="year_of_make">
+                                            <input type="text" id="year_of_make" value="<?php echo $vehicle_details["year_of_make"] ?? ""; ?>" class="form-control" placeholder="Year of Make" name="year_of_make">
                                         </div>
                                     </div>
 
@@ -250,66 +255,86 @@ function show(el, txt){
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="chassis_number">Chassis Number</span>
-                                            <input type="text" id="Chassis" class="form-control" name="chassis_number" placeholder="Chassis Number">
+                                            <input type="text" id="Chassis" value="<?php echo $vehicle_details["chassis_number"] ?? ""; ?>" class="form-control" name="chassis_number" placeholder="Chassis Number">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="EngineNumber">Engine Number</span>
-                                            <input type="text" id="EngineNumber" class="form-control" name="engine_number" placeholder="Engine Number">
+                                            <input type="text" id="EngineNumber" value="<?php echo $vehicle_details["engine_number"] ?? ""; ?>" class="form-control" name="engine_number" placeholder="Engine Number">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="risk_location">Location Of Risk</span>
-                                            <input type="text" id="risk_location" class="form-control" name="risk_location" placeholder="Engine Risk Location">
+                                            <input type="text" id="risk_location" class="form-control" value="<?php echo $vehicle_details["risk_location"] ?? ""; ?>" name="risk_location" placeholder="Engine Risk Location">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="InsuredName">Insured Name</span>
-                                            <input type="text" id="InsuredName" class="form-control" name="insured_name" placeholder="Insured Name">
+                                            <input type="text" id="InsuredName" value="<?php echo $vehicle_details["insured_name"] ?? ""; ?>" class="form-control" name="insured_name" placeholder="Insured Name">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="SumInsured">Sum Insured (Value of Vehicle to be Insured)</span>
-                                            <input type="text" id="SumInsured" class="form-control" name="sum_insured" placeholder="Sum Insured">
+                                            <input type="text" id="SumInsured" value="<?php echo $vehicle_details["sum_insured"] ?? ""; ?>" class="form-control" name="sum_insured" placeholder="Sum Insured">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <span for="insured_type">Insured Type</span>
+                                            <select name="insured_type" class="form-select">
+                                                <option value="">Select Insured Type</option>
+                                                <option value="Option1">Option1</option>
+                                                <option value="Option2">Option2</option>
+                                                <option value="Option3">Option3</option>
+                                            </select>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="SumInsured">Insured Type (Are you the Primary User)</span>
-                                            <select name="insured_type" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
-                                                <option value="">Select Insured Type</option>
+                                            <span for="primary_user">Primary User (Are you the Primary User)</span>
+                                            <select name="primary_user" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
+                                                <option value="">Select Primary User</option>
                                                 <option value="yes">Yes</option>
                                                 <option value="no">No</option>
                                             </select>
                                         </div>
 
                                         <div id="bar">
-                                        <div class="form-group">
-                                            <input type="text" id="" class="form-control" name="" placeholder="Name of primary user ">
-                                            <input type="text" id="" class="form-control" name="" placeholder="Relationship (e.g Sister, Mother)">
-                                        </div>
+                                            <div class="form-group">
+                                                <input type="text" value="<?php $vehicle_details["primary_user_name"] ?? ""; ?>" id="primary_user_name" class="form-control" name="primary_user_name" placeholder="Name of primary user ">
+                                            </div>
+                                            <div class="form-group">
+                                                <!-- <input type="text" id="" class="form-control" name="primary_user_relationship" placeholder="Relationship (e.g Sister, Mother)"> -->
+                                                <select name="primary_user_relationship" class="form-select">
+                                                    <option value="">Select Relationship</option>
+                                                    <option value="Mother" <?php isset($vehicle_details["primary_user_relationship"]) && $vehicle_details["primary_user_relationship"] == "Mother"?"selected":""; ?>>Mother</option>
+                                                    <option value="Spouse" <?php isset($vehicle_details["primary_user_relationship"]) && $vehicle_details["primary_user_relationship"] == "Spouse"?"selected":""; ?>>Spouse</option>
+                                                    <option value="Father" <?php isset($vehicle_details["primary_user_relationship"]) && $vehicle_details["primary_user_relationship"] == "Father"?"selected":""; ?>>Father</option>
+                                                    <option value="Sibling" <?php isset($vehicle_details["primary_user_relationship"]) && $vehicle_details["primary_user_relationship"] == "Sibling"?"selected":""; ?>>Sibling</option>
+                                                </select>
+                                            </div>
 
-                                       </div>
+                                        </div>
                                     </div>
                                    
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="PolicyStartDate">Policy Start Date (Date of commencement of policy)</span>
-                                            <input type="date" id="PolicyStartDate" class="form-control" name="policy_start_date" placeholder="Policy Start Date">
+                                            <input type="date" id="PolicyStartDate" value="<?php echo $vehicle_details["policy_start_date"] != null? $vehicle_details["policy_start_date"]:""; ?>" class="form-control" name="policy_start_date" placeholder="Policy Start Date">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="PolicyStartDate">Policy End Date (Policy expiry date)</span>
-                                            <input type="date" id="PolicyStartDate" class="form-control" name="policy_end_date" placeholder="Policy Start Date">
+                                            <input type="date" id="PolicyStartDate" class="form-control" name="policy_end_date" value="<?php echo $vehicle_details["policy_end_date"] != null? $vehicle_details["policy_end_date"]:""; ?>" placeholder="Policy Start Date">
                                         </div>
                                     </div>
 
