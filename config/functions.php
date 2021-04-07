@@ -2924,17 +2924,18 @@ function insert_payment_transaction($user_id, $payment_id){
   }
 }
 
-function insert_disbursed_loan($user_id, $loan_id, $amount){
+function insert_disbursed_loan($user_id, $loan_id, $amount, $received_json){
   global $dbc;
   $user_id = secure_database($user_id);
   $loan_id = secure_database($loan_id);
+  $loan_id = secure_database($received_json);
   // $tx_ref = secure_database($tx_ref);
   $unique_id = unique_id_generator($loan_id.$user_id);
   if($user_id == '' || $loan_id == '' || $amount == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    $insert_data_sql = "INSERT INTO `disbured_loan` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `loan_id` = '$loan_id', `amount` = '$amount', `date_created` = now()";
+    $insert_data_sql = "INSERT INTO `disbured_loan` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `loan_id` = '$loan_id', `amount` = '$amount', `received_json` = '$received_json', `date_created` = now()";
     $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
       return json_encode(["status"=>"1", "msg"=>"success"]);
@@ -2975,7 +2976,7 @@ function get_user_bank_statement($loan_id){
   $received_json = $get_bank_statement['received_json'];
   $decode_received_json = json_decode($received_json, true);
   //$callback_url = $decode_received_json['callback_url'];
-  $record_id = $decode_received_json['record'];
+  $record_id = $decode_received_json['record_id'];
   $curl = curl_init();
   curl_setopt_array($curl, array(
     CURLOPT_URL => 'https://api.okra.ng/v2/callback?record='.$record_id.'&method=PERIODIC_TRANSACTIONS',
@@ -3007,7 +3008,7 @@ function beautify_statement($loan_id){
   $decode_statement = json_decode($get_user_bank_statement, true);
   //print_r($decode_statement['data']);
   //print_r( $decode_statement['data']['transactions']['id'] );
-  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',       false);
+  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     // set default font subsetting mode
     $pdf->setFontSubsetting(true);
     $pdf->SetFont('helvetica', '', 10, '', true);
@@ -3370,7 +3371,119 @@ function approve_withdrawal($request_id, $amount){
   }
 }
 
-function repayment_cron(){}
+function add_new_vehicle($user_id, array $vehicle_details_array){
+  global $dbc;
+  //$user_id = $vehicle_details_array['user_id'];
+  $vehicle_type = $vehicle_details_array['vehicle_type'];
+  $vehicle_brand = $vehicle_details_array['vehicle_brand'];
+  $vehicle_model = $vehicle_details_array['vehicle_model'];
+  $year_of_make = $vehicle_details_array['year_of_make'];
+  $plate_number = $vehicle_details_array['plate_number'];
+  $chassis_number = $vehicle_details_array['chassis_number'];
+  $engine_number = $vehicle_details_array['engine_number'];
+  $vehicle_color = $vehicle_details_array['vehicle_color'];
+  $vehicle_license_name = $vehicle_details_array['vehicle_license_name'];
+  $phone_of_vehicle = $vehicle_details_array['phone_of_vehicle'];
+  $address_of_vehicle = $vehicle_details_array['address_of_vehicle'];
+  $vehicle_license_expiry = $vehicle_details_array['vehicle_license_expiry'];
+  $insurance_expiry = $vehicle_details_array['insurance_expiry'];
+  $road_worthiness_expiry = $vehicle_details_array['road_worthiness_expiry'];
+  $hackney_permit_expiry = $vehicle_details_array['hackney_permit_expiry'];
+  $hd_permit_expiry = $vehicle_details_array['hd_permit_expiry'];
+  $unique_id = unique_id_generator($user_id. $chassis_number);
+  $check_vehicle_exist = check_record_by_one_param('vehicle_details', 'chassis_number',$chassis_number);
+  if($user_id == '' || $vehicle_type == '' || $vehicle_brand == '' || $vehicle_model == '' || $year_of_make == '' || $plate_number == '' || $chassis_number == '' || $engine_number == '' || $vehicle_color == '' || $vehicle_license_name == '' || $phone_of_vehicle == '' || $address_of_vehicle == '' || $vehicle_license_expiry == '' || $insurance_expiry == '' || $road_worthiness_expiry == '' || $hackney_permit_expiry == '' || $hd_permit_expiry == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else if($check_vehicle_exist == true){
+     return  json_encode(["status"=>"0", "msg"=>"Vehicle already exists"]);
+  }
+  else{
+    $sql = "INSERT INTO `vehicle_details` SET
+    `unique_id` = '$unique_id',
+    `user_id` = '$user_id',
+    `vehicle_type` = '$vehicle_type',
+    `vehicle_brand` = '$vehicle_brand',
+    `vehicle_model` = '$vehicle_model',
+    `year_of_make` = '$year_of_make',
+    `plate_number` = '$plate_number',
+    `chassis_number` = '$chassis_number',
+    `engine_number` = '$engine_number',
+    `vehicle_color` = '$vehicle_color',
+    `vehicle_license_name` = '$vehicle_license_name',
+    `phone_of_vehicle` = '$phone_of_vehicle',
+    `address_of_vehicle` = '$address_of_vehicle',
+    `vehicle_license_expiry` = '$vehicle_license_expiry',
+    `insurance_expiry` = '$insurance_expiry',
+    `road_worthiness_expiry` = '$road_worthiness_expiry',
+    `hackney_permit_expiry` = '$hackney_permit_expiry',
+    `hd_permit_expiry` = '$hd_permit_expiry',
+    `date_created` = now()
+    ";
+    $query = mysqli_query($dbc, $sql);
+    if($query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function okra_recurrent(){
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => 'https://api.okra.ng/v2/pay/initiate',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS =>'
+  {
+      "account_to_debit": "5e9668d634a3fe58a3be8507",
+      "account_to_credit": "5e939074ad26310189448c03",
+          "amount": 10000,
+          "currency": "NGN"
+  }',
+    CURLOPT_HTTPHEADER => array(
+      'Authorization: {{token}}'
+    ),
+  ));
+
+  $response = curl_exec($curl);
+
+  curl_close($curl);
+  echo $response;
+}
+
+function repayment_cron(){
+
+
+}
+
+function add_time_frame($admin_id, $time_frame){
+  global $dbc;
+  $admin_id = secure_database($admin_id);
+  $unique_id = unique_id_generator($admin_id);
+  $time_frame = secure_database($time_frame);
+  // $loan_id = $guarantor_array['loan_id'];
+
+  if($admin_id == ''  || $time_frame == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $update_data_sql = "UPDATE `loan_time_frame` SET `unique_id` = '$unique_id', `added_by` = '$admin_id',  `time_frame`='$time_frame' WHERE `type` = 'loan'";
+    $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
+    if($update_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
 
 /////// MOST IMPORTANT FUNCTIONS END HERE
 

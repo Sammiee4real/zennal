@@ -2,6 +2,10 @@ $(document).ready(function(){
 
     $('#myTable').DataTable();
 
+    function formatNumber(num) {
+  		return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+	}
+
 	// if (window.location.href =="component-form-wizard-NextKin.php"){alert("1");}
 	var pageUrl = window.location.href.toLowerCase();
 	var re = new RegExp(/^.*\//);
@@ -1869,6 +1873,67 @@ $(document).ready(function(){
 				$("#modal").modal('hide');
 				$("#reject_withdrawal").attr("disabled", false);
 				$("#reject_withdrawal").text("Reject");
+			}
+		})
+	});
+
+	$("#add_referral").click(function(e){
+		e.preventDefault();
+		
+		$.ajax({
+			url:"ajax_admin/add_referral.php",
+			method: "POST",
+			data: $("#add_referral_form").serialize(),
+			beforeSend: function(){
+				$("#add_referral").attr("disabled", true);
+				$("#add_referral").text("Adding...");
+			},
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					$("#success_message").empty();
+					$("#success_message").html("Success! You've successfully added referral bonus");
+					toastbox('success_toast', 3000);
+					setTimeout( function(){ window.location.href = "add_referral_bonus.php";}, 3000);
+				}
+				else{
+					$("#error_message").empty();
+					$("#error_message").html("Error! " + data);
+					toastbox('error_toast', 3000);
+				}
+				$("#modal").modal('hide');
+				$("#add_referral").attr("disabled", false);
+				$("#add_referral").text("Add Referral");
+			}
+		})
+	});
+
+	$("#add_time_frame").click(function(e){
+		e.preventDefault();
+		
+		$.ajax({
+			url:"ajax_admin/add_timeframe.php",
+			method: "POST",
+			data: $("#add_time_frame_form").serialize(),
+			beforeSend: function(){
+				$("#add_time_frame").attr("disabled", true);
+				$("#add_time_frame").text("Submitting...");
+			},
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					$("#success_message").empty();
+					$("#success_message").html("Success! You've successfully added referral bonus");
+					toastbox('success_toast', 3000);
+					setTimeout( function(){ window.location.href = "add_timeframe.php";}, 3000);
+				}
+				else{
+					$("#error_message").empty();
+					$("#error_message").html("Error! " + data);
+					toastbox('error_toast', 3000);
+				}
+				$("#add_time_frame").attr("disabled", false);
+				$("#add_time_frame").text("Submit");
 			}
 		})
 	});

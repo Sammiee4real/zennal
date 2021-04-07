@@ -56,12 +56,18 @@ a:hover {
                         <div class="form-group boxed mt-3">
                             <div class="input-wrapper">
                                 <label class="label" for="city5">Preferred Amount</label>
-                                <input type="text" class="form-control" id="user_approved_amount" name="user_approved_amount" placeholder="Input your preferred amount between the specified range" value="">
+                                <input type="number" class="form-control" id="user_approved_amount" name="user_approved_amount" placeholder="Input your preferred amount between the specified range" value="">
                                 <i class="clear-input">
                                     <ion-icon name="close-circle"></ion-icon>
                                 </i>
                             </div>
                         </div>
+
+                        <div class="mt-3">
+                            <span class="font-weight-bold">Amount to Repay: </span>
+                        &#8358;<span id="amount_to_repay"></span>
+                        </div>
+
                         <input type="hidden" name="loan_id" id="loan_id" value="<?php echo $get_loan_application['unique_id'];?>">
                        
                         <div class="mt-3 mb-3">
@@ -77,3 +83,15 @@ a:hover {
 
 </div>
 <?php include("includes/footer.php");?>
+
+<script>
+    function formatNumber(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+    $('#user_approved_amount').keyup($.debounce(1000, function(e){
+        var interest_rate = "<?php echo $get_loan_application['loan_interest'];?>";
+        var user_approved_amount = $("#user_approved_amount").val();
+        var amount_to_repay = ((interest_rate/100) * user_approved_amount) + parseInt(user_approved_amount);
+        $("#amount_to_repay").html(formatNumber(amount_to_repay));
+    }));
+</script>
