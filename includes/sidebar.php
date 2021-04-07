@@ -34,6 +34,7 @@ $user = $_SESSION['user'];
     <link rel="stylesheet" href="assets/vendors/choices.js/choices.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/vendors/sweetalert2/package/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
     
 </head>
 <style type="text/css">

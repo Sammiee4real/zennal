@@ -60,7 +60,7 @@
             </div>
 
             <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
+           <!--  <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -74,7 +74,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
@@ -91,6 +91,22 @@
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-coins fa-2x text-gray-300"></i></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase">Number of Ongoing Personal Loan</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $get_num_ongoing_personal?></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -117,7 +133,7 @@
 
 
                     <!-- Content Row -->
-          <div class="row">
+          <!-- <div class="row"> -->
 
             <!-- Earnings (Monthly) Card Example -->
           <!--   <div class="col-xl-3 col-md-6 mb-4">
@@ -137,7 +153,7 @@
             </div> -->
 
             <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
+            <!-- <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -151,23 +167,9 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase">Number of Ongoing Personal Loan</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $get_num_ongoing_personal?></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            </div> -->
+            
+          <!-- </div> -->
 
 
         </div>
