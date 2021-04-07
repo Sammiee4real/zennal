@@ -1,22 +1,24 @@
 
-<?php include("includes/sidebar.php");?>
+<?php
+include("includes/sidebar.php");
+include("includes/header.php");
+$get_insurers = get_rows_from_table('insurers');
+?>            
 <div id="main">
-
-<?php include("includes/header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Vehicle Insurance</h3>
         <p class="text-subtitle text-muted">Get a quote</p>
     </div>
 
-        <div class="row">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb breadcrumb-right">
-                            <li class="breadcrumb-item"><a href="select_action.php">Back</a></li>
-                            <li class="breadcrumb-item"><a href="">Get a quote</a></li>
-                        </ol>
-                    </nav>
-        </div>
+    <div class="row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-right">
+                <li class="breadcrumb-item"><a href="select_action.php">Back</a></li>
+                <li class="breadcrumb-item"><a href="">Get a quote</a></li>
+            </ol>
+        </nav>
+    </div>
 
 <section class="section mt-5" id="multiple-column-form ">
         <div class="row match-height">
@@ -27,32 +29,34 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form" action="">
+                            <form class="form" id="vehicle-quote-form" method="post">
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
-                                            <span for="first-name-column">Vehicle Value *</span>
-                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Vehicle Value" name="Vehicle-column">
+                                            <span for="first-name-column">Vehicle Value (Without a delimeter)*</span>
+                                            <input type="text" id="vehicle_value" name="vehicle_value" class="form-control" placeholder="Enter Vehicle Value" name="Vehicle-column">
+                                            <span id="help-text"></span>
                                         </div>
                                         <div class="form-group">
                                             <span for="last-name-column">Preferred Insurer * </span>
-                                            <select class="form-select">
+                                            <select class="form-select" name="prefered_insurer" id="prefered_insurer">
                                                 <option>Select Preferred Insurer</option>
+                                                <?php
+                                                    foreach($get_insurers as $insurer){
+                                                    echo "<option value='".$insurer['unique_id']."'>".$insurer['name']."</option>";
+                                                    }
+                                                ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <span for="last-name-column">Plan *</span>
-                                            <select class="form-select">
-                                                <option>Plan</option>
-                                                <option>Silver</option>
-                                                <option>Gold</option>
-                                                <option>Diamond</option>
-                                                <option>Platinum</option>
+                                            <select class="form-select" name="select_plan" id="select_plan">
+                                                <option>Select package plan</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
-                                            <input type="checkbox" id="checkbox1" class="form-check-input">
-                                            <span for="country-floating">Save quote</span>
+                                        <div class="flex form-group" id="save-quote-container">
+                                            <input type="checkbox" id="save-quote" class="form-check-input">
+                                            <span for="save-quote">Save quote</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </div>
                                         <!-- <div class="form-group">
                                             <div class="form-check">
@@ -63,16 +67,15 @@
                                     </div>
                                     </div> -->
                                     </div>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-end">
+                                    <!-- </div> -->
+                                    <!-- <div class="col-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary mr-1 mb-1">Calculate</button>
-                                    </div>
+                                    </div> -->
                                     <div class="col-12 d-flex justify-content-end">
-                                            <h3 for="id-column">Total - ₦29,750</h3>
+                                            <h4 for="id-column">Premium amount: ₦ <span id="premium_amount">--</span></h4>
                                         </div>
                                     </form>
                                 </div>
-                            
                         </div>
                     </div>
                 </div>

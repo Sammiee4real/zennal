@@ -4,7 +4,7 @@ include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-$get_insurers = get_rows_form_table('insurers');
+$get_insurers = get_rows_from_table('insurers');
 //$get_users_employment = get_one_row_from_one_table_by_id('user_employment_details','user_id', $user_id, 'date_created');
 //$get_loan_category = get_rows_from_one_table('loan_category','date_created');
 ?>
@@ -29,12 +29,12 @@ $get_insurers = get_rows_form_table('insurers');
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Insurance</h1>
+          <h1 class="h3 mb-2 text-gray-800">Insurance Package</h1>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Add Insurance Plan</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Add Insurance Package</h6>
             </div>
             <div class="card-body">
               <form method="post" id="add_insurance_plan_form">

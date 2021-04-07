@@ -26,7 +26,7 @@ $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Insurerance</h1>
+          <h1 class="h3 mb-2 text-gray-800">Insurance</h1>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
