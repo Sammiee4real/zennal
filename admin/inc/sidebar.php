@@ -92,9 +92,10 @@
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Insurance Setting</h6>
             <a class="collapse-item" href="add_insurer.php">Add Insurer</a>
-            <a class="collapse-item" href="set_insurance_packages.php">Add Insurance Package</a>
-            <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plan</a>
-            <a class="collapse-item" href="add_insurance_category.php">Add Insurance Category</a>
+            <a class="collapse-item" href="set_insurance_interest.php">Set Insurance Interest</a>
+            <a class="collapse-item" href="set_product_id.php">Set Product Id</a>
+            <!-- <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plan</a> -->
+            <a class="collapse-item" href="add_insurance_package.php">Add Insurance Package</a>
             <a class="collapse-item" href="add_insurance_benefit.php">Add Insurance Benefit</a>
           </div>
         </div>

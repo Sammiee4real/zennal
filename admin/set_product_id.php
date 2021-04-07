@@ -29,24 +29,19 @@ $get_insurers = get_rows_from_table('insurers');
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Insurance Benefit</h1>
+          <h1 class="h3 mb-2 text-gray-800">Product Id</h1>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Add Insurance Benefit</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Add Insurance Product Id</h6>
             </div>
             <div class="card-body">
-              <form method="post" id="insurance_benefit_form">
+              <form method="post" id="product_id_form">
                 <div class="row justify-content-center">
                     <div class="col-md-8 mt-3">
-                        <label>Benefit Name</label>
-                        <input type="text" name="benefit_name" class="form-control" placeholder="Enter benefit" required>
-                     </div>
-
-                     <div class="col-md-8 mt-3">
                       <label>Insurer</label>
-                      <select type="text" name="insurer_id" id="insurer_id" class="form-control" required>
+                      <select type="text" name="insurers" id="insurers" class="form-control" required>
                         <option value="">Select Insurer</option>
                         <?php
                           foreach($get_insurers as $insurer){
@@ -55,13 +50,28 @@ $get_insurers = get_rows_from_table('insurers');
                         ?>
                       </select>
                     </div>
+                    
+                    <div class="col-md-8 mt-3">
+                        <label>Insurance Package</label>
+                        <!-- <input type="text" name="benefit_name" class="form-control" placeholder="Enter benefit" required> -->
+                        <select type="text" name="insurance_package" id="insurance_package" class="form-control" required>
+                          <option value="">Select package</option>
+                      </select>
+                    </div>
+                    <div class="col-md-8 mt-3">
+                        <label>Product Id</label>
+                        <input type="text" name="product_id" class="form-control" placeholder="Enter product id" required>
+                    </div>
+
                 </div>
+
+                
                 <div class="row justify-content-center insurance-plans">
                   
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-8 mt-3">
-                        <button type="type" class="btn btn-secondary" id="add_insurance_benefit">Add Benefit</button>
+                        <button type="submit" class="btn btn-secondary" id="product_id_btn">Save</button>
                     </div>
                 </div>
               </form>

@@ -1,7 +1,41 @@
-<?php include("includes/sidebar.php");?>
+<?php 
+include("includes/sidebar.php"); 
+include("includes/header.php");
+
+if (isset($_POST['upload-btn'])) {
+    if($_FILES['profile_pic']['name'] != null){
+        $filename = $_FILES['profile_pic']['name'];
+        
+        /* Location */
+        $location = $_SERVER['DOCUMENT_ROOT']."uploads/".$filename;
+        $imageFileType = pathinfo($location,PATHINFO_EXTENSION);
+        $imageFileType = strtolower($imageFileType);
+        /* Valid extensions */
+        $valid_extensions = array("jpg","jpeg","png");
+
+        /* Check file extension */
+        if(in_array(strtolower($imageFileType), $valid_extensions)) {
+            /* Upload file */
+            if(move_uploaded_file($_FILES['profile_pic']['tmp_name'], $location)){
+                if(update_user_image($filename) === true){
+                    $exe ="<script>window.location='profile';</script>";
+                    echo $exe;
+                }else{
+                    $error = "Invalid image type";
+                }
+            }
+        }
+        else{
+            $error = "Invalid image type";
+        }
+    }
+    else {
+        $error = "Please select the image to upload";
+    }
+}
+?> 
 <div id="main">
 
-<?php include("includes/header.php");?> 
 <style type="text/css">
 /* #bar, #cus {display:none;} */
 </style>
@@ -25,9 +59,27 @@
         <div class="row match-height">
             <div class="col-6 mx-auto">
                 <div class="card">
-                    <div class="d-flex justify-content-center pt-3">
-                        <img class="profile-pic" src="<?php echo 'assets/images/'.$user['profile_pic']?>" alt="" srcset="">
+                    <div class="d-flex justify-content-center py-3">
+                        <img class="profile-pic" src="<?php echo 'uploads/'.$user['profile_pic']?>" alt="" srcset="">
                     </div>
+                    <?php
+                        if(isset($error)){
+                    ?>
+                        <div class="alert alert-warning text-center mx-5" role="alert">
+                            <?= $error; ?>
+                        </div>
+                    <?php    }
+                    ?>
+                    <form class="form-inline text-center" action="" method="post" enctype="multipart/form-data">
+                        <div class="form-group mx-sm-3">
+                            <label for="profile_pic">Upload profile image</label>
+                            <input type="file" class="form-control" name="profile_pic" id="profile_pic">
+                        </div>
+                            <button name="upload-btn" class="btn btn-primary btn-sm" type="submit">Upload</button>
+                        <!-- </div> -->
+                    </form>
+                    
+                    
                     <div class="row mx-auto py-2">
                         <p><?php echo $user['first_name']." ".$user['last_name'];?></p>
                     </div>
@@ -90,7 +142,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="employment_status">Employment Status</label>
-                                            <select class="form-select" name="employment_status">
+                                            <select class="form-select" id="employment_status" name="employment_status">
                                                 <option>Select Status</option>
                                                 <option <?php if($user['employment_status'] === 'employed') echo 'selected';?> value="employed">Employed</option>
                                                 <option <?php if($user['employment_status'] === 'unemployed') echo 'selected';?> value="unemployed">Unemployed</option>
@@ -99,7 +151,7 @@
                                             </select>
                                         </div>
                                         
-                                        <div class="form-group">
+                                        <div class="form-group" id="occupation-group">
                                             <label for="occupation">Occupation</label>
                                             <input type="text" id="occupation" class="form-control" placeholder="Occupation" name="occupation" value="<?php echo $user['occupation'] ?? null;?>">
                                         </div>

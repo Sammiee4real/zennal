@@ -458,6 +458,7 @@ function update_user_profile($post){
 
   $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
   if ($exe) {
+    session_referesh();
     return json_encode(array("status"=>1, "msg"=>"success"));
   }
 }
@@ -596,8 +597,66 @@ function get_insurance_benefits($insurer_id){
   return $outer_arr;
 }
 
+
+// Badmus
+function save_quote($vehicle_value, $prefered_insurer, $select_plan){
+  global $dbc;
+
+  $user_id = $_SESSION['user']['unique_id'];
+
+  $user_saved_quote = get_rows_from_table_with_one_params('saved_quotes', 'user_id', $user_id);
+
+  if (empty($user_saved_quote)) {
+
+    $unique_id = unique_id_generator($user_id);
+
+    $sql = "INSERT INTO `saved_quotes` SET `unique_id`='$unique_id', `user_id`='$user_id', `vehicle_value`='$vehicle_value', `insurer_id`='$prefered_insurer', `plan_id`='$select_plan', `date_created`=now()";
+  }else {
+    $sql = "UPDATE `saved_quotes` SET `vehicle_value`='$vehicle_value', `insurer_id`='$prefered_insurer', `plan_id`='$select_plan', `date_created`=now() WHERE `user_id`='$user_id'";
+  }
+
+  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+  return json_encode(array("status"=>1));
+}
+// Badmus
+function get_vehicle_value($plan_id, $vehicle_value){
+  global $dbc;
+
+  $sql = "SELECT `plan_percentage` FROM insurance_plans WHERE `unique_id` = '$plan_id'";
+
+  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+
+  $data = mysqli_fetch_assoc($exe);
+
+  $percentage_interest = $data['plan_percentage'];
+
+  $percentage_value = floatval((($percentage_interest / 100) * $vehicle_value));
+  $premium_value = $percentage_value + $vehicle_value;
+  return $premium_value;
+}
+
+// Badmus
+
+function update_user_image($filename){
+  global $dbc;
+
+  $user_id = $_SESSION['user']['unique_id'];
+
+  $sql = "UPDATE `users` SET `profile_pic` = '$filename' WHERE `unique_id` = '$user_id'";
+
+  $exe = mysqli_query($dbc, $sql);
+  if ($exe) {
+    session_referesh();
+    return true;
+  }else {
+    return false;
+  }
+}
 // Badmus
 function get_insurance_quote($packageId){
+
+  global $dbc;
+
   if (! isset($_SESSION['vehicle_details'])) {
     return json_encode(array('status'=>0, 'msg'=>"Vehicle details not provided"));
   }
@@ -617,7 +676,7 @@ function get_insurance_quote($packageId){
   $vehicle_model = $_SESSION['vehicle_details']['vehicle_model'];
   $year_of_make = $_SESSION['vehicle_details']['year_of_make'];
   $chassis_number = $_SESSION['vehicle_details']['chassis_number'];
-  $engine_number = $_SESSION['vehicle_details']['engine_number'];
+  $engine_number = $_SESSION['vehicle_details']['engine_number'] == ""?$_SESSION['vehicle_details']['chassis_number']:$_SESSION['vehicle_details']['engine_number'];
   $risk_location = $_SESSION['vehicle_details']['risk_location'];
   $insured_name = $_SESSION['vehicle_details']['insured_name'];
   $sum_insured = $_SESSION['vehicle_details']['sum_insured'];
@@ -718,11 +777,33 @@ curl_setopt_array($curl, array(
 
 $response = json_decode(curl_exec($curl), true);
 curl_close($curl);
+
+$returned_amount = $response['Quote']['PaymentDue'];
+
+// Get percentage interest
+
+$sql = "SELECT * FROM `insurance_plans` WHERE `unique_id` = '$packageId'";
+$exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+$interest_rate = mysqli_fetch_assoc($exe);
+
+// if ($interest_rate['type'] == "1") { // If interest type is flat rate
+//   $amount_due = intval($interest_rate['interest_rate'] + $returned_amount);
+// }
+// elseif ($interest_rate['type'] == "2") { // If interest type is percentage rate
+
+//   $percentage_amount = floatval((($interest_rate['interest_rate'] / 100) * $returned_amount));plan_percentage
+
+//   $amount_due = intval($percentage_amount + $returned_amount);
+// }
+$percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
+
+$amount_due = intval($percentage_amount + $returned_amount);
+
 // echo $response;
 $res = array(
   'data'=> array(
     'one_time' => array(
-      'annual_due' => $response['Quote']['PaymentDue'],
+      'annual_due' => $amount_due,
       'quote_number' => $response['Quote']['QuoteNumber'],
       'validation_result' => $response['ValidationResult']
     ),
@@ -903,8 +984,6 @@ function get_banks(){
     ),
 
   ));
-
-  
 
   $response = curl_exec($curl);
 
@@ -1156,6 +1235,27 @@ function insert_insurance_plan($insurer_id, $plan_name, $plan_rate){
     $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
     $res = json_encode(array("status"=>1));
     return $res;
+}
+
+// Badmus
+function insert_insurance_interest($interest_type, $interest_rate){
+  global $dbc;
+
+  if($interest_type == null || $interest_rate == null){
+    return json_encode(array("status"=>0, "msg"=>"All fields are required"));
+  }
+
+  if (! intval($interest_rate) || ! boolval($interest_rate)){
+    return json_encode(array("status"=>0, "msg"=>"Please enter a valid interest rate"));
+  }
+
+  $uniqueid = unique_id_generator($interest_rate);
+
+  $sql = "UPDATE insurance_interest_rate SET `unique_id` = '$uniqueid',  `type` = '$interest_type', `interest_rate` = '$interest_rate', `datetime` = now() WHERE `id` = 1";
+          
+  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+  $res = json_encode(array("status"=>1));
+  return $res;
 }
 ///////// Badmus Functions Here /////////////////////
 
@@ -1714,7 +1814,22 @@ function user_exists($email){
     }
 }
 
+// Badmus\
+function session_referesh(){
+  global $dbc;
 
+  $user_id = $_SESSION['user']['unique_id'];
+
+  $sql = "SELECT * FROM `users` WHERE `unique_id` = '$user_id'";
+
+  $exe = mysqli_query($dbc, $sql);
+
+  $user = mysqli_fetch_assoc($exe);
+
+  $_SESSION['user'] = $user;
+
+  return true;
+}
 
 
 function check_record_by_three_params($table,$param,$value,$param2,$value2,$param3,$value3){

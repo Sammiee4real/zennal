@@ -3,9 +3,9 @@
 include("includes/sidebar.php");
 include("includes/header.php");
 $insurer_id = base64_decode($_GET['insurer_id']) ?? null;
-$get_plans = get_rows_form_table_with_one_params('insurance_plans', 'insurer_id', $insurer_id);
+$get_plans = get_rows_from_table_with_one_params('insurance_plans', 'insurer_id', $insurer_id);
 $get_benefits = get_insurance_benefits($insurer_id);
-$get_insurer = get_rows_form_table_with_one_params('insurers', 'unique_id', $insurer_id);
+$get_insurer = get_rows_from_table_with_one_params('insurers', 'unique_id', $insurer_id);
 
 ?>      
 <div id="main">    

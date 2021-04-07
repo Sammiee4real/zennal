@@ -39,6 +39,9 @@
         <div class="card-body px-0 py-1">
             <table class='table table-borderless'>
                 <?php
+                    if($get_recent_activities == null){
+                        echo "<div class='text-center'>No activities yet</div>";
+                    }else{
                     foreach ($get_recent_activities as $value) {
                         $date=date_create($value['date_created']);
                         
@@ -59,7 +62,7 @@
                         <p><?= date_format($date,"d/m/Y h:i a");?></p>
                     </td>
                 </tr>
-                <?php } ?>
+                <?php } } ?>
             </table>
             <div class="col-12 d-flex justify-content-end ">
                 <a href="#" class="btn btn-primary round mr-4">

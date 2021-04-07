@@ -3,7 +3,7 @@
 include("includes/sidebar.php");
 include("includes/header.php");
 
-$get_insurers = get_rows_form_table('insurers');
+$get_insurers = get_rows_from_table('insurers');
 ?>
 
 <div id="main">
