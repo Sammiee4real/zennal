@@ -68,14 +68,14 @@ $get_loan_requests = get_rows_from_one_table_by_id('personal_loan_application','
                         </td>
                         <td>
                           <?php
-                           if($value['bank_statement'] == ''){
-                              $bank_statement = beautify_statement($value['unique_id']);
+                           //if($value['bank_statement'] == ''){
+                              //$bank_statement = beautify_statement($value['unique_id']);
                           ?>
-                              <a  class="thumbnail fancybox" rel="ligthbox" href="../bank_statement/<?php echo $value['unique_id'].'.pdf';?>">Bank Statement <small>(click to view)</small></a>
-                           <?php }else{ 
+                             <!--  <a  class="thumbnail fancybox" rel="ligthbox" href="../bank_statement/<?php //echo $value['unique_id'].'.pdf';?>">Bank Statement <small>(click to view)</small></a> -->
+                           <?php //}else{ 
                           ?>
                            <a  class="thumbnail fancybox" rel="ligthbox" href="<?php echo $value['bank_statement']?>">Bank Statement <small>(click to view)</small></a>
-                         <?php } ?>
+                         <?php //} ?>
                         </td>
                         <td>
                           <?php echo $value['date_created'];?>

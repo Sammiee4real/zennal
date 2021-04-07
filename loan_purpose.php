@@ -5,12 +5,12 @@ include("includes/sidebar.php");
     $loan_purpose = isset($_SESSION['purpose_of_loan']) ? $_SESSION['purpose_of_loan'] : '';
     $transaction_id = isset($_GET['transaction_id']) ? $_GET['transaction_id'] : '';
     if($transaction_id != ""){
-        $callback_url = "http://$_SERVER[HTTP_HOST]"."zennal_callback.php?transaction_id=".$transaction_id;
-        $redirect_url = "http://$_SERVER[HTTP_HOST]"."zennal_callback.php?transaction_id=".$transaction_id;
+        $callback_url = "http://$_SERVER[HTTP_HOST]"."/new_zennal/zennal_callback.php?transaction_id=".$transaction_id;
+        $redirect_url = "http://$_SERVER[HTTP_HOST]"."/new_zennal/zennal_callback.php?transaction_id=".$transaction_id;
     }
     else{
-        $callback_url = "https://$_SERVER[HTTP_HOST]"."zennal_callback";
-        $redirect_url = "https://$_SERVER[HTTP_HOST]"."zennal_callback";
+        $callback_url = "https://$_SERVER[HTTP_HOST]"."/new_zennal/zennal_callback";
+        $redirect_url = "https://$_SERVER[HTTP_HOST]"."/new_zennal/zennal_callback";
     }
     $get_user_employment_status = get_one_row_from_one_table_by_id('user_employment_details','user_id', $user_id ,'date_created');
 ?>
@@ -221,8 +221,13 @@ include("includes/sidebar.php");
                 success_message: 'You are doing well!',
                 onSuccess: function (data) {
                     console.log('success', data);
+                    $.ajax({
+                        url: "<?php echo $callback_url?>",
+                        method: "POST",
+                        data: {data}
+                    })
                     //window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
-                    //window.location.href = '<?php echo $redirect_url?>';
+                    //window.location.href = '<?php //echo $redirect_url?>';
                     //console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
                 },
                 onClose: function () {

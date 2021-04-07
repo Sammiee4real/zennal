@@ -129,6 +129,27 @@
                             </i>
                         </div>
                     </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-8">
+                            <div id="accordion">
+                              <h5 class="mb-3 mt-3">
+                                <a class="btn btn-outline-secondary btn-sm text-center" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: 15px;">
+                                  Why is my BVN required?
+                                </a>
+                              </h5>
+                            </div>
+                        </div>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                          <div class="card-body">
+                            We request your BVN to verify that the individual applying for a Zennal Loan is the same as the owner of the provided bank account. This ensures that your account details cannot be used to apply for a loan without your authorization. <br>
+                            Please note: Your BVN does not provide access to your account. If in doubt, we encourage you to confirm this from your bank before you proceed. <br>
+                            Dial <b>*565*0#</b> to get your BVN<br>Please note: This will only work if you are making the request from the same phone number currently linked to your bank account.
+                          </div>
+                        </div>
+                    </div>
+
                       <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="span" for="name1">Do you Currently have an existing loan?</span>
