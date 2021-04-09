@@ -1996,6 +1996,73 @@ $(document).ready(function(){
 				$("#add_time_frame").attr("disabled", false);
 				$("#add_time_frame").text("Submit");
 			}
+		})
+	});
+
+	$("#submit_vehicle_registration").click(function(e){
+		e.preventDefault();
+		$('#submit_vehicle_registration').attr('disabled', true);
+		$('#submit_vehicle_registration').text('Please wait...');
+		$.ajax({
+			url:"ajax/submit_vehicle_registration.php",
+			method: "POST",
+			data: $("#vehicle_registration_form").serialize(),
+			success: function(data){
+				//alert(data);
+				if(data['status'] == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've submitted your vehicle details",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "payment?reg_id="+data['data'];}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data['status'],
+                        icon: "error",
+                    });
+				}
+				$('#submit_vehicle_registration').attr('disabled', false);
+				$('#submit_vehicle_registration').text('Submit');
+			}
+		})
+	});
+
+	// Badmus
+	$('#add_insurer_form').submit(function(e){
+		e.preventDefault();
+		$('#submit_insurer_form').attr('disabled', true);
+		$('#submit_insurer_form').text('Please wait...');
+		var formData = new FormData(this);
+		$.ajax({
+			url:"ajax_admin/add_insurer.php",
+			method: "POST",
+			data: formData,
+			contentType: false,
+			cache: false,
+			processData:false,
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Insurer added successfully",
+                        icon: "success",
+                    })
+					// .then(setTimeout( function(){ window.location.href = "refer";}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					// location.reload();
+				}
+				$('#submit_insurer_form').attr('disabled', false);
+				$('#submit_insurer_form').text('Submit');
+			}
 		});
 	});
 

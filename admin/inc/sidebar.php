@@ -1,3 +1,9 @@
+<?php
+  session_start();
+  if(!isset($_SESSION['user'])){
+    header("Location: login");
+  }
+?>
 <!--Sidebar -->
     <ul class="navbar-nav bg-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #022b69 !important;">
 

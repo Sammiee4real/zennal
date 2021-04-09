@@ -1572,23 +1572,23 @@ function get_one_row_from_one_table_by_id($table,$param,$value,$order_option){
   }
 }
 
-function get_one_row_from_one_table_by_two_params($table,$param,$value,$param2,$value2,$order_option){
-         global $dbc;
-        $table = secure_database($table);
-        $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' ORDER BY `$order_option` DESC";
-        $query = mysqli_query($dbc, $sql);
-        $num = mysqli_num_rows($query);
-       if($num > 0){
-             $row = mysqli_fetch_array($query);              
-             return $row;
-          }
-          else{
-             return null;
-        }
+  function get_one_row_from_one_table_by_two_params($table,$param,$value,$param2,$value2,$order_option){
+    global $dbc;
+    $table = secure_database($table);
+    $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' ORDER BY `$order_option` DESC";
+    $query = mysqli_query($dbc, $sql);
+    $num = mysqli_num_rows($query);
+   if($num > 0){
+         $row = mysqli_fetch_array($query);              
+         return $row;
+      }
+      else{
+         return null;
     }
+  }
 
 
-    function get_one_row_from_one_table_by_three_params($table,$param,$value,$param2,$value2,$param3,$value3,$order_option){
+  function get_one_row_from_one_table_by_three_params($table,$param,$value,$param2,$value2,$param3,$value3,$order_option){
          global $dbc;
         $table = secure_database($table);
         $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' AND `$param3`='$value3' ORDER BY `$order_option` DESC";
@@ -3490,54 +3490,70 @@ function add_new_vehicle($user_id, array $vehicle_details_array){
   global $dbc;
   //$user_id = $vehicle_details_array['user_id'];
   $vehicle_type = $vehicle_details_array['vehicle_type'];
-  $vehicle_brand = $vehicle_details_array['vehicle_brand'];
-  $vehicle_model = $vehicle_details_array['vehicle_model'];
+  $vehicle_make = $vehicle_details_array['vehicle_make'] == 'others' ? $vehicle_details_array['other_vehicle_make'] : $vehicle_details_array['vehicle_make'];
+  $vehicle_model = $vehicle_details_array['vehicle_model'] == 'others' ? $vehicle_details_array['other_vehicle_model'] : $vehicle_details_array['vehicle_model'];
   $year_of_make = $vehicle_details_array['year_of_make'];
-  $plate_number = $vehicle_details_array['plate_number'];
-  $chassis_number = $vehicle_details_array['chassis_number'];
+  // $plate_number = $vehicle_details_array['plate_number'];
+  $chasis_number = $vehicle_details_array['chasis_number'];
   $engine_number = $vehicle_details_array['engine_number'];
-  $vehicle_color = $vehicle_details_array['vehicle_color'];
-  $vehicle_license_name = $vehicle_details_array['vehicle_license_name'];
-  $phone_of_vehicle = $vehicle_details_array['phone_of_vehicle'];
-  $address_of_vehicle = $vehicle_details_array['address_of_vehicle'];
-  $vehicle_license_expiry = $vehicle_details_array['vehicle_license_expiry'];
-  $insurance_expiry = $vehicle_details_array['insurance_expiry'];
-  $road_worthiness_expiry = $vehicle_details_array['road_worthiness_expiry'];
-  $hackney_permit_expiry = $vehicle_details_array['hackney_permit_expiry'];
-  $hd_permit_expiry = $vehicle_details_array['hd_permit_expiry'];
-  $unique_id = unique_id_generator($user_id. $chassis_number);
-  $check_vehicle_exist = check_record_by_one_param('vehicle_details', 'chassis_number',$chassis_number);
-  if($user_id == '' || $vehicle_type == '' || $vehicle_brand == '' || $vehicle_model == '' || $year_of_make == '' || $plate_number == '' || $chassis_number == '' || $engine_number == '' || $vehicle_color == '' || $vehicle_license_name == '' || $phone_of_vehicle == '' || $address_of_vehicle == '' || $vehicle_license_expiry == '' || $insurance_expiry == '' || $road_worthiness_expiry == '' || $hackney_permit_expiry == '' || $hd_permit_expiry == ''){
+  $vehicle_color = $vehicle_details_array['vehicle_color'] == 'others' ? $vehicle_details_array['other_vehicle_color'] : $vehicle_details_array['vehicle_color'];
+  $occupation = $vehicle_details_array['occupation'];
+  $date_of_birth = $vehicle_details_array['date_of_birth'];
+  $contact_address = $vehicle_details_array['contact_address'];
+  $vehicle_particulars = json_encode($vehicle_details_array['vehicle_particulars']);
+  //$vehicle_license_name = $vehicle_details_array['vehicle_license_name'];
+  $name_on_vehicle = $vehicle_details_array['name_on_vehicle'];
+  $insurance_type = $vehicle_details_array['insurance_type'];
+  $insurer = $vehicle_details_array['insurer'];
+  $plate_number_type = $vehicle_details_array['plate_number_type'];
+  $number_plate = $vehicle_details_array['number_plate'];
+  $state = $vehicle_details_array['state'];
+  $first_lg = $vehicle_details_array['first_lg'];
+  $second_lg = $vehicle_details_array['second_lg'];
+  $third_lg = $vehicle_details_array['third_lg'];
+  $tinted_permit = $vehicle_details_array['tinted_permit'];
+  $plan_type = $vehicle_details_array['plan_type'];
+  $phone = $vehicle_details_array['phone'];
+  $unique_id = unique_id_generator($user_id. $chasis_number);
+  $check_vehicle_exist = check_record_by_one_param('vehicle_registration', 'chasis_number',$chasis_number);
+  if($user_id == '' || $vehicle_type == '' || $vehicle_make == '' || $vehicle_model == '' || $year_of_make == '' || $engine_number == '' || $chasis_number == '' || $vehicle_color == '' || $occupation == '' || $date_of_birth == '' || $contact_address == '' || $vehicle_particulars == '' || $name_on_vehicle == '' || $insurance_type == '' || $plate_number_type == '' || $state == '' || $first_lg == '' || $second_lg == '' || $third_lg == '' || $tinted_permit == '' || $phone == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else if($check_vehicle_exist == true){
      return  json_encode(["status"=>"0", "msg"=>"Vehicle already exists"]);
   }
   else{
-    $sql = "INSERT INTO `vehicle_details` SET
+    $sql = "INSERT INTO `vehicle_registration` SET
     `unique_id` = '$unique_id',
     `user_id` = '$user_id',
     `vehicle_type` = '$vehicle_type',
-    `vehicle_brand` = '$vehicle_brand',
+    `vehicle_make` = '$vehicle_make',
     `vehicle_model` = '$vehicle_model',
     `year_of_make` = '$year_of_make',
-    `plate_number` = '$plate_number',
-    `chassis_number` = '$chassis_number',
     `engine_number` = '$engine_number',
+    `chasis_number` = '$chasis_number',
     `vehicle_color` = '$vehicle_color',
-    `vehicle_license_name` = '$vehicle_license_name',
-    `phone_of_vehicle` = '$phone_of_vehicle',
-    `address_of_vehicle` = '$address_of_vehicle',
-    `vehicle_license_expiry` = '$vehicle_license_expiry',
-    `insurance_expiry` = '$insurance_expiry',
-    `road_worthiness_expiry` = '$road_worthiness_expiry',
-    `hackney_permit_expiry` = '$hackney_permit_expiry',
-    `hd_permit_expiry` = '$hd_permit_expiry',
+    `occupation` = '$occupation',
+    `date_of_birth` = '$date_of_birth',
+    `contact_address` = '$contact_address',
+    `vehicle_particulars` = '$vehicle_particulars',
+    `name_on_vehicle` = '$name_on_vehicle',
+    `insurance_type` = '$insurance_type',
+    `plate_number_type` = '$plate_number_type',
+    `state` = '$state',
+    `insurer` = '$insurer',
+    `plan_type` = '$plan_type',
+    `number_plate` = '$number_plate',
+    `first_lg` = '$first_lg',
+    `second_lg` = '$second_lg',
+    `third_lg` = '$third_lg',
+    `phone` = '$phone',
+    `tinted_permit` = '$tinted_permit',
     `date_created` = now()
     ";
-    $query = mysqli_query($dbc, $sql);
+    $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
     if($query){
-      return json_encode(["status"=>"1", "msg"=>"success"]);
+      return json_encode(["status"=>"1", "msg"=>"success", "data" => $unique_id]);
     }else{
       return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
     }
@@ -3599,6 +3615,182 @@ function add_time_frame($admin_id, $time_frame){
     }
   }
 }
+
+function add_services($service, $cost){
+  global $dbc;
+  $service = secure_database($service);
+  $unique_id = unique_id_generator($service);
+  $cost = secure_database($cost);
+  // $loan_id = $guarantor_array['loan_id'];
+
+  if($service == ''  || $cost == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $insert_data_sql = "INSERT INTO `services` SET `unique_id` = '$unique_id', `service` = '$service',  `cost`='$cost', `date_created` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function add_vehicle_particulars($vehicle_id, $license_amount, $road_worthiness_amount, $third_party_amount, $hackney_permit_amount){
+  global $dbc;
+  $vehicle_id = secure_database($vehicle_id);
+  $unique_id = unique_id_generator($vehicle_id);
+  $license_amount = secure_database($license_amount);
+  $road_worthiness_amount = secure_database($road_worthiness_amount);
+  $third_party_amount = secure_database($third_party_amount);
+  $hackney_permit_amount = secure_database($hackney_permit_amount);
+  // $loan_id = $guarantor_array['loan_id'];
+
+  if($vehicle_id == ''  || $license_amount == '' || $road_worthiness_amount == '' || $third_party_amount == '' || $hackney_permit_amount == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $insert_data_sql = "INSERT INTO `vehicle_particulars` SET `unique_id` = '$unique_id', `vehicle_id`= '$vehicle_id', `license_amount` = '$license_amount',  `road_worthiness_amount`='$road_worthiness_amount', `third_party_amount`='$third_party_amount', `hackney_permit_amount`='$hackney_permit_amount', `date_created` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function add_plate_number($vehicle_id, $type, $no_third_party_amount, $third_party_amount, $personalized_number){
+  global $dbc;
+  $vehicle_id = secure_database($vehicle_id);
+  $type = secure_database($type);
+  $unique_id = unique_id_generator($vehicle_id);
+  $no_third_party_amount = secure_database($no_third_party_amount);
+  $third_party_amount = secure_database($third_party_amount);
+  $personalized_number = secure_database($personalized_number);
+
+  if($vehicle_id == '' || $type == '' || $no_third_party_amount == '' || $third_party_amount == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $insert_data_sql = "INSERT INTO `number_plate` SET `unique_id` = '$unique_id', `vehicle_id`= '$vehicle_id', `no_third_party_amount` = '$no_third_party_amount',  `third_party_amount`='$third_party_amount', `type`='$type', `personalized_number` = '$personalized_number', `date_created` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function add_vehicle_brand($brand_name){
+  global $dbc;
+  $brand_name = secure_database($brand_name);
+  $unique_id = unique_id_generator($brand_name);
+  // $loan_id = $guarantor_array['loan_id'];
+
+  if($brand_name == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $insert_data_sql = "INSERT INTO `vehicle_brands` SET `unique_id` = '$unique_id', `brand_name` = '$brand_name', `datetime` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function add_vehicle_model($brand_id, $model_name){
+  global $dbc;
+  $brand_id = secure_database($brand_id);
+  $model_name = secure_database($model_name);
+  $unique_id = unique_id_generator($brand_id);
+  // $loan_id = $guarantor_array['loan_id'];
+
+  if($brand_id == '' || $model_name == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $insert_data_sql = "INSERT INTO `vehicle_models` SET `unique_id` = '$unique_id', `brand_id` = '$brand_id', `model_name` = '$model_name', `datetime` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function calculate_vehicle_registration($reg_id){
+  $reg_id = secure_database($reg_id);
+  $get_registration_details = get_one_row_from_one_table('vehicle_registration', 'unique_id', $reg_id);
+  $vehicle_type = $get_registration_details['vehicle_type'];
+  $get_vehicle_particulars = get_one_row_from_one_table('vehicle_particulars', 'vehicle_id', $vehicle_type);
+  // $get_number_plate
+  if($get_registration_details['tinted_permit'] == 'yes'){
+    $service = "Tinted Glass Permit";
+    $get_service = get_one_row_from_one_table('services', 'service', $service);
+    $service_charge = $get_service['cost'];
+  }
+  else{
+    $service_charge = 0;
+  }
+
+  if($get_registration_details['insurance_type'] == 'third_party_insurance'){
+    $insurance_charge = $get_vehicle_particulars['third_party_amount'];
+  }
+  else if($get_registration_details['insurance_type'] == 'no_third_party_insurance'){
+    $insurance_charge = 0;
+  }
+  else{
+    $insurance_charge = 0;
+  }
+
+  if($get_registration_details['plate_number_type'] == "private"){
+    $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','private','vehicle_id',$vehicle_type, 'date_created');
+    if($get_registration_details['insurance_type'] == 'third_party_insurance'){
+      $number_plate_charge = $get_number_plate['third_party_amount'];
+    }
+    else if($get_registration_details['insurance_type'] == 'no_third_party_insurance' || $get_registration_details['insurance_type'] == 'comprehensive'){
+      $number_plate_charge = $get_number_plate['no_third_party_amount'];
+    }
+  }
+  else if($get_registration_details['plate_number_type'] == "commercial"){
+    $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','commercial','vehicle_id',$vehicle_type, 'date_created');
+    if($get_registration_details['insurance_type'] == 'third_party_insurance'){
+      $number_plate_charge = $get_number_plate['third_party_amount'];
+    }
+    else if($get_registration_details['insurance_type'] == 'no_third_party_insurance' || $get_registration_details['insurance_type'] == 'comprehensive'){
+      $number_plate_charge = $get_number_plate['no_third_party_amount'];
+    }
+  }
+  else if($get_registration_details['plate_number_type'] == "personalized_number"){
+    $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','new','vehicle_id',$vehicle_type, 'date_created');
+    if($get_number_plate != null){
+      $number_plate_charge = $get_number_plate['personalized_number'];
+    } 
+    else{
+      $number_plate_charge = 0;
+    }
+  }
+
+  return json_encode([
+    "status" => 1,
+    "service_charge" => $service_charge, 
+    "insurance_charge" => $insurance_charge, 
+    "number_plate_charge" => $number_plate_charge
+  ]);
+} 
+
 
 /////// MOST IMPORTANT FUNCTIONS END HERE
 
