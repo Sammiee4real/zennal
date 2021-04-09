@@ -1938,6 +1938,36 @@ $(document).ready(function(){
 		})
 	});
 
+	$("#submit_vehicle_registration").click(function(e){
+		e.preventDefault();
+		$('#submit_vehicle_registration').attr('disabled', true);
+		$('#submit_vehicle_registration').text('Please wait...');
+		$.ajax({
+			url:"ajax/submit_vehicle_registration.php",
+			method: "POST",
+			data: $("#vehicle_registration_form").serialize(),
+			success: function(data){
+				//alert(data);
+				if(data['status'] == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've submitted your vehicle details",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "payment?reg_id="+data['data'];}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data['status'],
+                        icon: "error",
+                    });
+				}
+				$('#submit_vehicle_registration').attr('disabled', false);
+				$('#submit_vehicle_registration').text('Submit');
+			}
+		})
+	});
+
 	// Badmus
 	$('#add_insurer_form').submit(function(e){
 		e.preventDefault();
