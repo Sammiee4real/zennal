@@ -96,13 +96,12 @@
             <a class="collapse-item" href="add_timeframe">Update Loan Timeframe</a>
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Insurance Setting</h6>
-            <a class="collapse-item" href="add_insurer">Add Insurer</a>
-            <a class="collapse-item" href="set_insurance_packages">Add Insurance Package</a>
-            <a class="collapse-item" href="set_pricing_plan">Add Insurance Pricing Plan</a>
-            <a class="collapse-item" href="add_insurance_category">Add Insurance Category</a>
-            <a class="collapse-item" href="add_insurance_benefit">Add Insurance Benefit</a>
-            <h6 class="collapse-header">Referral Setting</h6>
-            <a class="collapse-item" href="add_referral_bonus">Add Referral</a>
+            <a class="collapse-item" href="add_insurer.php">Add Insurer</a>
+            <a class="collapse-item" href="set_insurance_interest.php">Set Insurance Interest</a>
+            <a class="collapse-item" href="set_product_id.php">Set Product Id</a>
+            <!-- <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plan</a> -->
+            <a class="collapse-item" href="add_insurance_package.php">Add Insurance Package</a>
+            <a class="collapse-item" href="add_insurance_benefit.php">Add Insurance Benefit</a>
           </div>
         </div>
       </li>

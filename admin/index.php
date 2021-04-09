@@ -4,6 +4,7 @@
   include("inc/header.php");
   $admin_id =$_SESSION['admin_id'];
   $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
+  $interest_rate = get_one_row_from_one_table_by_id('insurance_interest_rate','id', '1', 'datetime');
   $get_num_users = get_number_of_rows('users');
   //$get_asset_loan = get_one_row_from_one_table_by_id('loan_category','type', 2, 'date_created');
   $get_num_approved_asset_loan = get_number_of_rows_one_param('asset_finance_application','approval_status',1);
@@ -13,6 +14,17 @@
   $total_asset_loan = get_total_loan(2);
   $get_num_ongoing_asset = get_number_of_rows_one_param('asset_finance_application','approval_status', 3);
   $get_num_ongoing_personal = get_number_of_rows_one_param('personal_loan_application','approval_status', 3);
+
+  $int_rate = $interest_rate['interest_rate'];
+
+  if ($interest_rate['type'] == '1') {
+    $icon = "fa-dollar-sign";
+    $type = "Flat Rate";
+  }
+  elseif ($interest_rate['type'] == '2') {
+    $icon = "fa-percent";
+    $type = "Percentage Rate";
+  }
 ?>
 
 <body id="page-top">
@@ -167,9 +179,42 @@
                   </div>
                 </div>
               </div>
-            </div> -->
-            
-          <!-- </div> -->
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase">Number of Ongoing Personal Loan</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $get_num_ongoing_personal?></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase">Insurance Interest <br />- <?= $type ?> </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $int_rate ?></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas <?= $icon ?> fa-2x text-gray-300"></i> -->
+                      <!-- <i class="fas fa-percent"></i> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
 
 
         </div>

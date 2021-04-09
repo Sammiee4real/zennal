@@ -38,7 +38,7 @@
         </div>
         <div class="card-body px-0 py-1">
             <table class='table table-borderless'>
-                <?php 
+                <?php
                     if($get_recent_activities == null){
                         echo "<div class='text-center'>No activities yet</div>";
                     }else{

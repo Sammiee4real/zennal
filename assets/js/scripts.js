@@ -1877,6 +1877,67 @@ $(document).ready(function(){
 		})
 	});
 
+
+	// Badmus
+
+	$(".make_of_vehicle").change(function(){
+		console.log($(this).find(':selected').attr("data-brandId"));
+
+		let vehicleBrandId = $(this).find(':selected').attr("data-brandId");
+
+		$.get("ajax/get_vehicle_model.php", {vehicleBrandId}, function(data, error){
+			console.log(data);
+			const arrData = JSON.parse(data);
+			$("#vehicle_model").empty();
+			$("#vehicle_model").append(`<option value="">Select Vehicle Model</option>`);
+			arrData.map(model => {
+				// console.log(model.model_name);
+				$("#vehicle_model").append(
+					`<option value="${model.model_name}">${model.model_name}</option>`
+				)
+			})
+		})
+
+
+	});
+
+	// Badmus
+	$('#add_insurer_form').submit(function(e){
+		e.preventDefault();
+		$('#submit_insurer_form').attr('disabled', true);
+		$('#submit_insurer_form').text('Please wait...');
+		var formData = new FormData(this);
+		$.ajax({
+			url:"ajax_admin/add_insurer.php",
+			method: "POST",
+			data: formData,
+			contentType: false,
+			cache: false,
+			processData:false,
+			success: function(data){
+				//alert(data);
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Insurer added successfully",
+                        icon: "success",
+                    })
+					// .then(setTimeout( function(){ window.location.href = "refer";}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+					// location.reload();
+				}
+				$('#submit_insurer_form').attr('disabled', false);
+				$('#submit_insurer_form').text('Submit');
+			}
+		})
+	});
+
 	$("#add_referral").click(function(e){
 		e.preventDefault();
 		
@@ -2002,9 +2063,8 @@ $(document).ready(function(){
 				$('#submit_insurer_form').attr('disabled', false);
 				$('#submit_insurer_form').text('Submit');
 			}
-		})
+		});
 	});
-
 
 	$(".select-insurers").change(function(){
 		const insurerId = $(this)[0].value;
@@ -2026,46 +2086,120 @@ $(document).ready(function(){
 			}
 		});
 	});
+// ------
+	$("#prefered_insurer").change(function(){
+		const insurerId = $(this)[0].value;
+		console.log(insurerId);
+		let plans = $("#select_plan");
+		$(plans).empty();
+		plans.append(`<option>Select package</option>`);
+		$.ajax({
+			url:"admin/ajax_admin/get_insurance_plans.php",
+			method: "GET",
+			data:{insurerId},
+			success: function(res){
+				const data = JSON.parse(res);
+				data.map(plan => {
+					plans.append(`
+					<option value="${plan.unique_id}">${plan.plan_name} - ${plan.plan_percentage}%</option>
+					`);
+				});
+			}
+		});
+	});
+
+	$("#select_plan").change(function(){
+		let planId = $(this)[0].value;
+		let vehicleValue = $("#vehicle_value")[0].value;
+
+		$.get("admin/ajax_admin/get_vehicle_quote.php", {planId, vehicleValue}, function(data, error){
+			console.log(data)
+			let premium_amount = formatNumber(JSON.parse(data));
+			$("#premium_amount").text(premium_amount);
+		})
+	})
+
+	$("#vehicle_value").keyup(function() {
+		if(! Number($(this).val())){
+			$("#help-text").show();
+			$("#help-text").text("Please enter a valid vehicle value");
+		}else{
+			$("#help-text").hide();
+		}
+	})
+
+	$("#save-quote").click(function(){
+		if( $(this).is(':checked') ){
+			const quoteForm = $("#vehicle-quote-form").serialize();
+			const vehicleValue = $("#vehicle_value").val();
+			console.log(vehicleValue);
+
+			if(! Number(vehicleValue)){
+				alert("Please enter a valid vehicle value");
+			}
+			// alert(1);
+			$.ajax({
+				url: "ajax/save_quote.php",
+				method: "POST",
+				data:quoteForm,
+				beforeSend:function(){
+				  $("#save-quote-container").append(`<span class="text-right" id="save-quote-loader">Saving quote...</span>`);
+				},
+				success: function(data){
+				  if(data == "success"){
+					$("#save-quote-loader").text("Quote saved");
+				  }
+				  else{
+					$("#save-quote-loader").text("Quote not saved");
+				  }
+				  setTimeout( function(){ $("#save-quote-loader").remove();}, 3000);
+				}
+			});
+		};
+	});
 
 	$("#payment-option").change(function(){
+		// alert(1);
 		const insurerPlanId = $(".selectPackagePlan")[0].value;
 		console.log(insurerPlanId);
 		let oneTimePay = $("#one-time-payment");
 		let installmetalPay = $("#installment-payment");
 		oneTimePay.empty();
 		installmetalPay.empty();
-		
+		oneTimePay.append(`
+			<div>Please wait...</div>
+		`)
 		$.ajax({
 			url:"ajax/get_insurance_quote.php",
 			method: "GET",
 			data:{insurerPlanId},
 			success: function(res){
-
+				oneTimePay.empty();
 				const data = JSON.parse(res);
 				console.log(data.data.status);
 				if (data.data.status == '1'){
-					alert(1);
+					// alert(1);
 					let installment = data.data.installment;
 					let amount = formatNumber(data.data.one_time.annual_due);
 					oneTimePay.append(`
 					<tr>
 						<td class="text-bold-500">ANNUAL (ONE-TIME PAYMENT)</td>
 						<td>₦ ${amount}</td>
-						<td><a href="bank_details.php"><button class="btn btn-primary">BUY NOW</button></a></td>
+						<td><button class="btn btn-primary" id="buy_now" data-amount="${data.data.one_time.annual_due}">BUY NOW</button></td>
 				  	</tr>
-					`)
+					`);
 
-					if(installment.length > 0){
-						installment.map(payment => {
-							installmetalPay.append(`
-							<tr>
-								<td class="text-bold-500">TWO INSTALLMENTS</td>
-								<td>₦29,750</td>
-								<td><a href="apply_loan.php"><button class="btn btn-primary">BUY NOW</button></a></td>
-						  	</tr>
-							`)
-						})
-					}
+					// if(installment.length > 0){
+					// 	installment.map(payment => {
+					// 		installmetalPay.append(`
+					// 		<tr>
+					// 			<td class="text-bold-500">TWO INSTALLMENTS</td>
+					// 			<td>₦29,750</td>
+					// 			<td><a href="apply_loan.php"><button class="btn btn-primary">BUY NOW</button></a></td>
+					// 	  	</tr>
+					// 		`)
+					// 	})
+					// }
 				}
 				// data.map(plan => {
 				// 	plans.append(`
@@ -2074,7 +2208,164 @@ $(document).ready(function(){
 				// });
 			}
 		});
+	});
+
+	// document.getElementById("buy_now").addEventListener('click', function(){
+	// 	alert(1);
+	// 	// let amount = $(this).data('amount');
+	// 	// alert(amount);
+	// });
+
+	// $("#buy_now").click(function(){
+	// 	// e.preventDefault();
+    //    alert('sdfjsldf');
+	// });	
+
+	$(document).on("click", "#buy_now", function(){
+		const amountDue = $(this).data('amount');
+		Okra.buildWithOptions({
+			name: 'Cloudware Technologies',
+			env: 'production-sandbox',
+			key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+			token: '5f5a2e5f140a7a088fdeb0ac', 
+			source: 'link',
+			color: '#ffaa00',
+			limit: '24',
+			// amount: 5000,
+			// currency: 'NGN',
+			garnish: true,
+			charge: {
+			  type: 'one-time',
+			  amount: amountDue*100,
+			  note: '',
+			  currency: 'NGN',
+			  account: '5ecfd65b45006210350becce'
+			},
+			corporate: null,
+			connectMessage: 'Which account do you want to connect with?',
+			products: ["auth", "transactions", "balance"],
+			//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+			//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+			//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+			logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+			filter: {
+				banks: [],
+				industry_type: 'all',
+			},
+			widget_success: 'Your account was successfully linked to Cloudware Technologies',
+			widget_failed: 'An unknown error occurred, please try again.',
+			currency: 'NGN',
+			exp: null,
+			success_title: 'Cloudware Technologies!',
+			success_message: 'You are doing well!',
+			onSuccess: function (data) {
+				console.log('success', data);
+				// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+				window.location.href = 'http://localhost/new_zennal/online_generation_callback?payment_id='+data.payment_id;
+				//window.location.href = '<?php //echo $redirect_url?>';
+				//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+			},
+			onClose: function () {
+				console.log('closed')
+			}
+		})
+		// ----------------------------
+	});
+
+	// Badmus
+	$("#insurance_interest_form").submit(function(e){
+		e.preventDefault();
+		$.ajax({
+			url: "ajax_admin/set_insurance_interest.php",
+			method: "POST",
+			data:$(this).serialize(),
+			beforeSend:function(){
+			  $("#insurance_interest_btn").attr("disabled", true);
+			  $("#insurance_interest_btn").text("Please wait");
+			},
+			success: function(data){
+			  if(data == "success"){
+				$("#success_message").empty();
+				$("#success_message").html("Success! Insurance interest has been updated successfully");
+				toastbox('success_toast', 3000);
+				setTimeout( function(){ location.reload();}, 3000);
+			  }
+			  else{
+				$("#error_message").empty();
+				$("#error_message").html("Error! " + data);
+				toastbox('error_toast', 6000);
+			  }
+			  $("#insurance_interest_btn").attr("disabled", false);
+			  $("#insurance_interest_btn").text("Set Rate");
+			}
+		});
+	});
+
+
+	$("#employment_status").change(function () {
+		const employmentStatus = $(this)[0].value;
+		
+		if (String(employmentStatus) === "unemployed") {
+			// alert(employmentStatus);
+			$("#occupation-group").hide();
+		}else{
+			$("#occupation-group").show();
+		}
 	})
+
+	$("#insurers").change(function(){
+		const insurerId = $(this)[0].value;
+		console.log(insurerId);
+		// alert(insurerId);
+		let plans = $("#insurance_package");
+		$(plans).empty();
+		plans.append(`<option>Select package</option>`);
+		$.ajax({
+			url:"ajax_admin/get_insurance_plans.php",
+			method: "GET",
+			data:{insurerId},
+			success: function(res){
+				const data = JSON.parse(res);
+				data.map(plan => {
+					plans.append(`
+					<option value="${plan.unique_id}">${plan.plan_name}</option>
+					`);
+				});
+			}
+		});
+	});
+
+	
+
+	$("#product_id_form").submit(function(e) {
+		e.preventDefault();
+		$('#product_id_btn').attr('disabled', true);
+		$('#product_id_btn').text('Please wait...');
+		$.ajax({
+			url:"ajax_admin/set_product_id.php",
+			method: "POST",
+              data:$(this).serialize(),
+              beforeSend:function(){
+                $("#product_id_btn").attr("disabled", true);
+                $("#product_id_btn").text("Please wait");
+              },
+              success: function(data){
+                if(data == "success"){
+                  $("#success_message").empty();
+                  $("#success_message").html("Success! Product id added successfully");
+                  toastbox('success_toast', 3000);
+                  setTimeout( function(){ window.reload();}, 3000);
+                }
+                else{
+                  $("#error_message").empty();
+                  $("#error_message").html("Error! " + data);
+                  toastbox('error_toast', 6000);
+                }
+                $("#product_id_btn").attr("disabled", false);
+                $("#product_id_btn").text("Save");
+              }
+		});
+	});
 	/* Badmus */
 
 	function formatNumber(num){
