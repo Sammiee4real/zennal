@@ -356,7 +356,7 @@ function show(el, txt){
             }
             else{
                 $.ajax({
-                    url: "ajax/get_vehicle_model",
+                    url: "ajax/get_vehicle_reg_model",
                     method: "POST",
                     data: {"vehicle_make": selected_option},
                     beforeSend: function(){
