@@ -3,6 +3,7 @@
     $get_user_details  =  get_one_row_from_one_table_by_id('users','unique_id', $user_id, 'registered_on');
     @$get_loan_details = get_rows_from_one_table_by_id('personal_loan_application','user_id', $user_id, 'date_created');
     $count = 0;
+    $reg_id = isset($_GET['reg_id']) ? $_GET['reg_id'] : '';
     // foreach ($get_loan_details as $value) {
     //     if($value['approval_status'] == 3){
     //         $count++;
@@ -93,7 +94,7 @@ $(document).ready(function(){
       
 <div class="main-content container-fluid">
     <div class="page-title">
-        <h3>Apply for Loan</h3>
+        <h3>Vehicle Registration Installmental Payment</h3>
         <p class="text-subtitle text-muted">Let's know you better</p>
     </div>
 
@@ -475,6 +476,8 @@ $(document).ready(function(){
                             <span class="" for="name">Estimated Monthly income</span>
                             <input type="text" name="monthly_income" class="form-control" placeholder="Monthly income" value="<?= $get_employment_details['monthly_income'];?>">
                         </div>
+
+                        <input type="hidden" name="reg_id" id="reg_id" value="<?= $reg_id?>">
 
                         <div class="mt-3 mb-3">
                         <button type="button" class="btn btn-primary btn-block btn-lg submit_employment_details" id="" >Next</button>

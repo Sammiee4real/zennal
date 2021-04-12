@@ -1349,20 +1349,20 @@ function get_rows_from_one_table($table,$order_option){
 }
 
 function get_rows_from_one_table_by_id($table,$param,$value,$order_option){
-         global $dbc;
-        $table = secure_database($table);
-        $sql = "SELECT * FROM `$table` WHERE `$param`='$value' ORDER BY `$order_option` DESC";
-        $query = mysqli_query($dbc, $sql);
-        $num = mysqli_num_rows($query);
-       if($num > 0){
-             while($row = mysqli_fetch_array($query)){
-                $display[] = $row;
-             }              
-             return $display;
-          }
-          else{
-             return null;
-          }
+  global $dbc;
+  $table = secure_database($table);
+  $sql = "SELECT * FROM `$table` WHERE `$param`='$value' ORDER BY `$order_option` DESC";
+  $query = mysqli_query($dbc, $sql);
+  $num = mysqli_num_rows($query);
+  if($num > 0){
+       while($row = mysqli_fetch_array($query)){
+          $display[] = $row;
+       }              
+       return $display;
+    }
+    else{
+       return null;
+    }
 }
 
 function  get_loan_packages_by_category($table,$param,$value,$order_option){
@@ -3789,7 +3789,108 @@ function calculate_vehicle_registration($reg_id){
     "insurance_charge" => $insurance_charge, 
     "number_plate_charge" => $number_plate_charge
   ]);
-} 
+}
+
+function insert_payment($user_id, $reg_id, $city, $delivery_area, $delivery_address, $total, $installment_id){
+  global $dbc;
+  $user_id = secure_database($user_id);
+  $city = secure_database($city);
+  $delivery_area = secure_database($delivery_area);
+  $delivery_address = secure_database($delivery_address);
+  $total = secure_database($total);
+  $reg_id = secure_database($reg_id);
+  $unique_id = unique_id_generator($reg_id.$user_id);
+  $installment_id = secure_database($installment_id);
+  $check = check_record_by_one_param('vehicle_reg_payment', 'reg_id', $reg_id);
+  if($user_id == '' || $city == '' || $delivery_area == '' || $delivery_address == '' || $total == ''){
+   return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else if($check == true){
+    return json_encode(["status"=>"0", "msg"=>"Record already Exists"]);
+  }
+  else{
+    if($installment_id != ''){
+      $get_installment_details = get_one_row_from_one_table('installment_payment_interest', 'unique_id', $installment_id);
+      $equity_contribution = (30/100) * $total;
+      $balance = $total - $equity_contribution;
+      $interest = $get_installment_details['interest_rate'];
+      $interest_per_month = (int) (($interest /100) * $balance);
+      $total_interest = (int) $interest_per_month * $get_installment_details['no_of_month'];
+      $total_amount_to_pay = $total_interest + $balance;
+      $amount_to_pay_per_month = $total_amount_to_pay / $get_installment_details['no_of_month'];
+      $payment_type = 1;
+      $insert_data_sql = "INSERT INTO `vehicle_reg_payment` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `installment_id` = '$installment_id', `amount_to_repay` = '$total_amount_to_pay', `interest_per_month` = '$interest_per_month', `amount_deducted_per_month` = '$amount_to_pay_per_month', `date_created` = now()";
+    }
+    else{
+      $payment_type = 2;
+      $equity_contribution = 0;
+      $insert_data_sql = "INSERT INTO `vehicle_reg_payment` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `date_created` = now()";
+    }
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function submit_vehicle_reg_installment($user_id, $reg_id, $bank_statement){
+  global $dbc;
+  $user_id = secure_database($user_id);
+  $reg_id = secure_database($reg_id);
+  $bank_statement = secure_database($bank_statement);
+  $unique_id = unique_id_generator($user_id);
+  $get_registration_details = get_one_row_from_one_table_by_id('vehicle_reg_payment','reg_id', $reg_id ,'date_created');
+  $total = $get_registration_details['total'];
+  if($user_id == '' || $reg_id == '' || $bank_statement == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $insert_data_sql = "INSERT INTO `vehicle_reg_installment` SET `unique_id` = '$unique_id', `user_id` = '$user_id',  `reg_id`='$reg_id', `total`='$total', `bank_statement`='$bank_statement', `date_created` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
+    if($insert_data_query){
+      $get_last_id = mysqli_query($dbc, "SELECT MAX(ID) AS last_id FROM okra_test");
+      while ($row = mysqli_fetch_array($get_last_id)){
+        $last_id = $row['last_id'];
+      }
+      $update_data = mysqli_query($dbc, "UPDATE `okra_test` SET `loan_id` = '$unique_id', `status` = 1 WHERE `id` = '$last_id' AND `status` = 0") or die(mysqli_error($dbc));
+      return json_encode(["status"=>"1", "msg"=>"success"]);
+    }else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function installmental_payment($unique_id, $installment_id){
+  global $dbc;
+  $unique_id = secure_database($unique_id);
+  $installment_id = secure_database($installment_id);
+  if($unique_id == '' || $installment_id == ''){
+   return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $get_installment_details = get_one_row_from_one_table('installment_payment_interest', 'unique_id', $installment_id);
+    $get_details = get_one_row_from_one_table('vehicle_reg_installment', 'unique_id', $unique_id);
+    $total = $get_details['total'];
+    $equity_contribution = (30/100) * $total;
+    $balance = $total - $equity_contribution;
+    $interest = $get_installment_details['interest_rate'];
+    $interest_per_month = (int) (($interest /100) * $balance);
+    $total_interest = (int) $interest_per_month * $get_installment_details['no_of_month'];
+    $total_amount_to_pay = $total_interest + $balance;
+    $amount_to_pay_per_month = $total_amount_to_pay / $get_installment_details['no_of_month'];
+    $update_data_sql = "UPDATE `vehicle_reg_installment` SET `installment_id` = '$installment_id', `amount_to_repay` = '$total_amount_to_pay', `interest_per_month` = '$interest_per_month', `amount_deducted_per_month` = '$amount_to_pay_per_month' WHERE `unique_id` = '$unique_id'";
+    $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
+    if($update_data_query){
+      return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
+    }
+    else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
 
 
 /////// MOST IMPORTANT FUNCTIONS END HERE

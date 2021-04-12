@@ -108,6 +108,9 @@ $user = $_SESSION['user'];
                         <li>
                             <a href="pricing">Get Quote</a>
                         </li>
+                        <li>
+                            <a href="approved_vehicle_reg">View Approved Installmental Payment</a>
+                        </li>
                         
                     </ul>
                     
