@@ -4,7 +4,7 @@
   include("inc/header.php");
   $admin_id =$_SESSION['admin_id'];
   $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-  $interest_rate = get_one_row_from_one_table_by_id('insurance_interest_rate','id', '1', 'datetime');
+  //$interest_rate = get_one_row_from_one_table_by_id('insurance_interest_rate','id', '1', 'datetime');
   $get_num_users = get_number_of_rows('users');
   //$get_asset_loan = get_one_row_from_one_table_by_id('loan_category','type', 2, 'date_created');
   $get_num_approved_asset_loan = get_number_of_rows_one_param('asset_finance_application','approval_status',1);
@@ -15,16 +15,16 @@
   $get_num_ongoing_asset = get_number_of_rows_one_param('asset_finance_application','approval_status', 3);
   $get_num_ongoing_personal = get_number_of_rows_one_param('personal_loan_application','approval_status', 3);
 
-  $int_rate = $interest_rate['interest_rate'];
+  // $int_rate = $interest_rate['interest_rate'];
 
-  if ($interest_rate['type'] == '1') {
-    $icon = "fa-dollar-sign";
-    $type = "Flat Rate";
-  }
-  elseif ($interest_rate['type'] == '2') {
-    $icon = "fa-percent";
-    $type = "Percentage Rate";
-  }
+  // if ($interest_rate['type'] == '1') {
+  //   $icon = "fa-dollar-sign";
+  //   $type = "Flat Rate";
+  // }
+  // elseif ($interest_rate['type'] == '2') {
+  //   $icon = "fa-percent";
+  //   $type = "Percentage Rate";
+  // }
 ?>
 
 <body id="page-top">

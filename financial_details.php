@@ -3,6 +3,7 @@
     $get_financial_details = get_one_row_from_one_table_by_id('user_financial_details','user_id',$user_id, 'date_created');
     $get_bank_name = list_of_banks();
     $get_bank_name_decode = json_decode($get_bank_name, true);
+    $reg_id = isset($_GET['reg_id']) ? $_GET['reg_id'] : '';
 ?>
 <div id="main">
 
@@ -189,6 +190,8 @@
                     </div>
                         </div>
                     </div>
+
+                    <input type="hidden" name="reg_id" id="reg_id" value="<?= $reg_id;?>">
                     <div class="mt-3 mb-3">
                        <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit_financial_details" name="submit_financial_details">Submit</button>
                     </div>

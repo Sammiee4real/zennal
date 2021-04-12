@@ -1,6 +1,5 @@
 <?php
-  session_start();
-  if(!isset($_SESSION['user'])){
+  if(!isset($_SESSION['admin_id'])){
     header("Location: login");
   }
 ?>
@@ -82,6 +81,7 @@
             <a class="collapse-item" href="view_insurance_pricing">View Insurance Pricing Plans</a>
             <a class="collapse-item" href="personal_loan_application_requests">Personal Loan Requests</a>
             <a class="collapse-item" href="withdrawal_requests">Withdrawal Requests</a>
+            <a class="collapse-item" href="vehicle_reg_request">Vehicle Registration Requests</a>
           </div>
       </li>
      <li class="nav-item">

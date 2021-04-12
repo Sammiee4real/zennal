@@ -1,4 +1,6 @@
-<?php include("includes/sidebar.php");?>
+<?php include("includes/sidebar.php");
+    $reg_id = isset($_GET['reg_id']) ? $_GET['reg_id'] : '';
+?>
 <div id="main">
 
 <?php include("includes/header.php");?>            
@@ -87,7 +89,7 @@
                             <div class="mt-5">
                                 <button type="button" class="btn btn-primary btn-block btn-lg" id="verify_otp" name="verify_otp">Verify</button>
                             </div>
-
+                            <input type="hidden" name="reg_id" id="reg_id" value="<?= $reg_id;?>">
                         </form>
                     </div>
                 </div>

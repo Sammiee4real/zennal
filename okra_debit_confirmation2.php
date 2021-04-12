@@ -1,14 +1,14 @@
 <?php include("includes/sidebar.php");
-    $loan_id = isset($_GET['loan_id']) ? $_GET['loan_id'] : '';
-    $get_loan_application = get_one_row_from_one_table_by_id('personal_loan_application', 'unique_id', $loan_id, 'date_created');
+    $unique_id = isset($_GET['unique_id']) ? $_GET['unique_id'] : '';
+    $get_loan_application = get_one_row_from_one_table_by_id('vehicle_reg_installment', 'unique_id', $unique_id, 'date_created');
     $amount = $get_loan_application['amount_to_repay'];
-    if($loan_id != ""){
-        $callback_url = "http://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback.php?loan_id=".$loan_id;
-        $redirect_url = "http://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback.php?loan_id=".$loan_id;
+    if($unique_id != ""){
+        $callback_url = "http://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback2.php?unique_id=".$unique_id;
+        $redirect_url = "http://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback2.php?unique_id=".$unique_id;
     }
     else{
-        $callback_url = "https://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback";
-        $redirect_url = "https://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback";
+        $callback_url = "https://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback2";
+        $redirect_url = "https://$_SERVER[HTTP_HOST]"."/new_zennal/direct_debit_callback2";
     }
 ?>
 <div id="main">
@@ -44,7 +44,7 @@ a:hover {
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Direct Debit Confirmation</h3>
-        <p class="text-subtitle text-muted">Confirm you want your account to be debited on your next payday</p>
+        <p class="text-subtitle text-muted">Confirm you want your account to be debited every repayment month</p>
     </div>
 
 
@@ -65,7 +65,7 @@ a:hover {
             ?>
             <div class="card">
                 <div class="card-body">
-                    Please click the button below to confirm that your account should be debited on your next payday with the amount of <b>&#8358;<?= number_format($get_loan_application['amount_to_repay']);?></b><br><br>
+                    Please click the button below to confirm that your account should be debited every repayment month with the amount of <b>&#8358;<?= number_format($get_loan_application['amount_deducted_per_month']);?></b><br><br>
                     <button onclick="connectViaOptions2()" class="btn btn-primary btn-sm">Direct Debit Confirmation</button>
                 </div>
             </div>
@@ -108,7 +108,7 @@ a:hover {
             success_message: 'You are doing well!',
             onSuccess: function (data) {
                 console.log('success', data);
-               // window.location.href = '<?php //echo $redirect_url;?>';
+               //window.location.href = '<?php //echo $redirect_url;?>';
                 $.ajax({
                     url: "<?php echo $callback_url?>",
                     method: "POST",

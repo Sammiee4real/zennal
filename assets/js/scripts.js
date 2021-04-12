@@ -36,6 +36,12 @@ $(document).ready(function(){
 	$(".submit_employment_details").click(function(e){
 		e.preventDefault();
 		//toastbox('toast-11', 5000);
+		var reg_id = $("#reg_id").val();
+		if(reg_id == ''){
+			var location = "verify_otp";
+		}else{
+			var location = "verify_otp?reg_id="+reg_id;
+		}
 		$.ajax({
 			url:"ajax/submit_employment_details.php",
 			method: "POST",
@@ -50,7 +56,7 @@ $(document).ready(function(){
                         title: "Congratulations!",
                         text: "Your employment details have been successfully submitted and a verification code has been sent to your email address",
                         icon: "success",
-                    }).then(setTimeout( function(){ window.location.href = "verify_otp";}, 5000));
+                    }).then(setTimeout( function(){ window.location.href = location;}, 5000));
 				}
 				else{
 					Swal.fire({
@@ -69,6 +75,12 @@ $(document).ready(function(){
 	$("#verify_otp").click(function(e){
 		e.preventDefault();
 		//toastbox('toast-11', 5000);
+		var reg_id = $("#reg_id").val();
+		if(reg_id == ''){
+			var location = "financial_details";
+		}else{
+			var location = "financial_details?reg_id="+reg_id;
+		}
 		$.ajax({
 			url:"ajax/verify_otp.php",
 			method: "POST",
@@ -83,7 +95,7 @@ $(document).ready(function(){
                         title: "Congratulations!",
                         text: "Your Email Address has been verified, you will be redirected soon",
                         icon: "success",
-                    }).then(setTimeout( function(){ window.location.href = "financial_details";}, 5000));
+                    }).then(setTimeout( function(){ window.location.href = location;}, 5000));
 				}
 				else{
 					Swal.fire({
@@ -1786,6 +1798,12 @@ $(document).ready(function(){
 
 	$("#submit_financial_details").click(function(e){
 		e.preventDefault();
+		var reg_id = $("#reg_id").val();
+		if(reg_id == ''){
+			var location = "loan_purpose";
+		}else{
+			var location = "vehicle_reg_stmt?reg_id="+reg_id;
+		}
 		$('#submit_financial_details').attr('disabled', true);
 		$('#submit_financial_details').text('Please wait...');
 		$.ajax({
@@ -2028,6 +2046,294 @@ $(document).ready(function(){
 			}
 		})
 	});
+
+	$("#apply_coupon_code").click(function(){
+      	var coupon_code = $("#coupon_code").val();
+      	var total = $("#total").val();
+		if(coupon_code == ''){
+			alert("Please enter coupon code");
+		}
+      	else{
+			$.ajax({
+				url: "ajax/apply_coupon_code.php",
+				method: "POST",
+				data: {coupon_code, total},
+				beforeSend: function(){
+				  $("#apply_coupon_code").attr("disabled", true);
+				  $("#apply_coupon_code").text("Applying...");
+				},
+				success: function(data){
+					if(data['status'] == "success"){
+						$("#coupon_discount").html(data['discount']);
+						$("#new_total").html(data['total']);
+						$("#total").val(data['total_without_format']);
+					}
+					else{
+						Swal.fire({
+						title: "Error!",
+						text: data['status'],
+						icon: "error",
+						});
+					}
+					$("#apply_coupon_code").attr("disabled", true);
+				  	$("#apply_coupon_code").text("Applied");
+				}
+			})
+		}
+    });
+
+    $("#proceed_to_payment").click(function(e){
+    	e.preventDefault();
+    	$('#proceed_to_payment').attr('disabled', true);
+		$('#proceed_to_payment').text('Please wait...');
+		var total = $("#total").val();
+		$.ajax({
+			url:"ajax/one_time_payment.php",
+			method: "POST",
+			data: $("#proceed_to_payment_form").serialize(),
+			success: function(data){
+				//alert(data);
+				if(data['status'] == "success"){
+					Okra.buildWithOptions({
+		                name: 'Cloudware Technologies',
+		                env: 'production-sandbox',
+		                key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+		                token: '5f5a2e5f140a7a088fdeb0ac', 
+		                source: 'link',
+		                color: '#ffaa00',
+		                limit: '24',
+		                // amount: 5000,
+		                // currency: 'NGN',
+		                garnish: true,
+		                charge: {
+		                  type: 'one-time',
+		                  amount: parseInt(total*100),
+		                  note: '',
+		                  currency: 'NGN',
+		                  account: '5ecfd65b45006210350becce'
+		                },
+		                corporate: null,
+		                connectMessage: 'Which account do you want to connect with?',
+		                products: ["auth", "transactions", "balance"],
+		                //callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+		                //callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+		                //redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+		                logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+		                filter: {
+		                    banks: [],
+		                    industry_type: 'all',
+		                },
+		                widget_success: 'Your account was successfully linked to Cloudware Technologies',
+		                widget_failed: 'An unknown error occurred, please try again.',
+		                currency: 'NGN',
+		                exp: null,
+		                success_title: 'Cloudware Technologies!',
+		                success_message: 'You are doing well!',
+		                onSuccess: function (data) {
+		                    console.log('success', data);
+		                    // Swal.fire({
+		                    //     title: "Congratulations!",
+		                    //     text: "You've submitted your vehicle details",
+		                    //     icon: "success",
+		                    // }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+		                    // window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+		                    //window.location.href = 'http://localhost/new_zennal/online_generation_callback?payment_id='+data.payment_id;
+		                    //window.location.href = '<?php //echo $redirect_url?>';
+		                    //console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+		                },
+		                onClose: function () {
+		                    console.log('closed')
+		                }
+		            })
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data['status'],
+                        icon: "error",
+                    });
+				}
+				$('#proceed_to_payment').attr('disabled', false);
+				$('#proceed_to_payment').text('Proceed');
+			}
+		})
+    })
+
+
+    $(".proceed_to_payment_btn").click(function(e){
+    	e.preventDefault();
+		var installment_id = $(this).attr("id");
+		var unique_id = $("#unique_id").val();
+		$('#'+installment_id).attr('disabled', true);
+		$('#'+installment_id).text('Please wait...');
+		$.ajax({
+			url:"ajax/installmental_payment.php",
+			method: "POST",
+			data: {unique_id, installment_id},
+			success: function(data){
+				//alert(data);
+				if(parseInt(data['status']) == 200){
+					Okra.buildWithOptions({
+		                name: 'Cloudware Technologies',
+		                env: 'production-sandbox',
+		                key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+		                token: '5f5a2e5f140a7a088fdeb0ac', 
+		                source: 'link',
+		                color: '#ffaa00',
+		                limit: '24',
+		                // amount: 5000,
+		                // currency: 'NGN',
+		                garnish: true,
+		                charge: {
+		                  type: 'one-time',
+		                  amount: parseInt(data['data']*100),
+		                  note: '',
+		                  currency: 'NGN',
+		                  account: '5ecfd65b45006210350becce'
+		                },
+		                corporate: null,
+		                connectMessage: 'Which account do you want to connect with?',
+		                products: ["auth", "transactions", "balance"],
+		                //callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+		                //callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+		                //redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+		                logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+		                filter: {
+		                    banks: [],
+		                    industry_type: 'all',
+		                },
+		                widget_success: 'Your account was successfully linked to Cloudware Technologies',
+		                widget_failed: 'An unknown error occurred, please try again.',
+		                currency: 'NGN',
+		                exp: null,
+		                success_title: 'Cloudware Technologies!',
+		                success_message: 'You are doing well!',
+		                onSuccess: function (data) {
+		                    console.log('success', data);
+		                    // Swal.fire({
+		                    //     title: "Congratulations!",
+		                    //     text: "You've submitted your vehicle details",
+		                    //     icon: "success",
+		                    // }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+		                    window.location.href = "repayment_details?unique_id="+unique_id;
+		                    //window.location.href = 'http://localhost/new_zennal/online_generation_callback?payment_id='+data.payment_id;
+		                    //window.location.href = '<?php //echo $redirect_url?>';
+		                    //console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+		                },
+		                onClose: function () {
+		                    console.log('closed')
+		                }
+		            })
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data['status'],
+                        icon: "error",
+                    });
+				}
+				$('#'+installment_id).attr('disabled', false);
+				$('#'+installment_id).text('Proceed');
+			}
+		})
+    })
+
+
+    $("#submit_vehicle_reg_installment").click(function(e){
+		e.preventDefault();
+		//toastbox('toast-11', 5000);
+		var employment_status = $("#employment_status").val();
+		if(employment_status == 1 || employment_status == 4 || employment_status == 5 || employment_status == 6){
+			var location = "submit_guarantor";
+		}
+		else if(employment_status == 2 || employment_status == 3){
+			var location = "success";
+		}
+		$.ajax({
+			url:"ajax/submit_vehicle_reg_installment.php",
+			method: "POST",
+			data: $("#submit_vehicle_reg_installment_form").serialize(),
+			beforeSend: function(){
+				$('#submit_vehicle_reg_installment').attr('disabled', true);
+				$('#submit_vehicle_reg_installment').text('Submitting...');
+			},
+			success: function(data){
+				if(data == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your application has been submitted successfully",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = location;}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data,
+                        icon: "error",
+                    });
+				}
+				$('#submit_vehicle_reg_installment').attr('disabled', false);
+				$('#submit_vehicle_reg_installment').text('Submit');
+			}
+		})
+	});
+
+	$("#accept_vehicle_installment_btn").click(function(){
+          $.ajax({
+              url: "ajax_admin/accept_vehicle_installment.php",
+              method: "POST",
+              data:$("#accept_vehicle_installment_form").serialize(),
+              beforeSend:function(){
+                $("#accept_vehicle_installment_btn").attr("disabled", true);
+                $("#accept_vehicle_installment_btn").text("Please wait...");
+              },
+              success: function(data){
+              	$(".modal").modal('hide');
+                if(data == "success"){
+                  $("#success_message").empty();
+                  $("#success_message").html("Success! You've successfully approved this application");
+                  toastbox('success_toast', 3000);
+                  setTimeout( function(){ window.location.href = "vehicle_reg_request.php";}, 3000);
+                }
+                else{
+                  $("#error_message").empty();
+                  $("#error_message").html("Error! " + data);
+                  toastbox('error_toast', 6000);
+                }
+                $("#accept_vehicle_installment_btn").attr("disabled", false);
+                $("#accept_vehicle_installment_btn").text("Yes");
+              }
+          });
+      });
+
+	$("#reject_vehicle_installment_btn").click(function(){
+          $.ajax({
+              url: "ajax_admin/reject_vehicle_installment.php",
+              method: "POST",
+              data:$("#reject_vehicle_installment_form").serialize(),
+              beforeSend:function(){
+                $("#reject_vehicle_installment_btn").attr("disabled", true);
+                $("#reject_vehicle_installment_btn").text("Please wait...");
+              },
+              success: function(data){
+              	$(".modal").modal('hide');
+                if(data == "success"){
+                  $("#success_message").empty();
+                  $("#success_message").html("Success! You've successfully rejected this loan application");
+                  toastbox('success_toast', 3000);
+                  setTimeout( function(){ window.location.href = "vehicle_reg_request.php";}, 3000);
+                }
+                else{
+                  $("#error_message").empty();
+                  $("#error_message").html("Error! " + data);
+                  toastbox('error_toast', 6000);
+                }
+                $("#reject_vehicle_installment_btn").attr("disabled", false);
+                $("#reject_vehicle_installment_btn").text("Yes");
+              }
+          });
+      });
+
 
 	// Badmus
 	$('#add_insurer_form').submit(function(e){
