@@ -3513,6 +3513,7 @@ function add_new_vehicle($user_id, array $vehicle_details_array){
   $third_lg = $vehicle_details_array['third_lg'];
   $tinted_permit = $vehicle_details_array['tinted_permit'];
   $plan_type = $vehicle_details_array['plan_type'];
+  $vehicle_value = $vehicle_details_array['vehicle_value'];
   $phone = $vehicle_details_array['phone'];
   $unique_id = unique_id_generator($user_id. $chasis_number);
   $check_vehicle_exist = check_record_by_one_param('vehicle_registration', 'chasis_number',$chasis_number);
@@ -3543,6 +3544,7 @@ function add_new_vehicle($user_id, array $vehicle_details_array){
     `state` = '$state',
     `insurer` = '$insurer',
     `plan_type` = '$plan_type',
+    `vehicle_value` = '$vehicle_value',
     `number_plate` = '$number_plate',
     `first_lg` = '$first_lg',
     `second_lg` = '$second_lg',
@@ -3735,6 +3737,7 @@ function calculate_vehicle_registration($reg_id){
   $get_registration_details = get_one_row_from_one_table('vehicle_registration', 'unique_id', $reg_id);
   $vehicle_type = $get_registration_details['vehicle_type'];
   $get_vehicle_particulars = get_one_row_from_one_table('vehicle_particulars', 'vehicle_id', $vehicle_type);
+  $get_insurance_rate = get_one_row_from_one_table('insurance_plans', 'unique_id', $get_registration_details['plan_type']);
   // $get_number_plate
   if($get_registration_details['tinted_permit'] == 'yes'){
     $service = "Tinted Glass Permit";
@@ -3751,8 +3754,8 @@ function calculate_vehicle_registration($reg_id){
   else if($get_registration_details['insurance_type'] == 'no_third_party_insurance'){
     $insurance_charge = 0;
   }
-  else{
-    $insurance_charge = 0;
+  else if($get_registration_details['insurance_type'] == 'comprehensive'){
+    $insurance_charge = ($get_insurance_rate['plan_percentage'] / 100) * $get_registration_details['vehicle_value'];
   }
 
   if($get_registration_details['plate_number_type'] == "private"){

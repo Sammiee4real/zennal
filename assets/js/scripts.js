@@ -2067,6 +2067,7 @@ $(document).ready(function(){
 						$("#coupon_discount").html(data['discount']);
 						$("#new_total").html(data['total']);
 						$("#total").val(data['total_without_format']);
+						$("#initial_total").val(data['total_without_format']);
 					}
 					else{
 						Swal.fire({
@@ -2080,6 +2081,21 @@ $(document).ready(function(){
 				}
 			})
 		}
+    });
+
+    $("#remove_from_wallet").click(function(){
+      	var wallet_balance = $("#wallet_balance").val();
+      	var total = $("#total").val();
+      	var initial_total = $("#initial_total").val();
+      	if($('#remove_from_wallet').is(':checked')){
+      		var new_total = parseInt(total - wallet_balance);
+      		$("#new_total").html(formatNumber(new_total));
+			$("#total").val(new_total);
+      	}
+      	else{
+      		$("#new_total").html(formatNumber(initial_total));
+			$("#total").val(initial_total);
+      	}
     });
 
     $("#proceed_to_payment").click(function(e){

@@ -2,6 +2,7 @@
     $get_vehicles = get_rows_from_one_table('vehicles', 'date_created');
     $get_vehicle_brands = get_rows_from_one_table('vehicle_brands', 'datetime');
     $get_vehicle_models = get_rows_from_one_table('vehicle_models', 'datetime');
+    $get_insurer = get_rows_from_one_table('insurers', 'datetime');
 ?>
 <div id="main">
 
@@ -154,16 +155,28 @@
                                             <div class="form-group">
                                                <select class="form-select" name="insurer" id="insurer">
                                                     <option>Select Insurer</option>
-                                                    <option> Mutual Benefits</option>
-                                                    <option> Old Mutual</option>
+                                                    <?php
+                                                        foreach ($get_insurer as $insurer) {
+                                                    ?>
+                                                        <option value="<?= $insurer['unique_id']?>"><?= $insurer['name']?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
+                                            <center>
+                                                <div id="spinner_class2" class="d-none">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            </center>
                                              <div class="form-group">
                                                <select class="form-select" name="plan_type" id="plan_type">
                                                     <option>Select Plan</option>
-                                                    <option> Bronze</option>
-                                                    <option> Silver</option>
+                                                
                                                 </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="number" name="vehicle_value" id="vehicle_value" class="form-control" placeholder="Value of Vehicle (in naira)">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -366,6 +379,28 @@ function show(el, txt){
                         $("#spinner_class").addClass("d-none");
                         //console.log(data);
                         $("#vehicle_model").html(data);
+                    }
+                })
+            }
+        });
+
+        $("#insurer").change(function(){
+            var selected_option = $(this).children("option:selected").val();
+            if(selected_option == ''){
+                alert("Please select an option");
+            }
+            else{
+                $.ajax({
+                    url: "ajax/get_insurance_plan",
+                    method: "POST",
+                    data: {"insurer": selected_option},
+                    beforeSend: function(){
+                        $("#spinner_class2").removeClass("d-none");
+                    },
+                    success: function(data){
+                        $("#spinner_class2").addClass("d-none");
+                        //console.log(data);
+                        $("#plan_type").html(data);
                     }
                 })
             }
