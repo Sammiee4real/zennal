@@ -79,7 +79,7 @@ function show(el, txt){
 
                     <div class="tab-content">
                     <div class="tab-pane active" role="tabpanel" id="step1">
-                        <form class="form" action="buy_package.php" method="post" enctype="multipart/form-data">
+                        <form class="form" id="vehicle_details" method="post" enctype="multipart/form-data"> <!--action="buy_package.php" -->
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <fieldset class="form-group">
@@ -242,6 +242,14 @@ function show(el, txt){
                                             <span for="Modelcolumn">Vehicle Model</span>
                                             <select class="form-select" name="vehicle_model" id="vehicle_model">
                                             <option value="">Select Vehicle Model</option>
+                                            <?php
+                                                if (isset($vehicle_details["vehicle_model"])) {
+                                            ?>
+                                                    <option value="<?= $vehicle_details["vehicle_model"]?>" selected><?= $vehicle_details["vehicle_model"]?></option>
+                                            <?php
+                                                }
+                                            ?>
+                                            
                                             <!-- <option value="Accord" <?php //echo isset($vehicle_details["vehicle_model"]) && $vehicle_details["vehicle_model"] == "Accord"?"selected":""; ?>>Accord</option> -->
                                             </select>
                                         </div>
@@ -312,9 +320,9 @@ function show(el, txt){
                                             <span for="insured_type">Insured Type</span>
                                             <select name="insured_type" class="form-select">
                                                 <option value="">Select Insured Type</option>
-                                                <option value="Option1">Option1</option>
-                                                <option value="Option2">Option2</option>
-                                                <option value="Option3">Option3</option>
+                                                <option value="Spouse" <?php echo isset($vehicle_details["insured_type"]) && $vehicle_details["insured_type"] == "Spouse"?"selected":""; ?>>Spouse</option>
+                                                <option value="Other" <?php echo isset($vehicle_details["insured_type"]) && $vehicle_details["insured_type"] == "Other"?"selected":""; ?>>Other</option>
+                                                <!-- <option value="Option3">Option3</option> -->
                                             </select>
                                         </div>
                                     </div>
@@ -345,7 +353,7 @@ function show(el, txt){
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <span for="identity_image">Identity Image (Upload your valid ID)</span><br />
-                                            <i style="color:tomato; font-size:small;">Note: The image on your ID must tallies with your profile picture</i>
+                                            <i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
                                             <input type="file" id="identity_image" class="form-control" name="identity_image" value="" placeholder="Policy Start Date">
                                         </div>
                                     </div>   
@@ -380,7 +388,7 @@ function show(el, txt){
 
 
                                     <div class="text-center">
-                                      <button type="submit" name="submit_vehicle_details" class="btn btn-primary mr-1 mb-1">Submit</button>
+                                      <button type="submit" id="submit_vehicle_details" name="submit_vehicle_details" class="btn btn-primary mr-1 mb-1">Submit</button>
                                     </div>
                                
                                 </div>
