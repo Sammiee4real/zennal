@@ -4,13 +4,17 @@
 	require_once('../config/functions.php');
 	$user_id = $_SESSION['user']['unique_id'];
 	$reg_id = $_POST['reg_id'];
-	$city = $_POST['city'];
-	$delivery_area = $_POST['delivery_area'];
-	$delivery_address = $_POST['delivery_address'];
+	$city = isset($_POST['city']) ? $_POST['city'] : '';
+	$delivery_area = isset($_POST['delivery_area']) ? $_POST['delivery_area'] : '';
+	$delivery_address = isset($_POST['delivery_address']) ? $_POST['delivery_address'] : '';
 	$total = $_POST['total'];
+	$email = isset($_POST['email']) ? $_POST['email'] : '';
 	$installment_id = isset($_POST['installment_id']) ? $_POST['installment_id'] : '';
+	$service_type = $_POST['service_type'];
+	$remove_from_wallet = isset($_POST['remove_from_wallet']) ? $_POST['remove_from_wallet'] : '';;
 	$response_array = [];
-	$insert_payment = insert_payment($user_id, $reg_id, $city, $delivery_area, $delivery_address, $total, $installment_id);
+	$table = "vehicle_reg_payment";
+	$insert_payment = insert_payment($email, $table, $user_id, $reg_id, $city, $delivery_area, $delivery_address, $total, $installment_id, $service_type, $remove_from_wallet);
 	$insert_payment_decode = json_decode($insert_payment, true);
 	if($insert_payment_decode['status'] == 1){
 		$response_array = [

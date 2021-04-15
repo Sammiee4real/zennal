@@ -1895,6 +1895,36 @@ $(document).ready(function(){
 		})
 	});
 
+	$("#change_ownership_btn").click(function(e){
+		e.preventDefault();
+		$('#change_ownership_btn').attr('disabled', true);
+		$('#change_ownership_btn').text('Please wait...');
+		$.ajax({
+			url:"ajax/change_ownership.php",
+			method: "POST",
+			data: $("#change_ownership_form").serialize(),
+			success: function(data){
+				//alert(data);
+				if(data['status'] == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've submitted ownership details",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "complete_change_ownership_order?unique_id="+data['data'];}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data['status'],
+                        icon: "error",
+                    });
+				}
+				$('#change_ownership_btn').attr('disabled', false);
+				$('#change_ownership_btn').text('Proceed');
+			}
+		})
+	});
+
 
 	// Badmus
 
@@ -2067,6 +2097,9 @@ $(document).ready(function(){
 						$("#coupon_discount").html(data['discount']);
 						$("#new_total").html(data['total']);
 						$("#total").val(data['total_without_format']);
+						$("#initial_total").val(data['total_without_format']);
+						$("#apply_coupon_code").attr("disabled", true);
+				  		$("#apply_coupon_code").text("Applied");
 					}
 					else{
 						Swal.fire({
@@ -2074,12 +2107,27 @@ $(document).ready(function(){
 						text: data['status'],
 						icon: "error",
 						});
+						$("#apply_coupon_code").attr("disabled", false);
+				  		$("#apply_coupon_code").text("Apply");
 					}
-					$("#apply_coupon_code").attr("disabled", true);
-				  	$("#apply_coupon_code").text("Applied");
 				}
 			})
 		}
+    });
+
+    $("#remove_from_wallet").click(function(){
+      	var wallet_balance = $("#wallet_balance").val();
+      	var total = $("#total").val();
+      	var initial_total = $("#initial_total").val();
+      	if($('#remove_from_wallet').is(':checked')){
+      		var new_total = parseInt(total - wallet_balance);
+      		$("#new_total").html(formatNumber(new_total));
+			$("#total").val(new_total);
+      	}
+      	else{
+      		$("#new_total").html(formatNumber(initial_total));
+			$("#total").val(initial_total);
+      	}
     });
 
     $("#proceed_to_payment").click(function(e){

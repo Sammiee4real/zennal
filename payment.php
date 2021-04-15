@@ -10,6 +10,8 @@
   $total = $subtotal + $delivery_fee;
   $get_installment_details = get_rows_from_one_table('installment_payment_interest','date_created');
   // print_r($get_payment_details_decode);
+  $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
+  $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
 ?>
 <div id="main">
 
@@ -33,6 +35,7 @@
       <div class="card-content">
         <div class="card-body">
           <form class="form" method="post" id="proceed_to_payment_form">
+            <input type="hidden" name="service_type" id="service_type" value="vehicle_registration">
             <div class="row">
               <h4 class="card-title">Delivery Details</h4>
               <div class="col-md-12 col-12">
@@ -97,7 +100,7 @@
                       <tr>
                         <td class="text-bold-500 text-blue">Coupon Discount</td>
                         <td></td>
-                        <td class="text-bold-500 text-dark"><span id="coupon_discount">0</span>%</td>
+                        <td class="text-bold-500 text-dark">&#8358;<span id="coupon_discount">0</span></td>
                       </tr>
                       <tr>
                         <td class="text-bold-500 text-blue">Delivery Fee</td>
@@ -105,19 +108,21 @@
                         <td class="text-bold-500 text-dark">&#8358;<?= number_format($delivery_fee)?></td>
                       </tr>
                       <tr>
+                        <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="customCheck2" id="remove_from_wallet"> 
+                          Remove from my Zennal Wallet
+                        </td>
+                        <td></td>
+                        <td class="text-bold-500 text-dark">&#8358;<?= number_format($wallet_balance);?></td>
+                        <input type="hidden" name="" id="wallet_balance" value="<?= $wallet_balance;?>">
+                      </tr>
+                      <tr>
                         <td class="text-bold-500 text-blue">Total</td>
                         <td></td>
                         <td class="text-bold-500 text-dark">&#8358;<span id="new_total"><?php echo number_format($total)?></span></td>
                         <input type="hidden" name="total" id="total" value="<?= $total?>">
+                        <input type="hidden" name="initial_total" id="initial_total" value="<?= $total?>">
                         <input type="hidden" name="reg_id" id="reg_id" value="<?= $reg_id?>">
                       </tr>
-                      <!-- <tr>
-                        <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="customCheck2" id="customColorCheck2"> 
-                          Remove from my Zennal Wallet
-                        </td>
-                        <td></td>
-                        <td class="text-bold-500 text-dark">₦12,000</td>
-                      </tr> -->
                     </tbody>
                   </table>
                 </div>
