@@ -3794,41 +3794,32 @@ function calculate_vehicle_registration($reg_id){
   ]);
 }
 
-function insert_payment($user_id, $reg_id, $city, $delivery_area, $delivery_address, $total, $installment_id){
+function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delivery_area, $delivery_address, $total, $installment_id, $service_type, $remove_from_wallet){
   global $dbc;
   $user_id = secure_database($user_id);
   $city = secure_database($city);
   $delivery_area = secure_database($delivery_area);
   $delivery_address = secure_database($delivery_address);
+  $remove_from_wallet = secure_database($remove_from_wallet);
   $total = secure_database($total);
   $reg_id = secure_database($reg_id);
   $unique_id = unique_id_generator($reg_id.$user_id);
   $installment_id = secure_database($installment_id);
-  $check = check_record_by_one_param('vehicle_reg_payment', 'reg_id', $reg_id);
-  if($user_id == '' || $city == '' || $delivery_area == '' || $delivery_address == '' || $total == ''){
+  $check = check_record_by_one_param($table, 'reg_id', $reg_id);
+  if($user_id == '' || $total == ''){
    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else if($check == true){
     return json_encode(["status"=>"0", "msg"=>"Record already Exists"]);
   }
   else{
-    if($installment_id != ''){
-      $get_installment_details = get_one_row_from_one_table('installment_payment_interest', 'unique_id', $installment_id);
-      $equity_contribution = (30/100) * $total;
-      $balance = $total - $equity_contribution;
-      $interest = $get_installment_details['interest_rate'];
-      $interest_per_month = (int) (($interest /100) * $balance);
-      $total_interest = (int) $interest_per_month * $get_installment_details['no_of_month'];
-      $total_amount_to_pay = $total_interest + $balance;
-      $amount_to_pay_per_month = $total_amount_to_pay / $get_installment_details['no_of_month'];
-      $payment_type = 1;
-      $insert_data_sql = "INSERT INTO `vehicle_reg_payment` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `installment_id` = '$installment_id', `amount_to_repay` = '$total_amount_to_pay', `interest_per_month` = '$interest_per_month', `amount_deducted_per_month` = '$amount_to_pay_per_month', `date_created` = now()";
+    $payment_type = 1;
+    $equity_contribution = 0;
+    if($remove_from_wallet != ''){
+      $balance = 0;
+      $update_wallet = update_by_one_param('wallet','balance', $balance, 'user_id',$user_id);
     }
-    else{
-      $payment_type = 2;
-      $equity_contribution = 0;
-      $insert_data_sql = "INSERT INTO `vehicle_reg_payment` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `date_created` = now()";
-    }
+    $insert_data_sql = "INSERT INTO `$table` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `email`='$email', `service_type` = '$service_type', `date_created` = now()";
     $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
       return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
@@ -3893,6 +3884,93 @@ function installmental_payment($unique_id, $installment_id){
       return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
     }
   }
+}
+
+function change_vehicle_ownership($user_id, array $vehicle_details_array){
+  global $dbc;
+  $user_id = secure_database($user_id);
+  $vehicle_id = $vehicle_details_array['vehicle_id'];
+  $license_expiry = $vehicle_details_array['license_expiry'];
+  $dob = $vehicle_details_array['dob'];
+  $name = $vehicle_details_array['name'];
+  $phone = $vehicle_details_array['phone'];
+  $address = $vehicle_details_array['address'];
+  $vehicle_documents = json_encode($vehicle_details_array['vehicle_documents']);
+  $registration_type = $vehicle_details_array['registration_type'];
+  $plate_number_type = $vehicle_details_array['plate_number_type'];
+  $unique_id = unique_id_generator($user_id. $vehicle_id);
+  if($user_id == '' || $vehicle_id == '' || $license_expiry == '' || $dob == '' || $name == '' || $phone == '' || $address == '' || $vehicle_documents == '' || $registration_type == '' || $plate_number_type == ''){
+    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else{
+    $sql = "INSERT INTO `change_ownership` SET
+    `unique_id` = '$unique_id',
+    `user_id` = '$user_id',
+    `vehicle_id` = '$vehicle_id',
+    `license_expiry` = '$license_expiry',
+    `name` = '$name',
+    `phone` = '$phone',
+    `dob` = '$dob',
+    `address` = '$address',
+    `vehicle_documents` = '$vehicle_documents',
+    `registration_type` = '$registration_type',
+    `plate_number_type` = '$plate_number_type',
+    `date_created` = now()
+    ";
+    $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    if($query){
+      return json_encode(["status"=>"1", "msg"=>"success", "data" => $unique_id]);
+    }else{
+      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+    }
+  }
+}
+
+function calculate_change_vehicle_ownership($unique_id){
+  $unique_id = secure_database($unique_id);
+  $get_details = get_one_row_from_one_table('change_ownership', 'unique_id', $unique_id);
+  $vehicle_id = $get_details['vehicle_id'];
+  $registration_type = $get_details['registration_type'];
+  $plate_number_type = $get_details['plate_number_type'];
+  $get_vehicle_particulars = get_one_row_from_one_table('vehicle_particulars', 'vehicle_id', $vehicle_id);
+
+  if($registration_type != ''){
+    if($registration_type == "private_with_third"){
+      $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','private','vehicle_id',$vehicle_id, 'date_created');
+      $registration_charge = $get_number_plate['third_party_amount'];
+    }
+    else if($registration_type == "private_without_third"){
+      $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','private','vehicle_id',$vehicle_id, 'date_created');
+      $registration_charge = $get_number_plate['no_third_party_amount'];
+    }
+    else if($registration_type == "commercial_with_third"){
+      $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','commercial','vehicle_id',$vehicle_id, 'date_created');
+      $registration_charge = $get_number_plate['third_party_amount'];
+    }
+    else if($registration_type == "commercial_without_third"){
+      $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','commercial','vehicle_id',$vehicle_id, 'date_created');
+      $registration_charge = $get_number_plate['no_third_party_amount'];
+    }
+  }
+
+  if($plate_number_type != ""){
+    if($plate_number_type == "custom"){
+      $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','new','vehicle_id',$vehicle_id, 'date_created');
+      if($get_number_plate != null){
+        $number_plate_charge = $get_number_plate['personalized_number'];
+      }
+      else{
+        $number_plate_charge = 0;
+      }
+    }
+    else{
+      $number_plate_charge = 0;
+    }
+  }
+  return json_encode([
+    "status" => 1,
+    "change_of_ownership_fee" => $number_plate_charge + $registration_charge
+  ]);
 }
 
 

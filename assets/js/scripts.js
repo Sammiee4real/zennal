@@ -1895,6 +1895,36 @@ $(document).ready(function(){
 		})
 	});
 
+	$("#change_ownership_btn").click(function(e){
+		e.preventDefault();
+		$('#change_ownership_btn').attr('disabled', true);
+		$('#change_ownership_btn').text('Please wait...');
+		$.ajax({
+			url:"ajax/change_ownership.php",
+			method: "POST",
+			data: $("#change_ownership_form").serialize(),
+			success: function(data){
+				//alert(data);
+				if(data['status'] == "success"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "You've submitted ownership details",
+                        icon: "success",
+                    }).then(setTimeout( function(){ window.location.href = "complete_change_ownership_order?unique_id="+data['data'];}, 3000));
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: data['status'],
+                        icon: "error",
+                    });
+				}
+				$('#change_ownership_btn').attr('disabled', false);
+				$('#change_ownership_btn').text('Proceed');
+			}
+		})
+	});
+
 
 	// Badmus
 
@@ -2068,6 +2098,8 @@ $(document).ready(function(){
 						$("#new_total").html(data['total']);
 						$("#total").val(data['total_without_format']);
 						$("#initial_total").val(data['total_without_format']);
+						$("#apply_coupon_code").attr("disabled", true);
+				  		$("#apply_coupon_code").text("Applied");
 					}
 					else{
 						Swal.fire({
@@ -2075,9 +2107,9 @@ $(document).ready(function(){
 						text: data['status'],
 						icon: "error",
 						});
+						$("#apply_coupon_code").attr("disabled", false);
+				  		$("#apply_coupon_code").text("Apply");
 					}
-					$("#apply_coupon_code").attr("disabled", true);
-				  	$("#apply_coupon_code").text("Applied");
 				}
 			})
 		}

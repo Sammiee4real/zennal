@@ -18,12 +18,12 @@
 		    $registration_charge = $get_number_plate['no_third_party_amount'];
 		    $total += $registration_charge;
 		}
-		else if($plate_number_type == "commercial_with_third"){
+		else if($registration_type == "commercial_with_third"){
 		    $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','commercial','vehicle_id',$vehicle_type, 'date_created');
 		    $registration_charge = $get_number_plate['third_party_amount'];
 		    $total += $registration_charge;
 		}
-		else if($plate_number_type == "commercial_without_third"){
+		else if($registration_type == "commercial_without_third"){
 		    $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','commercial','vehicle_id',$vehicle_type, 'date_created');
 		    $registration_charge = $get_number_plate['no_third_party_amount'];
 		    $total += $registration_charge;

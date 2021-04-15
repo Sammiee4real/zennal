@@ -24,7 +24,7 @@
                                       <h4 class="card-title">Vehicle Details</h4>
                                      </div>
                                     <div class="form-group">
-                                        <select class="form-select" id="vehicle_type" name="vehicle_type">
+                                        <select class="form-select" id="vehicle_id" name="vehicle_id">
                                             <option>Select vehicle type</option>
                                             <?php
                                                 foreach ($get_vehicles as $vehicle) {
@@ -37,15 +37,15 @@
                                     <div class="form-group mb-5">
                                         <select class="form-select" name="license_expiry">
                                             <option>Vehicle license expiry</option>
-                                            <option>Less than 1 month</option>
-                                            <option>More than 1 month</option>
-                                            <option>More than 1 year</option>
-                                            <option>More than 2 years</option>
-                                            <option>More than 3 years</option>
-                                            <option>More than 4 years</option>
-                                            <option>More than 5 years</option>
-                                            <option>More than 6 years</option>
-                                            <option>More than 7 years</option>
+                                            <option value="less_than_one_month">Less than 1 month</option>
+                                            <option value="more_than_one_month">More than 1 month</option>
+                                            <option value="more_than_one_year">More than 1 year</option>
+                                            <option value="more_than_two_years">More than 2 years</option>
+                                            <option value="more_than_three_years">More than 3 years</option>
+                                            <option value="more_than_four_years">More than 4 years</option>
+                                            <option value="more_than_five_years">More than 5 years</option>
+                                            <option value="more_than_six_years">More than 6 years</option>
+                                            <option value="more_than_seven_years">More than 7 years</option>
                                         </select>
                                     </div>
                                    
@@ -70,27 +70,27 @@
                                         <span>1. Current Proof of Ownership  2. Vehicle License  3. Receipt of Purchase / 4. Transfer of Ownership Document / 5. Your Picture or Passport Photograph / 6. Valid ID Card </span>
                                         <input type="file" name="files[]" placeholder="Upload Document" class="form-control" id="files" multiple >
                                         <span id="uploaded_image"></span>
-                                        <input type="hidden" name="image_url" id="image_url">
+                                        <input type="hidden" name="vehicle_documents" id="image_url">
                                     </div>
 
                                      <div class="mt-5">
                                       <h4 class="card-title">Others</h4>
                                      </div>
                                     <div class="form-group">
-                                        <select class="form-select">
+                                        <select class="form-select" name="registration_type">
                                             <option>Select Registration type</option>
-                                            <option>Private Vehicle (with 3rd Party Insurance)</option>
-                                            <option>Private Vehicle (No Insurance)</option>
-                                            <option>Commercial Vehicle (with 3rd Party Insurance)</option>
-                                            <option>Commercial Vehicle (No Insurance)</option>
+                                            <option value="private_with_third">Private Vehicle (with 3rd Party Insurance)</option>
+                                            <option value="private_without_third">Private Vehicle (No Insurance)</option>
+                                            <option value="commercial_with_third">Commercial Vehicle (with 3rd Party Insurance)</option>
+                                            <option value="commercial_without_third">Commercial Vehicle (No Insurance)</option>
                                         </select>
                                     </div>
                                     <div class="form-group mb-5">
-                                        <select class="form-select">
+                                        <select class="form-select" name="plate_number_type">
                                             <option>Type of number plate</option>
-                                            <option> New number plate</option>
-                                            <option> Old number plate</option>
-                                            <option>Custom number plate</option>
+                                            <option value="new"> New number plate</option>
+                                            <option value="old"> Old number plate</option>
+                                            <option value="custom">Custom number plate</option>
                                         </select>
                                     </div>
                                     
