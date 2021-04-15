@@ -653,13 +653,29 @@ function update_user_image($filename){
   }
 }
 // Badmus
-function get_insurance_quote($packageId){
+function get_insurance_quote($insurer, $package_plan, $payment_method){
 
   global $dbc;
 
-  if (! isset($_SESSION['vehicle_details'])) {
-    return json_encode(array('status'=>0, 'msg'=>"Vehicle details not provided"));
+  // Validate input
+
+  if($insurer == ""){
+    return json_encode(array('status'=>0, 'msg'=>"Please select an insurer"));
   }
+  else if($package_plan == ""){
+    return json_encode(array('status'=>0, 'msg'=>"Please select a package plan"));
+  }
+  else if($payment_method == ""){
+    return json_encode(array('status'=>0, 'msg'=>"Please select a payment method"));
+  }
+
+
+  $user_id = $_SESSION['user']['unique_id'];
+
+  $insurance_query = "SELECT * FROM `vehicle_insurance` WHERE `user_id` = '$user_id'";
+  $insurance_query_exe = mysqli_query($dbc, $insurance_query) or die(mysqli_error($dbc));
+
+  $user_insurance = mysqli_fetch_assoc($insurance_query_exe);
 
   $first_name = $_SESSION['user']['first_name'];
   $last_name = $_SESSION['user']['last_name'];
@@ -668,23 +684,23 @@ function get_insurance_quote($packageId){
   $title = $_SESSION['user']['title'];
   $email = $_SESSION['user']['email'];
 
-  $usage = $_SESSION['vehicle_details']['usage'];
-  $make_of_vehicle = $_SESSION['vehicle_details']['make_of_vehicle'];
-  $other_make_of_vehicle = $_SESSION['vehicle_details']['other_make_of_vehicle'];
-  $vehicle_type = $_SESSION['vehicle_details']['vehicle_type'];
-  $vehicle_reg_no = $_SESSION['vehicle_details']['vehicle_reg_no'];
-  $vehicle_model = $_SESSION['vehicle_details']['vehicle_model'];
-  $year_of_make = $_SESSION['vehicle_details']['year_of_make'];
-  $chassis_number = $_SESSION['vehicle_details']['chassis_number'];
-  $engine_number = $_SESSION['vehicle_details']['engine_number'] == ""?$_SESSION['vehicle_details']['chassis_number']:$_SESSION['vehicle_details']['engine_number'];
-  $risk_location = $_SESSION['vehicle_details']['risk_location'];
-  $insured_name = $_SESSION['vehicle_details']['insured_name'];
-  $sum_insured = $_SESSION['vehicle_details']['sum_insured'];
-  $insured_type = $_SESSION['vehicle_details']['insured_type'];
-  $policy_start_date = $_SESSION['vehicle_details']['policy_start_date'];
-  $policy_end_date = $_SESSION['vehicle_details']['policy_end_date'];
-  $risk_img = $_SESSION['vehicle_details']['risk_img'];
-  $identity_img = $_SESSION['vehicle_details']['identity_img'];
+  $usage = $user_insurance['usage'];
+  $make_of_vehicle = $user_insurance['make_of_vehicle'];
+  $other_make_of_vehicle = $user_insurance['other_make_of_vehicle'];
+  $vehicle_type = $user_insurance['vehicle_type'];
+  $vehicle_reg_no = $user_insurance['vehicle_reg_no'];
+  $vehicle_model = $user_insurance['vehicle_model'];
+  $year_of_make = $user_insurance['year_of_make'];
+  $chassis_number = $user_insurance['chassis_number'];
+  $engine_number = $user_insurance['engine_number'] == ""?$user_insurance['chassis_number']:$user_insurance['engine_number'];
+  $risk_location = $user_insurance['risk_location'];
+  $insured_name = $user_insurance['insured_name'];
+  $sum_insured = $user_insurance['sum_insured'];
+  $insured_type = $user_insurance['insured_type'];
+  $policy_start_date = $user_insurance['policy_start_date'];
+  $policy_end_date = $user_insurance['policy_end_date'];
+  $risk_img = $user_insurance['risk_img_base64'];
+  $identity_img = $user_insurance['identity_img_base64'];
 
   // -----------------------------------------------------------------------------
   $curl = curl_init();
@@ -694,11 +710,11 @@ function get_insurance_quote($packageId){
        "ComprehensiveMotorDetails"=> array(
          "Usage"=> $usage,
          "FloodCoverRequired"=> false, 
-         "ExcessBuyBackValue"=> 15000,
-         "VehicleReplacementRequired"=> true,
-         "TrackerDiscountEnabled"=> true,
+         "ExcessBuyBackValue"=> 0,
+         "VehicleReplacementRequired"=> false,
+         "TrackerDiscountEnabled"=> false,
          "TrackerRequired"=> false,
-         "TrackerAmount"=> 50,
+         "TrackerAmount"=> 0,
          "VehicleRegistrationNumber"=> $vehicle_reg_no,
          "MakeOfVehicle"=> $make_of_vehicle,
          "OtherMakeOfVehicle"=> $other_make_of_vehicle,
@@ -712,7 +728,7 @@ function get_insurance_quote($packageId){
         //  "VideoUrl"=> "http://test.video" 
        ),
        "SumInsured"=> $sum_insured, 
-       "InsuredType"=> "MainContact", 
+       "InsuredType"=> $insured_type,
     //   "AddonAnswers"=> [ 
     //      array( 
     //       "ID"=> 12, 
@@ -775,44 +791,158 @@ curl_setopt_array($curl, array(
     ),
 ));
 
-$response = json_decode(curl_exec($curl), true);
-curl_close($curl);
+if (curl_exec($curl)) {
+  $response = json_decode(curl_exec($curl), true);
+  curl_close($curl);
 
-$returned_amount = $response['Quote']['PaymentDue'];
+  $returned_amount = $response['Quote']['PaymentDue'];
 
-// Get percentage interest
+  // Get percentage interest
+  $sql = "SELECT * FROM `insurance_plans` WHERE `unique_id` = '$package_plan'";
+  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+  $interest_rate = mysqli_fetch_assoc($exe);
 
-$sql = "SELECT * FROM `insurance_plans` WHERE `unique_id` = '$packageId'";
-$exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
-$interest_rate = mysqli_fetch_assoc($exe);
+  // $quote_array = array();
 
-// if ($interest_rate['type'] == "1") { // If interest type is flat rate
-//   $amount_due = intval($interest_rate['interest_rate'] + $returned_amount);
-// }
-// elseif ($interest_rate['type'] == "2") { // If interest type is percentage rate
+  // $installment_interest_sql = "SELECT * FROM `insurance_interest_rate`";
 
-//   $percentage_amount = floatval((($interest_rate['interest_rate'] / 100) * $returned_amount));plan_percentage
+  // $installment_interest_exe = mysqli_query($dbc, $installment_interest_sql) or die(mysqli_error($dbc));
 
-//   $amount_due = intval($percentage_amount + $returned_amount);
-// }
-$percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
+  // $get_insurance_interest = mysqli_fetch_all($installment_interest_exe, MYSQLI_ASSOC);
 
-$amount_due = intval($percentage_amount + $returned_amount);
+  // foreach($get_insurance_interest as $item) {
+  //   if ($item['type'] == "1") { // If interest type is flat rate
+  //     $amount_due = intval($item['interest_rate'] + $returned_amount);
+  //     $monthly_due = array('due_amount' => $amount_due, 'month' => $item['month']);
+  //     array_push($installment_array, $monthly_due);
 
-// echo $response;
-$res = array(
-  'data'=> array(
-    'one_time' => array(
-      'annual_due' => $amount_due,
-      'quote_number' => $response['Quote']['QuoteNumber'],
-      'validation_result' => $response['ValidationResult']
-    ),
-    'installment' => array(),
-    'status'=>1
-  )
-);
-echo json_encode($res);
+  //   }
+  //   elseif ($item['type'] == "2") { // If interest type is percentage rate
+  
+  //     $percentage_amount = floatval((($item['interest_rate'] / 100) * $returned_amount));
+  
+  //     $amount_due = intval($percentage_amount + $returned_amount);
+
+  //     $monthly_due = array('due_amount' => $amount_due, 'month' => $item['month']);
+  //     array_push($installment_array, $monthly_due);
+  //   }
+  // }
+
+  if ($payment_method === "one_time") {
+    
+    $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
+    $amount_due = intval($percentage_amount + $returned_amount);
+
+    // Update vehicle insurance
+    $update_query = "UPDATE `vehicle_insurance` SET `insurer_id`='$insurer', `package_plan_id`='$package_plan', `payment_method`='$payment_method', `amount_due`='$amount_due', `datetime`=now() WHERE `user_id` = '$user_id'";
+    
+    // Execute query
+    mysqli_query($dbc, $update_query) or die(mysqli_error($dbc));
+
+    $quote_array = array('status' => 1, 'amount_due' => $amount_due);
+    return json_encode($quote_array);
+  }
+  elseif ($payment_method === "installmental") {
+    $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
+
+    $amount_due = intval($percentage_amount + $returned_amount);
+
+    $equity_amount = floatval(((30 / 100) * $amount_due)); //30% equity amount
+
+    $amount_to_balance = floatval(($amount_due - $equity_amount));
+
+    $insurance_id = $user_insurance['unique_id'];
+
+    $unique_id = unique_id_generator($amount_to_balance);
+
+    if(get_number_of_rows_one_param('installmental_payment','insurance_id',$insurance_id) == 0){
+      $installment_sql = "INSERT INTO `installmental_payment` SET `unique_id`='$unique_id', `insurance_id`='$insurance_id', `equity_amount`='$equity_amount', `amount_to_balance`='$amount_to_balance', `datetime`=now()";
+    }
+    elseif (get_number_of_rows_one_param('installmental_payment','insurance_id',$insurance_id) > 0) {
+      $installment_sql = "UPDATE `installmental_payment` SET `equity_amount`='$equity_amount', `amount_to_balance`='$amount_to_balance', `datetime`=now() WHERE `insurance_id`='$insurance_id'";
+    }
+    mysqli_query($dbc, $installment_sql) or die(mysqli_error($dbc));
+
+    $insurance_installment = get_rows_from_table('insurance_interest_rate');
+
+    $quote_array = array('status' => 1, 'insurance_id'=>$insurance_id, 'equity_amount' => $equity_amount, 'amount_to_balance' => $amount_to_balance, 'months' => $insurance_installment);
+    return json_encode($quote_array);
+  }
+  
+  
+  // $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));  8160
+
+  // $amount_due = intval($percentage_amount + $returned_amount);
+
+  // // echo $response;
+  // $res = array(
+  //   'data'=> array(
+  //     'one_time' => array(
+  //       'annual_due' => $amount_due,
+  //       'quote_number' => $response['Quote']['QuoteNumber'],
+  //       'validation_result' => $response['ValidationResult']
+  //     ),
+  //     'installment' => array(
+  //       'equity_amount' => 3000,
+  //       'installmental_due' => $installment_array
+  //     )
+  //   ),
+  //   'status'=>1
+  // );
+  
+}else {
+  return json_encode(array("status"=>0, "msg"=>"Unable to get quote"));
+}
+
     // -------------------------------------------------------------------------
+}
+
+
+// Badmus
+function save_vehicle_particulars($post_data){
+  global $dbc;
+
+  $vehicle_type = $post_data['vehicle_type'];
+  $make_of_vehicle = $post_data['make_of_vehicle'];
+  $vehicle_model = $post_data['vehicle_model'];
+  $year_of_make = $post_data['year_of_make'];
+  $plate_no = $post_data['plate_no'];
+  $engine_no = $post_data['engine_no'];
+  $chassis_no = $post_data['chassis_no'];
+  $vehicle_license = $post_data['vehicle_license'];
+  $vehicle_color = $post_data['vehicle_color'];
+  $road_worthiness = isset($post_data['road_worthiness']) ? '1':'0';
+  $hackey_permit = isset($post_data['hackey_permit']) ? '1':'0';
+  $vehicle_license = isset($post_data['vehicle_license']) ? '1':'0';
+  $permit_type = $post_data['permit_type'];
+  $insurance_type = $post_data['insurance_type'];
+
+  $user_id = $_SESSION['user']['unique_id'];
+  $unique_id = unique_id_generator($engine_no);
+ 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	
+  $insert_query = "INSERT INTO `renew_vehicle_particulars` SET `unique_id`='$unique_id', `user_id`='$user_id', `vehicle_type`='$vehicle_model', `make_of_vehicle`='$make_of_vehicle', `vehicle_model`='$vehicle_model', `year_of_make`='$year_of_make', `plate_number`='$plate_no', `engine_number`='$engine_no',
+   `chassis_number`='$chassis_no', `vehicle_license_name`='$vehicle_license', `vehicle_color`='$vehicle_color', `road_worthiness`='$road_worthiness', `hackney_permit`='$hackey_permit', `vehicle_license`='$vehicle_license', `type_of_permit`='$permit_type', `insurance_type`='$insurance_type', `datetime`=now()";
+  mysqli_query($dbc, $insert_query) or die(mysqli_error($dbc));
+  return json_encode(array("status"=>1, "row_id" => "$unique_id"));
+}
+
+function save_insurance_payment_id($insurance_id, $payment_id){
+  global $dbc;
+  $update_query = "UPDATE `vehicle_insurance` SET `payment_id`='$payment_id' WHERE `insurance_id`='$insurance_id'";
+  mysqli_query($dbc, $update_query) or die(mysqli_error($dbc));
+  return true;
+}
+
+
+function save_installment($post_data){
+  global $dbc;
+
+  $insurance_id = $post_data["insuranceId"];
+  $installmental_month = $post_data["installmentalMonth"];
+
+  $update_query = "UPDATE `installmental_payment` SET `no_of_months`='$installmental_month' WHERE `insurance_id`='$insurance_id'";
+  mysqli_query($dbc, $update_query) or die(mysqli_error($dbc));
+  return json_encode(array("status"=>1));
 }
 
 function insurance_packages(){
@@ -902,56 +1032,93 @@ function save_insurance_details($info){
   return json_encode(["status"=>1, "msg"=>"Details saved"]);
 }
 
-function upload_vehicle_attached_file($fileArr){
+function save_vehicle_details($post_date, $file_arr){
 
-  $filename1 = $fileArr['vehicle_license'];
-  $filename2 = $fileArr['proof_of_ownership'];
-  $filename3 = $fileArr['utility_bill'];
-  $filename4 = $fileArr['means_of_id'];
-  $filename5 = $fileArr['plate_number'];
-  $filename6 = $fileArr['side_one'];
-  $filename7 = $fileArr['side_two'];
-  $filename8 = $fileArr['side_three'];
-  $filename9 = $fileArr['side_four'];
+  global $dbc;
 
-  $uploaded_file = array(
-     'vehicle_license'=>$filename1["name"],
-     'proof_of_ownership'=>$filename2["name"],
-     'utility_bill'=>$filename3["name"],
-     'means_of_id'=>$filename4["name"],
-     'plate_number'=>$filename5["name"],
-     'side_one'=>$filename6["name"],
-     'side_two'=>$filename7["name"],
-     'side_three'=>$filename8["name"],
-     'side_four'=>$filename9["name"],
-  );
+  $user_id = $_SESSION['user']['unique_id'];
+  /* Valid Extensions */
+  $valid_extensions = array("jpg","jpeg","png");
 
-  $files = [$filename1, $filename2, $filename3, $filename4, $filename5, $filename6, $filename7, $filename8, $filename9];
+  // Extract submitted data
+  $usage = $post_date['usage'];
+  $make_of_vehicle = $post_date['make_of_vehicle'];
+  $other_make_of_vehicle = $post_date['other_make_of_vehicle'];
+  $vehicle_type = $post_date['vehicle_type'];
+  $vehicle_reg_no = $post_date['vehicle_reg_no'];
+  $vehicle_model = $post_date['vehicle_model'];
+  $year_of_make = $post_date['year_of_make'];
+  $chassis_number = $post_date['chassis_number'];
+  $engine_number = $post_date['engine_number'] == ""?$post_date['chassis_number']:$post_date['engine_number'];
+  $risk_location = $post_date['risk_location'];
+  $insured_name = $post_date['insured_name'];
+  $sum_insured = $post_date['sum_insured'];
+  $insured_type = $post_date['insured_type'];
+  $policy_start_date = $post_date['policy_start_date'];
+  $policy_end_date = $post_date['policy_end_date'];
 
-  /* Location */
+  $risk_image = $file_arr['risk_image'];
+  $identity_image = $file_arr['identity_image'];
 
-  foreach ($files as $file) {
-     $location = "../uploads/".$file['name'];
-     $uploadOk = 1;
-     $imageFileType = pathinfo($location,PATHINFO_EXTENSION);
+  // Get file extension
+  $risk_image_type = pathinfo($risk_image["name"],PATHINFO_EXTENSION);
+  $identity_image_type = pathinfo($identity_image["name"],PATHINFO_EXTENSION);
 
-     if(strlen($file["name"]) < 1){
-        return json_encode(["status"=>0, "msg"=>"Please upload all documents".$file]);
-     }
-     /* Valid Extensions */
-     $valid_extensions = array("jpg","jpeg","png");
+  // Validate submitted data
 
-     /* Check file extension */
-     if( !in_array(strtolower($imageFileType),$valid_extensions) ) {
-        return json_encode(["status"=>0, "msg"=>"invalid file type".$file]);
-     }
-
-        /* Upload file */
-     if(!move_uploaded_file($file['tmp_name'],$location)){
-        return json_encode(["status"=>0, "msg"=>"can't upload image:".$file]);
-     }
+  if(strlen($risk_image["name"]) < 1){
+    return json_encode(["status"=>0, "msg"=>"Please upload vehicle image"]);
   }
-  return json_encode(["status"=>1, "file"=>$uploaded_file]);
+  if(strlen($identity_image["name"]) < 1){
+    return json_encode(["status"=>0, "msg"=>"Please upload your valid ID"]);
+  }
+
+  /* Validate file type */
+  if( !in_array(strtolower($risk_image_type),$valid_extensions) ) {
+    return json_encode(["status"=>0, "msg"=>"Invalid file risk image"]);
+  }
+
+  if( !in_array(strtolower($identity_image_type),$valid_extensions) ) {
+    return json_encode(["status"=>0, "msg"=>"Invalid file identity image"]);
+  }
+
+  // Get base64 image encoded
+  $risk_img = file_get_contents($file_arr['risk_image']['tmp_name']);
+  $identity_image = file_get_contents($file_arr['identity_image']['tmp_name']);
+  
+  $risk_img_base64 = base64_encode($risk_img);
+  $identity_image_base64 = base64_encode($identity_image);
+
+  // Check if user insurance record exist
+
+  $sql = "SELECT id FROM vehicle_insurance WHERE `user_id` = '$user_id'";
+
+  $exe = mysqli_query($dbc, $sql);
+
+  $row_count = mysqli_num_rows($exe);
+  $unique_id = unique_id_generator($chassis_number);
+
+  if($row_count == 0){
+    $insert_query = "INSERT INTO vehicle_insurance SET `unique_id`='$unique_id', `user_id`='$user_id', `usage`='$usage', `make_of_vehicle`='$make_of_vehicle', 
+    `other_make_of_vehicle`='$other_make_of_vehicle', `vehicle_type`='$vehicle_type', `vehicle_reg_no`='$vehicle_reg_no', `vehicle_model`='$vehicle_model', 
+    `year_of_make`='$year_of_make', `risk_location`='$risk_location', `insured_name`='$insured_name', `insured_type`='$insured_type', `sum_insured`='$sum_insured', 
+    `engine_number`='$engine_number', `chassis_number`='$chassis_number', `policy_start_date`='$policy_start_date', `policy_end_date`='$policy_end_date', 
+    `risk_img_base64`='$risk_img_base64', `identity_img_base64`='$identity_image_base64', `datetime`=now()";
+
+    mysqli_query($dbc, $insert_query) or die(mysqli_error($dbc));
+
+  }else if ($row_count > 0) {
+    $update_query = "UPDATE vehicle_insurance SET `usage`='$usage', `make_of_vehicle`='$make_of_vehicle', 
+    `other_make_of_vehicle`='$other_make_of_vehicle', `vehicle_type`='$vehicle_type', `vehicle_reg_no`='$vehicle_reg_no', `vehicle_model`='$vehicle_model', 
+    `year_of_make`='$year_of_make', `risk_location`='$risk_location', `insured_name`='$insured_name', `insured_type`='$insured_type', `sum_insured`='$sum_insured', 
+    `engine_number`='$engine_number', `chassis_number`='$chassis_number', `policy_start_date`='$policy_start_date', `policy_end_date`='$policy_end_date', 
+    `risk_img_base64`='$risk_img_base64', `identity_img_base64`='$identity_image_base64', `datetime`=now() WHERE `user_id`='$user_id'";
+
+    mysqli_query($dbc, $update_query) or die(mysqli_error($dbc));
+
+  }
+
+  return json_encode(["status"=>1, "msg"=>"Vehicle details saved successfully"]);
 }
 
 function get_banks(){
@@ -1814,6 +1981,18 @@ function user_exists($email){
     }
 }
 
+
+// Badmus
+function validate_coupon_code($coupon_code,$particulars_id){
+  global $dbc;
+  if (check_record_by_one_param('coupon_code','code',$coupon_code) === true) {
+    $sql = "UPDATE `renew_vehicle_particulars` SET `coupon_code`='$coupon_code' WHERE `unique_id` = '$particulars_id'";
+    $exe_query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    return true;
+  }else {
+    return "Invalid coupon code";
+  }
+}
 // Badmus\
 function session_referesh(){
   global $dbc;

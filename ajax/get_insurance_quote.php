@@ -1,10 +1,12 @@
 <?php
 	session_start();
 	include('../config/functions.php');
-	$packageId = $_GET['insurerPlanId'];
-	$insurance_quote = get_insurance_quote($packageId);
+	$insurer = $_POST['insurer'];
+	$package_plan = $_POST['package_plan'];
+	$payment_method = $_POST['payment_method'];
+	$insurance_quote = get_insurance_quote($insurer, $package_plan, $payment_method);
 	// $decode = json_decode($insurance_quote, true);
-	// if($decode['status'] == "1"){
+	// if(isset($decode['status']) && $decode['status'] == "0"){
 	// 	echo $insurance_quote;
 	// }else{
 	// 	echo $decode[''];

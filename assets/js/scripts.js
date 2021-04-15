@@ -1374,21 +1374,44 @@ $(document).ready(function(){
 	});
 	// Insurance 
 
-	$("#vehicle_info_form").submit(function(e){
+	$("#vehicle_details").submit(function(e){
 		e.preventDefault();
-		$("#submit-vehicle-info").attr("disabled", true);
-		var vehicleInfoObj = {};
-		var info = $(this).serializeArray();
+		$("#submit_vehicle_details").attr("disabled", true);
+		$("#submit_vehicle_details").text("Please wait");
 
-		info.map(item =>{
-			vehicleInfoObj[item["name"]] = item["value"];
+		const fd = new FormData(this);
+
+		$.ajax({
+			url:"ajax/submit_vehicle_details.php",
+			method: "POST",
+			async: false,
+			data: fd,
+			contentType: false,
+            processData: false,
+			success: function(response){
+                if(response == 'success'){
+
+					console.log(response);
+
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Vehicle details saved successfully",
+                        icon: "success",
+                    });
+					
+					setTimeout( function(){ window.location.href = "buy_package.php";}, 4000);
+				}else{
+					//alert(res["msg"]);
+					Swal.fire({
+                        title: "Error!",
+                        text: response,
+                        icon: "error",
+                    });
+					$('#submit_vehicle_details').attr('disabled', false);
+					$('#submit_vehicle_details').text('Submit');
+				}
+			}
 		});
-
-		console.log(vehicleInfoObj);
-
-		localStorage.setItem("vehicleInfo", JSON.stringify(vehicleInfoObj));
-		//alert("saved");
-		setTimeout(() => window.location = "vehicle_attachments.php", 1000);
 	});
 
 	$("#vehicle_attachments_form").submit(function(e){
@@ -1929,6 +1952,7 @@ $(document).ready(function(){
 	// Badmus
 
 	$(".make_of_vehicle").change(function(){
+		
 		console.log($(this).find(':selected').attr("data-brandId"));
 
 		let vehicleBrandId = $(this).find(':selected').attr("data-brandId");
@@ -1945,10 +1969,89 @@ $(document).ready(function(){
 				)
 			})
 		})
-
-
 	});
 
+	// Badmus
+	// Renew Vehicle Particulars
+	$("#make_of_vehicle").change(function(){
+
+		console.log($(this).find(':selected').attr("data-brandId"));
+
+		let vehicleBrandId = $(this).find(':selected').attr("data-brandId");
+
+		$.get("ajax/get_vehicle_model.php", {vehicleBrandId}, function(data, error){
+			console.log(data);
+			const arrData = JSON.parse(data);
+			$("#vehicle_model").empty();
+			$("#vehicle_model").append(`<option value="">Select Vehicle Model</option>`);
+			arrData.map(model => {
+				// console.log(model.model_name);
+				$("#vehicle_model").append(
+					`<option value="${model.unique_id}">${model.model_name}</option>`
+				)
+			})
+		})
+	});
+
+	// Badmus
+	$("#renew-particulars-form").submit(function(e){
+		e.preventDefault();
+		// alert($(this).serialize());
+
+		$.ajax({
+			url:"ajax/save_vehicle_particulars.php",
+			method: "POST",
+			data: $(this).serialize(),
+			beforeSend: function(){
+				$("#submit-particular-btn").attr("disabled", true);
+				$("#submit-particular-btn").text("Please wait");
+			},
+			success: function(data){
+				console.log(data);
+				let resDAta = JSON.parse(data);
+				if(resDAta.status == "1"){
+					Swal.fire({
+                        title: "Congratulations!",
+                        text: "Vehicle details submitted successfully",
+                        icon: "success",
+                    })
+					setTimeout( function(){ window.location.href = `complete_order.php?rec_id=${resDAta.row_id}`;}, 3000);
+				}
+				else{
+					Swal.fire({
+                        title: "Error!",
+                        text: `${data}`,
+                        icon: "error",
+                    })
+				}
+				$("#submit-particular-btn").attr("disabled", false);
+				$("#submit-particular-btn").text("Submit");
+			}
+		})
+	})
+
+
+	$("#coupon_field").keyup(function() {
+		const couponCode = $(this).val();
+		const particularsId = $(this).attr('data-particularsId');
+
+
+		$.ajax({
+			url:"ajax/validate_coupon_code.php",
+			method: "GET",
+			data: {couponCode, particularsId},
+			success: function(data){
+				if (data === true) {
+					$("#coupon_code_help_txt").text("Valid coupon code");
+					$("#coupon_code_help_txt").css('color', 'green');
+					// If coupon code is valid remove the discount rate from the total amount
+				}else{
+					$("#coupon_code_help_txt").text(`${data}`);
+					$("#coupon_code_help_txt").css('color', 'tomato');
+				}
+			}
+		})
+	})
 	// Badmus
 	$('#add_insurer_form').submit(function(e){
 		e.preventDefault();
@@ -2425,7 +2528,7 @@ $(document).ready(function(){
 		console.log(insurerId);
 		let plans = $(".selectPackagePlan");
 		$(plans).empty();
-		plans.append(`<option>Select package</option>`);
+		plans.append(`<option value="">Select package</option>`);
 		$.ajax({
 			url:"admin/ajax_admin/get_insurance_plans.php",
 			method: "GET",
@@ -2470,8 +2573,8 @@ $(document).ready(function(){
 			console.log(data)
 			let premium_amount = formatNumber(JSON.parse(data));
 			$("#premium_amount").text(premium_amount);
-		})
-	})
+		});
+	});
 
 	$("#vehicle_value").keyup(function() {
 		if(! Number($(this).val())){
@@ -2480,7 +2583,7 @@ $(document).ready(function(){
 		}else{
 			$("#help-text").hide();
 		}
-	})
+	});
 
 	$("#save-quote").click(function(){
 		if( $(this).is(':checked') ){
@@ -2515,9 +2618,12 @@ $(document).ready(function(){
 	$("#payment-option").change(function(){
 		// alert(1);
 		const insurerPlanId = $(".selectPackagePlan")[0].value;
-		console.log(insurerPlanId);
+		let paymentType = $(this).find(':selected').attr("data-paymentType");
+		// console.log(paymentType);
+		// console.log(insurerPlanId);
 		let oneTimePay = $("#one-time-payment");
 		let installmetalPay = $("#installment-payment");
+		$("#installmental-payment-header").empty();
 		oneTimePay.empty();
 		installmetalPay.empty();
 		oneTimePay.append(`
@@ -2525,23 +2631,57 @@ $(document).ready(function(){
 		`)
 		$.ajax({
 			url:"ajax/get_insurance_quote.php",
-			method: "GET",
-			data:{insurerPlanId},
+			method: "POST",
+			data:$("#buy-package-form").serialize(),
 			success: function(res){
 				oneTimePay.empty();
 				const data = JSON.parse(res);
-				console.log(data.data.status);
-				if (data.data.status == '1'){
-					// alert(1);
-					let installment = data.data.installment;
-					let amount = formatNumber(data.data.one_time.annual_due);
+				console.log(data);
+				if (data.status == '1'){
+					
+					if (paymentType == "oneTime") {
+						let amount = formatNumber(data.amount_due);
+						oneTimePay.append(`
+							<tr>
+								<td class="text-bold-500">ONE-TIME PAYMENT</td>
+								<td>₦ ${amount}</td>
+								<td><button class="btn btn-primary" data-insuranceId="${data.insurance_id}" id="one-time-insurance-payment" data-amount="${amount}">BUY NOW</button></td>
+							</tr>
+						`);
+					}else if(paymentType == "installmental"){
+						$("#installmental-payment-header").append(`
+							<div class="alert alert-light-primary color-primary"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>  30% equity contribution on all Installments.</div>
+							<div class="card">
+								<div class="card-body">
+									<p>Equity Amount: ₦${formatNumber(data.equity_amount)}</p>
+									<p>Amount To Balance: ₦${formatNumber(data.amount_to_balance)}</p>
+								</div>
+							</div>
+						`);
+						let installment = data.months;
+						console.log(installment);
+
+						installment.map(month => {
+							installmetalPay.append(`
+								<tr>
+									<td class="text-bold-500">${month.month} MONTH INSTALLMENTS</td>
+									<td><button id="installmental-month" data-equityAmount="${data.equity_amount}" data-installmentalMonth="${month.month}" data-insuranceId="${data.insurance_id}" class="btn btn-primary">BUY NOW</button></td>
+								</tr>
+							`);
+						});
+					}
+				}else if(data.status == '0'){
+					Swal.fire({
+                        title: "Error!",
+                        text: data.msg,
+                        icon: "error",
+                    });
+				}else{
 					oneTimePay.append(`
-					<tr>
-						<td class="text-bold-500">ANNUAL (ONE-TIME PAYMENT)</td>
-						<td>₦ ${amount}</td>
-						<td><button class="btn btn-primary" id="buy_now" data-amount="${data.data.one_time.annual_due}">BUY NOW</button></td>
-				  	</tr>
-					`);
+						<div>Error occured</div>
+					`)
+				}
+					
 
 					// if(installment.length > 0){
 					// 	installment.map(payment => {
@@ -2554,7 +2694,7 @@ $(document).ready(function(){
 					// 		`)
 					// 	})
 					// }
-				}
+				// }
 				// data.map(plan => {
 				// 	plans.append(`
 				// 	<option value="${plan.unique_id}">${plan.plan_name}</option>
@@ -2573,10 +2713,84 @@ $(document).ready(function(){
 	// $("#buy_now").click(function(){
 	// 	// e.preventDefault();
     //    alert('sdfjsldf');
-	// });	
+	// });
+	
+	$(document).on("click", "#installmental-month", function(){
+		const installmentalMonth = $(this).attr("data-installmentalMonth");
+		const insuranceId = $(this).attr("data-insuranceId");
+		const equityAmount = $(this).attr("data-equityAmount");
 
-	$(document).on("click", "#buy_now", function(){
-		const amountDue = $(this).data('amount');
+		$.ajax({
+			url: "ajax/save_installment.php",
+			method: "POST",
+			data:{insuranceId, installmentalMonth},
+			beforeSend:function(){
+				$(this).attr("disabled", true);
+				$(this).text("Please wait");
+			},
+			success: function(data){
+			  if(data == "success"){
+				Okra.buildWithOptions({
+					name: 'Cloudware Technologies',
+					env: 'production-sandbox',
+					key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+					token: '5f5a2e5f140a7a088fdeb0ac', 
+					source: 'link',
+					color: '#ffaa00',
+					limit: '24',
+					// amount: 5000,
+					// currency: 'NGN',
+					garnish: true,
+					charge: {
+					  type: 'one-time',
+					  amount: equityAmount*100,
+					  note: '',
+					  currency: 'NGN',
+					  account: '5ecfd65b45006210350becce'
+					},
+					corporate: null,
+					connectMessage: 'Which account do you want to connect with?',
+					products: ["auth", "transactions", "balance"],
+					//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+					//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+					//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+					// logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+					logo: 'http://localhost/zennal/assets/images/logozennal.png',
+					filter: {
+						banks: [],
+						industry_type: 'all',
+					},
+					widget_success: 'Your account was successfully linked to Cloudware Technologies',
+					widget_failed: 'An unknown error occurred, please try again.',
+					currency: 'NGN',
+					exp: null,
+					success_title: 'Cloudware Technologies!',
+					success_message: 'You are doing well!',
+					onSuccess: function (data) {
+						console.log('success', data);
+						// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+						window.location.href = `http://localhost/zennal/insurance_payment_callback.php?payment_id="${data.payment_id}"&insurance_id="${insuranceId}"`;
+						//window.location.href = '<?php //echo $redirect_url?>';
+						//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+					},
+					onClose: function () {
+						console.log('closed')
+					}
+				})
+			  }
+			//   else{
+			// 	$("#save-quote-loader").text("Quote not saved");
+			//   }
+			//   setTimeout( function(){ $("#save-quote-loader").remove();}, 3000);
+			// console.log(data);
+			}
+		});
+		// -----------------------------------------------------------------------------------------------
+	});
+
+	$(document).on("click", "#one-time-insurance-payment", function(){
+		const amountDue = $(this).attr("data-amount");
+		const insuranceId = $(this).attr("data-insuranceId");
 		Okra.buildWithOptions({
 			name: 'Cloudware Technologies',
 			env: 'production-sandbox',
@@ -2601,7 +2815,7 @@ $(document).ready(function(){
 			//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
 			//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
 			//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
-			logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+			logo: 'http://localhost/zennal/assets/images/logozennal.png',
 			filter: {
 				banks: [],
 				industry_type: 'all',
@@ -2615,7 +2829,7 @@ $(document).ready(function(){
 			onSuccess: function (data) {
 				console.log('success', data);
 				// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
-				window.location.href = 'http://localhost/new_zennal/online_generation_callback?payment_id='+data.payment_id;
+				window.location.href = `http://localhost/zennal/insurance_payment_callback.php?payment_id="${data.payment_id}"&insurance_id="${insuranceId}"`;
 				//window.location.href = '<?php //echo $redirect_url?>';
 				//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
 			},

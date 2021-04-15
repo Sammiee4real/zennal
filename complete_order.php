@@ -2,7 +2,14 @@
 <?php include("includes/sidebar.php");?>
 <div id="main">
 
-<?php include("includes/header.php");?>
+<?php 
+include("includes/header.php");
+if(!isset($_GET['rec_id'])){
+  echo "
+  <script>window.location = `particulars`</script>";
+}
+$particulars_record_id = $_GET['rec_id']
+?>
 <style type="text/css">
 #bar, #physical {display:none;}
 </style>
@@ -67,7 +74,8 @@ $(document).ready(function(){
                                 </div>
 
                                 <div class="form-group">
-                                   <input type="text" name="" class="form-control" placeholder="Coupon Code">
+                                   <input type="text" name="" data-particularsId="<?= $particulars_record_id ?>" class="form-control" id="coupon_field" placeholder="Coupon Code">
+                                   <i id="coupon_code_help_txt"></i>
                                 </div>
 
     <h4 class="card-title mt-5">Order Summary</h4>
@@ -76,15 +84,15 @@ $(document).ready(function(){
           <table class="table mb-0">
             <tbody>
               <tr>
-                <td class="text-bold-500 text-blue">Change of vehicle ownership</td>
+                <td class="text-bold-500 text-blue">Renew Vehicle Particulars</td>
                 <td>1</td>
                 <td class="text-bold-500 text-dark">₦17,000</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="text-bold-500 text-blue">Vehicle Registration</td>
                 <td>1</td>
                 <td class="text-bold-500 text-dark">₦2,000</td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="text-bold-500 text-blue">Sub Total</td>
                 <td></td>
