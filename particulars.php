@@ -4,7 +4,7 @@ include("includes/header.php");
 
 $get_vehicle_types = get_rows_from_table('vehicles');
 $get_vehicle_brands = get_rows_from_table('vehicle_brands');
-$get_permit_types = get_rows_from_table('types_of_permit');
+$get_permit_types = get_rows_from_table('services');
 ?> 
 
 <div id="main">
@@ -154,7 +154,7 @@ $get_permit_types = get_rows_from_table('types_of_permit');
                                     <?php
                                         foreach($get_permit_types as $permit_type){
                                     ?>
-                                        <option value="<?php echo $permit_type["unique_id"] ?>" ><?php echo $permit_type["permit_title"]?></option>
+                                        <option value="<?php echo $permit_type["unique_id"] ?>" ><?php echo $permit_type["service"]?></option>
                                     <?php    
                                         }
                                     ?>
@@ -163,7 +163,7 @@ $get_permit_types = get_rows_from_table('types_of_permit');
                             <div class="form-group">
                                 <select name="insurance_type" class="form-select" required> <!--  onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" -->
                                     <option value="">Insurance type</option>
-                                    <option value="3rd_party_insurance">3rd Party Insurance</option>
+                                    <option value="third_party_insurance">3rd Party Insurance</option>
                                     <option value="comprehensive_insurance">Comprehensive Insurance</option>
                                     <option value="no_insurance">(No Insurance)</option>
                                 </select>

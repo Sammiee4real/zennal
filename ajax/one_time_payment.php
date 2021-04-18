@@ -4,7 +4,7 @@
 	require_once('../config/functions.php');
 	$user_id = $_SESSION['user']['unique_id'];
 	$reg_id = $_POST['reg_id'];
-	$city = isset($_POST['city']) ? $_POST['city'] : '';
+	$city = isset($_POST['city']) ? $_POST['city']  : (isset($_POST['delivery_city']) ? $_POST['delivery_city'] : '');
 	$delivery_area = isset($_POST['delivery_area']) ? $_POST['delivery_area'] : '';
 	$delivery_address = isset($_POST['delivery_address']) ? $_POST['delivery_address'] : '';
 	$total = $_POST['total'];

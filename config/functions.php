@@ -920,7 +920,7 @@ function save_vehicle_particulars($post_data){
   $user_id = $_SESSION['user']['unique_id'];
   $unique_id = unique_id_generator($engine_no);
  	 	 	 	 	 	 	 	 	 	 	 	 	 	 	
-  $insert_query = "INSERT INTO `renew_vehicle_particulars` SET `unique_id`='$unique_id', `user_id`='$user_id', `vehicle_type`='$vehicle_model', `make_of_vehicle`='$make_of_vehicle', `vehicle_model`='$vehicle_model', `year_of_make`='$year_of_make', `plate_number`='$plate_no', `engine_number`='$engine_no',
+  $insert_query = "INSERT INTO `renew_vehicle_particulars` SET `unique_id`='$unique_id', `user_id`='$user_id', `vehicle_type`='$vehicle_type', `make_of_vehicle`='$make_of_vehicle', `vehicle_model`='$vehicle_model', `year_of_make`='$year_of_make', `plate_number`='$plate_no', `engine_number`='$engine_no',
    `chassis_number`='$chassis_no', `vehicle_license_name`='$vehicle_license', `vehicle_color`='$vehicle_color', `road_worthiness`='$road_worthiness', `hackney_permit`='$hackey_permit', `vehicle_license`='$vehicle_license', `type_of_permit`='$permit_type', `insurance_type`='$insurance_type', `datetime`=now()";
   mysqli_query($dbc, $insert_query) or die(mysqli_error($dbc));
   return json_encode(array("status"=>1, "row_id" => "$unique_id"));
@@ -1983,16 +1983,75 @@ function user_exists($email){
 
 
 // Badmus
-function validate_coupon_code($coupon_code,$particulars_id){
+function get_coupon_discount($coupon_code, $particulars_id, $amount){
   global $dbc;
-  if (check_record_by_one_param('coupon_code','code',$coupon_code) === true) {
+  $get_coupon = get_rows_from_table_with_one_params('coupon_code','coupon_code',$coupon_code);
+  if (count($get_coupon) == 0) {
+    return 0;
+  }else {
     $sql = "UPDATE `renew_vehicle_particulars` SET `coupon_code`='$coupon_code' WHERE `unique_id` = '$particulars_id'";
     $exe_query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
-    return true;
-  }else {
-    return "Invalid coupon code";
+    $discount = $get_coupon[0]['discount'];
+    $total = (intval($amount) - intval($discount));
+
+    return json_encode(array('total'=>$total, 'discount'=>$discount));
   }
 }
+
+// Badmus
+function calculate_renew_vehicle_particulars($particulars_id){
+  global $dbc;
+  
+  $sql = "SELECT rvp.road_worthiness AS rw, rvp.hackney_permit AS hp, rvp.vehicle_license AS vl, rvp.insurance_type AS insurance_type, vp.license_amount, vp.road_worthiness_amount, vp.third_party_amount, vp.hackney_permit_amount, services.cost FROM `renew_vehicle_particulars` AS `rvp` JOIN `vehicle_particulars` AS `vp` ON rvp.vehicle_type = vp.vehicle_id JOIN `services` ON rvp.type_of_permit = services.unique_id WHERE rvp.unique_id = '$particulars_id'";
+  $exe = mysqli_query($dbc, $sql);
+
+  $data = mysqli_fetch_assoc($exe);
+
+  $cost = $data['cost'];
+
+  $road_worthiness = $data['rw'];
+  $hackey_permit = $data['hp'];
+  $vehicle_license = $data['vl'];
+
+  $road_worthiness_amount = $data['road_worthiness_amount'];
+  $hackney_permit_amount = $data['hackney_permit_amount'];
+  $third_party_amount = $data['third_party_amount'];
+  $vehicle_license_amount = $data['license_amount'];
+
+  $insurance_type = $data['insurance_type'];
+
+  if ($road_worthiness == '1') {
+    $cost + $road_worthiness_amount;
+  }
+
+  if ($hackey_permit == '1') {
+    $cost + $hackney_permit_amount;
+  }
+
+  if ($vehicle_license == '1') {
+    $cost + $vehicle_license_amount;
+  }
+
+  if ($insurance_type == 'third_party_insurance') {
+    $insurance_cost = $third_party_amount;
+  }
+  elseif ($insurance_type == 'no_insurance') {
+    $insurance_cost = 0;
+  }
+  elseif ($insurance_type == 'comprehensive_insurance') {
+    $insurance_cost = "";
+  }
+
+  $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'renew_vehicle_particulars');
+  $delivery_fee = $get_delivery_fee['fee'];
+
+  $total = $cost+$insurance_cost+$delivery_fee;
+
+  $arr_data = json_encode(array('cost' => $cost, 'insurance_cost' => $insurance_cost, 'delivery_fee' =>$delivery_fee, 'total' => $total));
+  return $arr_data;
+
+}
+
 // Badmus\
 function session_referesh(){
   global $dbc;
@@ -2174,15 +2233,15 @@ function save_employment_details($user_id, array $employment_array){
       `marital_status`='$marital_status' ,
       `name_of_spouse`='$name_of_spouse' ,
       `phone_of_spouse`='$phone_of_spouse' ,
-      `no_of_kidso`='$no_of_kidso' ,
+      `no_of_kids`='$no_of_kids' ,
       `professional_category`='$professional_category',
       `professional_subcategory`='$professional_subcategory' ,
       `cac_number`='$cac_number' ,
       `company_name`='$company_name' ,
       `company_address`='$company_address' ,
-      `monthly_income`='$monthly_income' 
+      `monthly_income`='$monthly_income', 
       `date_created` = now()";
-      $insert_data_query = mysqli_query($dbc, $insert_data_sql);
+      $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
       if($insert_data_query){
         return json_encode(["status"=>"1", "msg"=>"success"]);
       }else{
