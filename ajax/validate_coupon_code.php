@@ -3,8 +3,9 @@
 	include('../config/functions.php');
 	$coupon_code = $_GET['couponCode'];
 	$particulars_id = $_GET['particularsId'];
+	$total_amount = $_GET['totalAmount'];
 
-    echo validate_coupon_code($coupon_code,$particulars_id);
+    echo get_coupon_discount($coupon_code, $particulars_id, $total_amount);
 	// $decode = json_decode($insurance_quote, true);
 	// if($decode['status'] == "1"){
 	// 	echo $insurance_quote;
