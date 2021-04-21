@@ -2153,52 +2153,52 @@ $(document).ready(function(){
 						// let data = JSON.parse(res);
 						if(data.status == "success"){
 							// alert('saved');
-								Okra.buildWithOptions({
-									name: 'Cloudware Technologies',
-									env: 'production-sandbox',
-									key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
-									token: '5f5a2e5f140a7a088fdeb0ac', 
-									source: 'link',
-									color: '#ffaa00',
-									limit: '24',
-									// amount: 5000,
-									// currency: 'NGN',
-									garnish: true,
-									charge: {
-									type: 'one-time',
-									amount: total*100,
-									note: '',
-									currency: 'NGN',
-									account: '5ecfd65b45006210350becce'
-									},
-									corporate: null,
-									connectMessage: 'Which account do you want to connect with?',
-									products: ["auth", "transactions", "balance"],
-									//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
-									//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
-									//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
-									logo: 'http://localhost/zennal/assets/images/logozennal.png',
-									filter: {
-										banks: [],
-										industry_type: 'all',
-									},
-									widget_success: 'Your account was successfully linked to Cloudware Technologies',
-									widget_failed: 'An unknown error occurred, please try again.',
-									currency: 'NGN',
-									exp: null,
-									success_title: 'Cloudware Technologies!',
-									success_message: 'You are doing well!',
-									onSuccess: function (data) {
-										console.log('success', data);
-										// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
-										window.location.href = `http://localhost/zennal/insurance_payment_callback.php?payment_id="${data.payment_id}"&insurance_id="${insuranceId}"`;
-										//window.location.href = '<?php //echo $redirect_url?>';
-										//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
-									},
-									onClose: function () {
-										console.log('closed')
-									}
-								})
+							Okra.buildWithOptions({
+								name: 'Cloudware Technologies',
+								env: 'production-sandbox',
+								key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+								token: '5f5a2e5f140a7a088fdeb0ac', 
+								source: 'link',
+								color: '#ffaa00',
+								limit: '24',
+								// amount: 5000,
+								// currency: 'NGN',
+								garnish: true,
+								charge: {
+								type: 'one-time',
+								amount: total*100,
+								note: '',
+								currency: 'NGN',
+								account: '5ecfd65b45006210350becce'
+								},
+								corporate: null,
+								connectMessage: 'Which account do you want to connect with?',
+								products: ["auth", "transactions", "balance"],
+								//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+								//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+								//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+								logo: 'http://localhost/zennal/assets/images/logozennal.png',
+								filter: {
+									banks: [],
+									industry_type: 'all',
+								},
+								widget_success: 'Your account was successfully linked to Cloudware Technologies',
+								widget_failed: 'An unknown error occurred, please try again.',
+								currency: 'NGN',
+								exp: null,
+								success_title: 'Cloudware Technologies!',
+								success_message: 'You are doing well!',
+								onSuccess: function (data) {
+									console.log('success', data);
+									// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+									window.location.href = `http://localhost/zennal/vehicle_payment_callback.php?payment_id="${data.payment_id}"&reg_id="${reg_id}"`;
+									//window.location.href = '<?php //echo $redirect_url?>';
+									//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+								},
+								onClose: function () {
+									console.log('closed')
+								}
+							})
 							
 						}
 						else{
@@ -2214,10 +2214,26 @@ $(document).ready(function(){
 					}
 				})
 		}else if(paymentOption == "installment"){
-			window.location = `vehicle_reg_loan.php?reg_id=${reg_id}`;
+			$.ajax({
+				url:"ajax/one_time_payment.php",
+				method: "POST",
+				data: payload,
+				success: function(data){
+					// let data = JSON.parse(res);
+					if(data.status == "success"){
+						window.location = `vehicle_reg_loan.php?reg_id=${reg_id}`;
+					}
+					else{
+						Swal.fire({
+							title: "Error!",
+							text: data.status,
+							icon: "error",
+						});
+					}
+				}
+			})
+			
 		}
-			
-			
 		}
 	})
 

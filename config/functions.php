@@ -926,9 +926,9 @@ function save_vehicle_particulars($post_data){
   return json_encode(array("status"=>1, "row_id" => "$unique_id"));
 }
 
-function save_insurance_payment_id($insurance_id, $payment_id){
+function save_successful_payment_id($table, $payment_id, $param, $value){
   global $dbc;
-  $update_query = "UPDATE `vehicle_insurance` SET `payment_id`='$payment_id' WHERE `insurance_id`='$insurance_id'";
+  $update_query = "UPDATE `$table` SET `payment_id`='$payment_id', `paid`='1' WHERE `$param`='$value'";
   mysqli_query($dbc, $update_query) or die(mysqli_error($dbc));
   return true;
 }
