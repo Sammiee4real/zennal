@@ -2032,19 +2032,24 @@ $(document).ready(function(){
 
 
 	$(".coupon_field").keyup(function() {
+		let payload;
 		const couponCode = $(this).val();
 		const particularsId = $(this).attr('data-particularsId');
 		const totalAmount = $(this).attr('data-total');
-		// alert(totalAmount);
+		if($(this).attr('data-type')){
+			const type = $(this).attr('data-type')
+			payload = {couponCode, particularsId, totalAmount, type}
+		}else{
+			payload = {couponCode, particularsId, totalAmount}
+		}
 		$.ajax({
 			url:"ajax/validate_coupon_code.php",
 			method: "GET",
-			data: {couponCode, particularsId, totalAmount},
+			data: payload,
 			success: function(data){
 				if (data == '0') {
 					$(".coupon_code_help_txt").text(`Invalid coupon code`);
 					$(".coupon_code_help_txt").css('color', 'tomato');
-					
 				}else{
 					let resData = JSON.parse(data);
 					$(".coupon_code_help_txt").text("Valid coupon code");
@@ -2058,6 +2063,7 @@ $(document).ready(function(){
 			}
 		})
 	})
+
 	// Badmus
 	$('#add_insurer_form').submit(function(e){
 		e.preventDefault();
@@ -2236,6 +2242,43 @@ $(document).ready(function(){
 		}
 		}
 	})
+
+
+	$("#vehicle_permit_form").submit(function(e){
+		e.preventDefault();
+		
+		$.ajax({
+			url:"ajax/save_vehicle_permit.php",
+			method: "POST",
+			data: $(this).serialize(),
+			beforeSend: function(){
+				$("#vehicle_permit_btn").attr("disabled", true);
+				$("#vehicle_permit_btn").text("Please wait");
+			},
+			success: function(data){
+				//alert(data);
+				let res = JSON.parse(data);
+				console.log(res);
+				if(res.status == 1){
+					Swal.fire({
+						title: "Success!",
+						text: "Application has been submitted successfully",
+						icon: "success",
+					});
+					setTimeout( function(){ window.location.href = `complete_order.php?rec_id=${res.record_id}&type=vehicle_permit`;}, 3000);
+				}
+				else{
+					Swal.fire({
+						title: "Error!",
+						text: res.msg,
+						icon: "error",
+					});
+				}
+				$("#add_referral").attr("disabled", false);
+				$("#add_referral").text("Sumbit");
+			}
+		})
+	});
 
 	$("#add_referral").click(function(e){
 		e.preventDefault();

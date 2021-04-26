@@ -1983,13 +1983,24 @@ function user_exists($email){
 
 
 // Badmus
-function get_coupon_discount($coupon_code, $particulars_id, $amount){
+function get_coupon_discount($data){
   global $dbc;
+
+  $coupon_code = $data['couponCode'];
+	$particulars_id = $data['particularsId'];
+	$amount = $data['totalAmount'];
+
+  // $coupon_code, $particulars_id, $amount
+
   $get_coupon = get_rows_from_table_with_one_params('coupon_code','coupon_code',$coupon_code);
   if (count($get_coupon) == 0) {
     return 0;
   }else {
-    $sql = "UPDATE `renew_vehicle_particulars` SET `coupon_code`='$coupon_code' WHERE `unique_id` = '$particulars_id'";
+    if(isset($data['type'])){
+      $sql = "UPDATE `renew_vehicle_particulars` SET `coupon_code`='$coupon_code' WHERE `unique_id` = '$particulars_id'";
+    }else{
+      $sql = "UPDATE `vehicle_permit` SET `coupon_code`='$coupon_code' WHERE `unique_id` = '$particulars_id'";
+    }
     $exe_query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
     $discount = $get_coupon[0]['discount'];
     $total = (intval($amount) - intval($discount));
@@ -2052,7 +2063,29 @@ function calculate_renew_vehicle_particulars($particulars_id){
 
 }
 
-// Badmus\
+// Badmus
+function calculate_vehicle_permit($particulars_record_id){
+  
+  global $dbc;
+  
+  $sql = "SELECT services.cost FROM `vehicle_permit` JOIN `services` ON vehicle_permit.permit_type = services.unique_id WHERE vehicle_permit.unique_id = '$particulars_record_id'";
+  $exe = mysqli_query($dbc, $sql);
+
+  $data = mysqli_fetch_assoc($exe);
+
+  $cost = $data['cost'];
+
+  $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'renew_vehicle_particulars');
+  $delivery_fee = $get_delivery_fee['fee'];
+
+  $total = $cost+$delivery_fee;
+
+  $arr_data = json_encode(array('delivery_fee' => $delivery_fee, 'total' => $total, 'cost' => $cost));
+
+  return $arr_data;
+}
+
+// Badmus
 function session_referesh(){
   global $dbc;
 
@@ -4205,13 +4238,50 @@ function calculate_change_vehicle_ownership($unique_id){
       $number_plate_charge = 0;
     }
   }
+  
   return json_encode([
     "status" => 1,
     "change_of_ownership_fee" => $number_plate_charge + $registration_charge
   ]);
 }
 
+function save_vehicle_permit($post_data){
+  global $dbc;
 
+
+  $permit_type = secure_database($post_data['permit_type']);
+  $vehicle_type = secure_database($post_data['vehicle_type']);
+  $make_of_vehicle = secure_database($post_data['make_of_vehicle']);
+  $vehicle_model = secure_database($post_data['vehicle_model']);
+  $year_of_make = secure_database($post_data['year_of_make']);
+  $plate_no = secure_database($post_data['plate_no']);
+  $engine_no = secure_database($post_data['engine_no']);
+  $chassis_no = secure_database($post_data['chassis_no']);
+  $vehicle_license = secure_database($post_data['vehicle_license']);
+  $vehicle_color = secure_database($post_data['vehicle_color']);
+  $license_expiry = secure_database($post_data['license_expiry']);
+  $insurance_expiry = secure_database($post_data['insurance_expiry']);
+  $road_worthiness_expiry = secure_database($post_data['road_worthiness_expiry']);
+  $hackney_permit_expiry = secure_database($post_data['hackney_permit_expiry']);
+  $heavy_duty_permit_expiry = secure_database($post_data['heavy_duty_permit_expiry']);
+
+  $unique_id = unique_id_generator($vehicle_model);
+  $user_id = $_SESSION['user']['unique_id'];
+
+  $sql = "INSERT INTO vehicle_permit SET `unique_id`='$unique_id', `user_id`='$user_id', `permit_type`='$permit_type', `vehicle_type`='$vehicle_type',
+  `vehicle_make`='$make_of_vehicle', `year_of_make`='$year_of_make', `plate_no`='$plate_no', `engine_no`='$engine_no', `chassis_no`='$chassis_no', 
+  `vehicle_license`='$vehicle_license', `vehicle_color`='$vehicle_color', `license_expiry`='$license_expiry', `insurance_expiry`='$insurance_expiry',
+  `road_worthiness_expiry`='$road_worthiness_expiry', `hackney_permit_expiry`='$hackney_permit_expiry', `heavy_duty_permit_expiry`='$heavy_duty_permit_expiry',
+  `datetime`=now()";
+
+  $exe = mysqli_query($dbc, $sql);
+
+  if($exe){
+    return json_encode(array('status'=>1, 'record_id'=>$unique_id));
+  }else{
+    return json_encode(array('msg'=>'Error saving application.'));
+  }
+}
 /////// MOST IMPORTANT FUNCTIONS END HERE
 
 

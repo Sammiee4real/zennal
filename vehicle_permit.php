@@ -33,7 +33,7 @@ function show(el, txt){
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form" action="complete_order.php">
+                            <form class="form" id="vehicle_permit_form"> <!-- action="complete_order.php"-->
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                          <div class="mt-3 mb-3">
@@ -104,7 +104,7 @@ function show(el, txt){
                                         </div>
                                         <div class="form-group">
                                             <select class="form-select" id="vehicle_model" name="vehicle_model" required>
-                                                <option>Select Vehicle  model</option>
+                                                <option>Select make of vehicle</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -137,10 +137,17 @@ function show(el, txt){
                                 </div> -->
 
                                 <div class="form-group">
-                                            <select class="form-select">
-                                                <option>Select color</option>
-                                            </select>
-                                        </div>
+                                    <select class="form-select" name="vehicle_color" id="" required>
+                                        <option>Select color</option>
+                                        <option value="red">Red</option>
+                                        <option value="green">Green</option>
+                                        <option value="white">White</option>
+                                        <option value="yello">Yello</option>
+                                        <option value="ash">Ash</option>
+                                        <option value="blue">Blue</option>
+                                        <option value="black">Black</option>
+                                    </select>
+                                </div>
 
                                 <div class="mt-3 mb-3">
                                           <h4 class="card-title">Expiry Dates</h4>
@@ -148,29 +155,29 @@ function show(el, txt){
 
                                          <div class="form-group">
                                             <span>Vehicle License Expiry</span>
-                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                            <input type="date" id="" class="form-control" placeholder="" name="license_expiry">
                                         </div>
                                         <div class="form-group">
                                             <span>Insurance Expiry</span>
-                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                            <input type="date" id="" class="form-control" placeholder="" name="insurance_expiry">
                                         </div>
                                         <div class="form-group">
                                             <span>Road Worthiness Expiry</span>
-                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                            <input type="date" id="" class="form-control" placeholder="" name="road_worthiness_expiry">
                                         </div>
                                         <div class="form-group">
                                             <span>Hackney Permit Expiry (If applicable)</span>
-                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                            <input type="date" id="" class="form-control" placeholder="" name="hackney_permit_expiry">
                                         </div>
                                         <div class="form-group">
                                             <span>Heavy Duty Permit Expiry (If applicable)</span>
-                                            <input type="date" id="" class="form-control" placeholder="" name="Vehicle">
+                                            <input type="date" id="" class="form-control" placeholder="" name="heavy_duty_permit_expiry">
                                         </div>
 
                                     </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-primary mr-1 mb-1">Proceed </button>
+                                        <button type="submit" id="vehicle_permit_btn" class="btn btn-primary mr-1 mb-1">Proceed</button>
                                     </div>
                                     
                                     </form>
@@ -181,8 +188,5 @@ function show(el, txt){
                 </div>
             </div>
     </section>
-
- 
-
 </div>
 <?php include("includes/footer.php");?>

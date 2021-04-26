@@ -3,23 +3,30 @@
 <div id="main">
 
 <?php 
-include("includes/header.php");
-if(!isset($_GET['rec_id'])){
-  echo "
-  <script>window.location = `particulars`</script>";
-}
-$particulars_record_id = $_GET['rec_id'];
+  include("includes/header.php");
+  if(!isset($_GET['rec_id'])){
+    echo "
+    <script>window.location = `particulars`</script>";
+  }
+  $particulars_record_id = $_GET['rec_id'];
 
-$get_payment_details = calculate_renew_vehicle_particulars($particulars_record_id);
-  $get_payment_details_decode = json_decode($get_payment_details, true);
-  // $vehicle_registration_charge = $get_payment_details_decode['service_charge'] + $get_payment_details_decode['number_plate_charge'];
-  // $insurance_charge = $get_payment_details_decode['insurance_charge'];
-  // $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
-  // $delivery_fee = $get_delivery_fee['fee'];
-  // $subtotal = $vehicle_registration_charge + $insurance_charge;
-  // $total = $subtotal + $delivery_fee;
-  // $get_installment_details = get_rows_from_one_table('installment_payment_interest','date_created');
-  // print_r($get_payment_details_decode);
+  $is_vehicle_permit = (isset($_GET['type']) && $_GET['type'] == 'vehicle_permit');
+  if($is_vehicle_permit){
+    $get_payment_details = calculate_vehicle_permit($particulars_record_id);
+    $get_payment_details_decode = json_decode($get_payment_details, true);
+  }else{
+    $get_payment_details = calculate_renew_vehicle_particulars($particulars_record_id);
+    $get_payment_details_decode = json_decode($get_payment_details, true);
+    // $vehicle_registration_charge = $get_payment_details_decode['service_charge'] + $get_payment_details_decode['number_plate_charge'];
+    // $insurance_charge = $get_payment_details_decode['insurance_charge'];
+    // $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
+    // $delivery_fee = $get_delivery_fee['fee'];
+    // $subtotal = $vehicle_registration_charge + $insurance_charge;
+    // $total = $subtotal + $delivery_fee;
+    // $get_installment_details = get_rows_from_one_table('installment_payment_interest','date_created');
+    // print_r($get_payment_details_decode);
+    
+  }
   $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
   $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
 ?>
@@ -88,7 +95,7 @@ $(document).ready(function(){
                                 </div>
 
                                 <div class="form-group">
-                                   <input type="text" name="" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>" class="form-control coupon_field" placeholder="Coupon Code">
+                                   <input type="text" name="" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>" class="form-control coupon_field" placeholder="Coupon Code">
                                    <i class="coupon_code_help_txt"></i>
                                 </div>
 
@@ -98,16 +105,27 @@ $(document).ready(function(){
           <table class="table mb-0">
             <tbody>
               <tr>
-                <td class="text-bold-500 text-blue">Renew Vehicle Particulars</td>
+                <?php
+                  if($is_vehicle_permit){
+                    echo '<td class="text-bold-500 text-blue">Vehicle Permit</td>';
+                  }
+                  else{
+                    echo '<td class="text-bold-500 text-blue">Renew Vehicle Particulars</td>';
+                  }
+                ?>
                 <td>1</td>
                 <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['cost']) ?></td>
               </tr>
-              
-              <tr>
-                <td class="text-bold-500 text-blue">Insurance Cost</td>
-                <td></td>
-                <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['insurance_cost']) ?></td>
-              </tr>
+              <?php
+              if(!$is_vehicle_permit){
+                ?>
+                <tr>
+                  <td class="text-bold-500 text-blue">Insurance Cost</td>
+                  <td></td>
+                  <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['insurance_cost']) ?></td>
+                </tr>
+              <?php
+              }?>
               <tr>
                 <td class="text-bold-500 text-blue">Delivery Fee</td>
                 <td></td>
@@ -196,26 +214,37 @@ $(document).ready(function(){
         </div>
 
         <div class="form-group">
-        <input type="text" name="" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>" class="form-control coupon_field" placeholder="Coupon Code">
+        <input type="text" name="" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>" class="form-control coupon_field" placeholder="Coupon Code">
         <i class="coupon_code_help_txt"></i>
       </div>
 
          <h4 class="card-title mt-5">Order Summary</h4>
                                         
         <div class="table-responsive">
-          <table class="table mb-0">
+        <table class="table mb-0">
             <tbody>
-            <tr>
-                <td class="text-bold-500 text-blue">Renew Vehicle Particulars</td>
+              <tr>
+                <?php
+                  if($is_vehicle_permit){
+                    echo '<td class="text-bold-500 text-blue">Vehicle Permit</td>';
+                  }
+                  else{
+                    echo '<td class="text-bold-500 text-blue">Renew Vehicle Particulars</td>';
+                  }
+                ?>
                 <td>1</td>
                 <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['cost']) ?></td>
               </tr>
-              
-              <tr>
-                <td class="text-bold-500 text-blue">Insurance Cost</td>
-                <td></td>
-                <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['insurance_cost']) ?></td>
-              </tr>
+              <?php
+              if(!$is_vehicle_permit){
+                ?>
+                <tr>
+                  <td class="text-bold-500 text-blue">Insurance Cost</td>
+                  <td></td>
+                  <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['insurance_cost']) ?></td>
+                </tr>
+              <?php
+              }?>
               <tr>
                 <td class="text-bold-500 text-blue">Delivery Fee</td>
                 <td></td>
@@ -229,10 +258,10 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Coupon Discount</td>
                 <td></td>
-                <td class="text-bold-500 text-dark" id="coupon_discount">₦0.00</td>
+                <td class="text-bold-500 text-dark coupon_discount" id="coupon_discount">₦0.00</td>
               </tr>
               <tr>
-                <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="customCheck2 remove_from_wallet" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
+                <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary remove_from_wallet"  name="customCheck2" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
                 <td></td>
                 <td class="text-bold-500 text-dark">₦<?= number_format($wallet_balance)?></td>
               </tr>
