@@ -67,6 +67,7 @@ a:hover {
                 <div class="card-body">
                     Please click the button below to confirm that your account should be debited on your next payday with the amount of <b>&#8358;<?= number_format($get_loan_application['amount_to_repay']);?></b><br><br>
                     <button onclick="connectViaOptions2()" class="btn btn-primary btn-sm">Direct Debit Confirmation</button>
+                    <input type="hidden" name="received_json" id="received_json">
                 </div>
             </div>
         </div>
@@ -108,11 +109,33 @@ a:hover {
             success_message: 'You are doing well!',
             onSuccess: function (data) {
                 console.log('success', data);
-               // window.location.href = '<?php //echo $redirect_url;?>';
+                // window.location.href = '<?php //echo $redirect_url;?>';
+                // $.ajax({
+                //     url: "<?php //echo $callback_url?>",
+                //     method: "POST",
+                //     data: {data}
+                // })
+
                 $.ajax({
                     url: "<?php echo $callback_url?>",
                     method: "POST",
-                    data: {data}
+                    data: {data},
+                    success: function(data){
+                        if(data == "success"){
+                            Swal.fire({
+                                title: "Congratulations!",
+                                text: "Your loan has been disbursed successfully, you will be redirected shortly",
+                                icon: "success",
+                            }).then(setTimeout( function(){ window.location.href = "index"}, 5000));
+                        }
+                        else{
+                            Swal.fire({
+                                title: "Error!",
+                                text: data,
+                                icon: "error",
+                            });
+                        }
+                    }
                 })
             },
             onClose: function () {
