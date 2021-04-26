@@ -2522,7 +2522,7 @@ function submit_loan_application($user_approved_amount, $loan_id){
   $loan_interest = $get_loan_details['loan_interest'];
   $interest_rate = ($loan_interest / 100) * $user_approved_amount;
   $amount_to_repay = $user_approved_amount + $interest_rate;
-  $update_data_sql = "UPDATE `personal_loan_application` SET `user_approved_amount`='$user_approved_amount', `amount_to_repay`='$amount_to_repay', `approval_status` = 3  WHERE `unique_id`='$loan_id'";
+  $update_data_sql = "UPDATE `personal_loan_application` SET `user_approved_amount`='$user_approved_amount', `amount_to_repay`='$amount_to_repay', `approval_date` = now(), `approval_status` = 3  WHERE `unique_id`='$loan_id'";
   $update_data_query = mysqli_query($dbc, $update_data_sql) or mysqli_error($dbc);
   if($update_data_query){
     // $flutter_transfer = flutterwave_transfer($loan_id, $get_loan_details['user_id'], $user_approved_amount);
@@ -3221,8 +3221,8 @@ function insert_payment_transaction($user_id, $payment_id){
 function insert_disbursed_loan($user_id, $loan_id, $amount, $received_json){
   global $dbc;
   $user_id = secure_database($user_id);
-  $loan_id = secure_database($loan_id);
-  $loan_id = secure_database($received_json);
+  // $loan_id = secure_database($loan_id);
+  // $loan_id = secure_database($received_json);
   // $tx_ref = secure_database($tx_ref);
   $unique_id = unique_id_generator($loan_id.$user_id);
   if($user_id == '' || $loan_id == '' || $amount == ''){
@@ -3741,7 +3741,7 @@ function add_new_vehicle($user_id, array $vehicle_details_array){
   }
 }
 
-function okra_recurrent(){
+function okra_recurrent($amount, $account_to_debit, $account_to_credit){
   $curl = curl_init();
   curl_setopt_array($curl, array(
     CURLOPT_URL => 'https://api.okra.ng/v2/pay/initiate',
@@ -3754,13 +3754,13 @@ function okra_recurrent(){
     CURLOPT_CUSTOMREQUEST => 'POST',
     CURLOPT_POSTFIELDS =>'
   {
-      "account_to_debit": "5e9668d634a3fe58a3be8507",
-      "account_to_credit": "5e939074ad26310189448c03",
-          "amount": 10000,
+      "account_to_debit": $account_to_debit,
+      "account_to_credit": $account_to_credit,
+          "amount": $amount,
           "currency": "NGN"
   }',
     CURLOPT_HTTPHEADER => array(
-      'Authorization: {{token}}'
+      'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjVhMmU1ZjE0MGE3YTA4OGZkZWIwYWMiLCJpYXQiOjE1OTk3NDU2MzF9.ptc3Vf6KklgPiDCQXIi3SqpQ7nIlaFcxhhdw0GEtEjU'
     ),
   ));
 
@@ -3771,8 +3771,39 @@ function okra_recurrent(){
 }
 
 function repayment_cron(){
-
-
+  $get_due_repayments = get_rows_from_table_with_one_params('personal_loan_application', 'approval_status', 3);
+  foreach ($get_due_repayments as $repayment) {
+    $get_customer_id = get_one_row_from_one_table('disbured_loan', 'loan_id', $repayment['unique_id']);
+    $get_employment_details = get_one_row_from_one_table('user_employment_details', 'user_id', $repayment['user_id']);
+    $customer_id = $get_customer_id['received_json'];
+    $decode = json_decode($customer_id, true);
+    $account_to_debit = $decode['customer_id'];
+    $account_to_credit = '';
+    $salary_payday = $get_employment_details['salary_payday'];
+    $approval_date = $repayment['approval_date'];
+    $explode_date = explode('-', $approval_date);
+    $approval_day = $explode_date[2];
+    $today = date("Y-m-d");
+    $new_approval_date = date_create($repayment['approval_date']);
+    if($salary_payday != ''){
+      if (abs($salary_payday - $approval_day) >= 5){
+        $repayment_date = date_create($explode_date[0].'-'.$explode_date[1].'-'.$salary_payday);
+      }else{
+        $date_to_add = '30 days';
+        $repayment_date = date_add($new_approval_date, date_interval_create_from_date_string($date_to_add));
+      }
+    }
+    else{
+      $date_to_add = '28 days';
+      $repayment_date = date_add($new_approval_date, date_interval_create_from_date_string($date_to_add));
+    }
+    
+    if($today == date_format($repayment_date,"Y-m-d")){
+      $deduct_money = okra_recurrent($repayment['amount_to_repay'], $account_to_debit, $account_to_credit);
+      $add_referral = add_referral($referrer_id, $user_id, 'loan', $total, "Referral Bonus for Vehicle Registration");
+    }
+    
+  }
 }
 
 function add_time_frame($admin_id, $time_frame){
@@ -3985,6 +4016,10 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
   $unique_id = unique_id_generator($reg_id.$user_id);
   $installment_id = secure_database($installment_id);
   $check = check_record_by_one_param($table, 'reg_id', $reg_id);
+  $get_user = get_one_row_from_one_table('users', 'unique_id', $user_id);
+  $referrer_code = $get_user['referrer_code'];
+  $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+  $referrer_id = $get_referrer['unique_id'];
   if($user_id == '' || $total == ''){
    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
@@ -4001,7 +4036,13 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
     $insert_data_sql = "INSERT INTO `$table` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `email`='$email', `service_type` = '$service_type', `date_created` = now()";
     $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
-      return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
+      $add_referral = add_referral($referrer_id, $user_id, 'vehicle_registration', $total, "Referral Bonus for Vehicle Registration");
+      $add_referral_decode = json_decode($add_referral, true);
+      if($add_referral_decode['status'] == 1){
+        return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
+      }else{
+        return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+      }
     }
     else{
       return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);

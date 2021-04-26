@@ -314,7 +314,7 @@ function show(el, txt){
               $("#initial_total2").val(data['total_without_format']);
               $("#apply_coupon_code2").attr("disabled", true);
                 $("#apply_coupon_code2").text("Applied");
-            }
+            } 
             else{
               Swal.fire({
               title: "Error!",
