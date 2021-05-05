@@ -797,6 +797,8 @@ if (curl_exec($curl)) {
 
   $returned_amount = $response['Quote']['PaymentDue'];
 
+  if($returned_amount == 0) return json_encode(array("status"=>0, "msg"=>"No amount returned"));
+
   // Get percentage interest
   $sql = "SELECT * FROM `insurance_plans` WHERE `unique_id` = '$package_plan'";
   $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));

@@ -2853,10 +2853,13 @@ $(document).ready(function(){
 						console.log(installment);
 
 						installment.map(month => {
+							let interestPerMonth = ((((month.interest_rate / 100) * data.amount_to_balance)+data.amount_to_balance)/month.month)
+							console.log(`${interestPerMonth} per month`);
+							
 							installmetalPay.append(`
 								<tr>
 									<td class="text-bold-500">${month.month} MONTH INSTALLMENTS</td>
-									<td><button id="installmental-month" data-equityAmount="${data.equity_amount}" data-installmentalMonth="${month.month}" data-insuranceId="${data.insurance_id}" class="btn btn-primary">BUY NOW</button></td>
+									<td><span>₦ ${formatNumber(Math.round(interestPerMonth))}/M</span>  <button id="installmental-month" data-equityAmount="${data.equity_amount}" data-installmentalMonth="${month.month}" data-insuranceId="${data.insurance_id}" class="btn btn-primary">BUY NOW</button></td>
 								</tr>
 							`);
 						});
