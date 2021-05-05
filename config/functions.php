@@ -2059,8 +2059,9 @@ function calculate_renew_vehicle_particulars($particulars_id){
   $delivery_fee = $get_delivery_fee['fee'];
 
   $total = $cost+$insurance_cost+$delivery_fee;
+  $email_delivery_total = $cost+$insurance_cost;
 
-  $arr_data = json_encode(array('cost' => $cost, 'insurance_cost' => $insurance_cost, 'delivery_fee' =>$delivery_fee, 'total' => $total));
+  $arr_data = json_encode(array('cost' => $cost, 'insurance_cost' => $insurance_cost, 'delivery_fee' =>$delivery_fee, 'total' => $total, 'email_delivery_total' => $email_delivery_total));
   return $arr_data;
 
 }

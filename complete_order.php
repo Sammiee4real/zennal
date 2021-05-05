@@ -129,12 +129,12 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Delivery Fee</td>
                 <td></td>
-                <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['delivery_fee']) ?></td>
+                <td class="text-bold-500 text-dark">₦0</td><?php //number_format($get_payment_details_decode['delivery_fee']) ?>
               </tr>
               <tr>
                 <td class="text-bold-500 text-blue">Sub Total</td>
                 <td></td>
-                <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['total']) ?></td>
+                <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['email_delivery_total']) ?></td>
               </tr>
               <tr>
                 <td class="text-bold-500 text-blue">Coupon Discount</td>
@@ -149,19 +149,19 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Total</td>
                 <td></td>
-                <td class="text-bold-500 text-dark total_cost" id="total_cost">₦<?= number_format($get_payment_details_decode['total']) ?></td>
+                <td class="text-bold-500 text-dark total_cost" id="total_cost">₦<?= number_format($get_payment_details_decode['email_delivery_total']) ?></td>
               </tr>
             </tbody>
           </table>
         </div>
 
-<div class="form-group">
-    <select data-amount="<?= $get_payment_details_decode['total'] ?>" name="thename" class="form-select payment-option" >
-       <option value="">--- Payment Option ---</option>
-        <option value="one_time">One time Payment</option>
-        <option value="installmemt">On installment</option>
-    </select>
-</div>    
+        <div class="form-group">
+            <select data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" name="thename" class="form-select payment-option" >
+              <option value="">--- Payment Option --</option>
+              <option value="one_time">One time Payment</option>
+              <option value="installment">On installment</option>
+            </select>
+        </div> 
 
     <div  class="one box">      
         <div class="col-12 mt-3 d-flex justify-content-end">
@@ -280,7 +280,7 @@ $(document).ready(function(){
           </table>
           <div class="form-group">
             <select data-amount="<?= $get_payment_details_decode['total'] ?>" name="thename" class="form-select payment-option" >
-              <option value="">--- Payment Option ---</option>
+              <option value="">--- Payment Option --</option>
               <option value="one_time">One time Payment</option>
               <option value="installment">On installment</option>
             </select>
