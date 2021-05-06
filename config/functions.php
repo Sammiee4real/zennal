@@ -797,6 +797,8 @@ if (curl_exec($curl)) {
 
   $returned_amount = $response['Quote']['PaymentDue'];
 
+  if($returned_amount == 0) return json_encode(array("status"=>0, "msg"=>"No amount returned"));
+
   // Get percentage interest
   $sql = "SELECT * FROM `insurance_plans` WHERE `unique_id` = '$package_plan'";
   $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
@@ -2057,8 +2059,9 @@ function calculate_renew_vehicle_particulars($particulars_id){
   $delivery_fee = $get_delivery_fee['fee'];
 
   $total = $cost+$insurance_cost+$delivery_fee;
+  $email_delivery_total = $cost+$insurance_cost;
 
-  $arr_data = json_encode(array('cost' => $cost, 'insurance_cost' => $insurance_cost, 'delivery_fee' =>$delivery_fee, 'total' => $total));
+  $arr_data = json_encode(array('cost' => $cost, 'insurance_cost' => $insurance_cost, 'delivery_fee' =>$delivery_fee, 'total' => $total, 'email_delivery_total' => $email_delivery_total));
   return $arr_data;
 
 }

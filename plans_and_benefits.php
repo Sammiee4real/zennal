@@ -207,7 +207,7 @@ $get_insurer = get_rows_from_table_with_one_params('insurers', 'unique_id', $ins
                 <th></th>
                 <?php
                   foreach($get_plans as $plan){
-                    echo "<th> <a href='select_plan?plan_id=".$plan["unique_id"]."' class='btn btn-primary'>Select Package</a></th>";
+                    echo "<th> <button data-plan_id=".$plan["unique_id"]."' class='btn btn-primary'>Compare</button></th>";
                   }
                 ?>
                 <!-- <th><a href="#" class="btn btn-primary">Select Package</a></th>
