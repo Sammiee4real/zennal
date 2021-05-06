@@ -2633,6 +2633,372 @@ $(document).ready(function(){
           });
       });
 
+	$("#update_delivery_fee_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/update_delivery_fee.php",
+          method: "POST",
+          data:$("#update_delivery_fee_form").serialize(),
+          beforeSend:function(){
+            $("#update_delivery_fee_btn").attr("disabled", true);
+            $("#update_delivery_fee_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully updated delivery fee");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "update_delivery_fee.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#update_delivery_fee_btn").attr("disabled", false);
+            $("#update_delivery_fee_btn").text("Update Fee");
+          }
+      	});
+    });
+
+    $("#set_coupon_code_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/add_coupon_code.php",
+          method: "POST",
+          data:$("#set_coupon_code_form").serialize(),
+          beforeSend:function(){
+            $("#set_coupon_code_btn").attr("disabled", true);
+            $("#set_coupon_code_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully added coupon code");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_coupon_code.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#set_coupon_code_btn").attr("disabled", false);
+            $("#set_coupon_code_btn").text("Add Coupon Code");
+          }
+      	});
+    });
+
+    $("#edit_coupon_code_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/edit_coupon_code.php",
+          method: "POST",
+          data:$("#edit_coupon_code_form").serialize(),
+          beforeSend:function(){
+            $("#edit_coupon_code_btn").attr("disabled", true);
+            $("#edit_coupon_code_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully edited coupon code");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_coupon_code.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#edit_coupon_code_btn").attr("disabled", false);
+            $("#edit_coupon_code_btn").text("Edit");
+          }
+      	});
+    });
+
+    $("#delete_coupon_code_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/delete_coupon_code.php",
+          method: "POST",
+          data:$("#delete_coupon_code_form").serialize(),
+          beforeSend:function(){
+            $("#delete_coupon_code_btn").attr("disabled", true);
+            $("#delete_coupon_code_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully deleted coupon code");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_coupon_code.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#delete_coupon_code_btn").attr("disabled", false);
+            $("#delete_coupon_code_btn").text("Edit");
+          }
+      	});
+    });
+
+    $("#add_vehicle_brand_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/add_vehicle_brand.php",
+          method: "POST",
+          data:$("#add_vehicle_brand_form").serialize(),
+          beforeSend:function(){
+            $("#add_vehicle_brand_btn").attr("disabled", true);
+            $("#add_vehicle_brand_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully added vehicle brand");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "add_vehicle_brand.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#add_vehicle_brand_btn").attr("disabled", false);
+            $("#add_vehicle_brand_btn").text("Add Vehicle Brand");
+          }
+      	});
+    });
+
+    $("#add_vehicle_model_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/add_vehicle_model.php",
+          method: "POST",
+          data:$("#add_vehicle_model_form").serialize(),
+          beforeSend:function(){
+            $("#add_vehicle_model_btn").attr("disabled", true);
+            $("#add_vehicle_model_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully added vehicle model");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "add_vehicle_model.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#add_vehicle_model_btn").attr("disabled", false);
+            $("#add_vehicle_model_btn").text("Add Vehicle Model");
+          }
+      	});
+    });
+
+    $("#edit_number_plate_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/edit_number_plate.php",
+          method: "POST",
+          data:$("#edit_number_plate_form").serialize(),
+          beforeSend:function(){
+            $("#edit_number_plate_btn").attr("disabled", true);
+            $("#edit_number_plate_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully edited price");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_number_plate.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#edit_number_plate_btn").attr("disabled", false);
+            $("#edit_number_plate_btn").text("Edit");
+          }
+      	});
+    });
+
+    $("#edit_particulars_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/edit_particular.php",
+          method: "POST",
+          data:$("#edit_particulars_form").serialize(),
+          beforeSend:function(){
+            $("#edit_particulars_btn").attr("disabled", true);
+            $("#edit_particulars_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully edited price");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_vehicle_particular.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#edit_particulars_btn").attr("disabled", false);
+            $("#edit_particulars_btn").text("Edit");
+          }
+      	});
+    });
+
+    $("#edit_service_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/edit_service.php",
+          method: "POST",
+          data:$("#edit_service_form").serialize(),
+          beforeSend:function(){
+            $("#edit_service_btn").attr("disabled", true);
+            $("#edit_service_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully edited service");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_services.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#edit_service_btn").attr("disabled", false);
+            $("#edit_service_btn").text("Edit");
+          }
+      	});
+    });
+
+    $("#add_service_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/add_service.php",
+          method: "POST",
+          data:$("#add_service_form").serialize(),
+          beforeSend:function(){
+            $("#add_service_btn").attr("disabled", true);
+            $("#add_service_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully added service");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_services.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#add_service_btn").attr("disabled", false);
+            $("#add_service_btn").text("Add Service");
+          }
+      	});
+    });
+
+    $("#delete_service_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/delete_service.php",
+          method: "POST",
+          data:$("#delete_service_form").serialize(),
+          beforeSend:function(){
+            $("#delete_service_btn").attr("disabled", true);
+            $("#delete_service_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully deleted service");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_services.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#delete_service_btn").attr("disabled", false);
+            $("#delete_service_btn").text("Delete");
+          }
+      	});
+    });
+
+    $("#update_referral_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/update_referral.php",
+          method: "POST",
+          data:$("#update_referral_form").serialize(),
+          beforeSend:function(){
+            $("#update_referral_btn").attr("disabled", true);
+            $("#update_referral_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully updated referral");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "update_referral_bonus";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#update_referral_btn").attr("disabled", false);
+            $("#update_referral_btn").text("Update");
+          }
+      	});
+    });
+
+    $("#edit_installment_interest_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/edit_installment_interest.php",
+          method: "POST",
+          data:$("#edit_installment_interest_form").serialize(),
+          beforeSend:function(){
+            $("#edit_installment_interest_btn").attr("disabled", true);
+            $("#edit_installment_interest_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully edited Interest");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_installment_interest";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#edit_installment_interest_btn").attr("disabled", false);
+            $("#edit_installment_interest_btn").text("Edit");
+          }
+      	});
+    });
+
+	//Tosin's code ends
+
 
 	// Badmus
 	$('#add_insurer_form').submit(function(e){

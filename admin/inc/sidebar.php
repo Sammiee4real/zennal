@@ -1,8 +1,3 @@
-<?php
-  if(!isset($_SESSION['admin_id'])){
-    header("Location: login");
-  }
-?>
 <!--Sidebar -->
     <ul class="navbar-nav bg-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #022b69 !important;">
 
@@ -82,6 +77,10 @@
             <a class="collapse-item" href="personal_loan_application_requests">Personal Loan Requests</a>
             <a class="collapse-item" href="withdrawal_requests">Withdrawal Requests</a>
             <a class="collapse-item" href="vehicle_reg_request">Vehicle Registration Requests</a>
+            <a class="collapse-item" href="manage_number_plate">Manage Number Plate</a>
+            <a class="collapse-item" href="manage_coupon_code">Manage Coupon Code</a>
+            <a class="collapse-item" href="manage_vehicle_particular">Manage Vehicle Particular</a>
+            <a class="collapse-item" href="manage_services">Manage Services</a>
           </div>
       </li>
      <li class="nav-item">
@@ -95,6 +94,13 @@
             <a class="collapse-item" href="set_loan_package">Add Loan Packages</a>
             <a class="collapse-item" href="add_timeframe">Update Loan Timeframe</a>
             <div class="collapse-divider"></div>
+            <h6 class="collapse-header">Vehicle Registration Setting</h6>
+            <a class="collapse-item" href="update_delivery_fee">Update Delivery Fee</a>
+            <a class="collapse-item" href="set_coupon_code">Set Coupon Code</a>
+            <a class="collapse-item" href="add_vehicle_brand">Add Vechicle Brand</a>
+            <a class="collapse-item" href="add_vehicle_model">Add Vechicle Model</a>
+            <a class="collapse-item" href="set_installment_interest">Set Installment Interest</a>
+            <div class="collapse-divider"></div>
             <h6 class="collapse-header">Insurance Setting</h6>
             <a class="collapse-item" href="add_insurer.php">Add Insurer</a>
             <a class="collapse-item" href="set_insurance_interest.php">Set Insurance Interest</a>
@@ -102,6 +108,10 @@
             <!-- <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plan</a> -->
             <a class="collapse-item" href="add_insurance_package.php">Add Insurance Package</a>
             <a class="collapse-item" href="add_insurance_benefit.php">Add Insurance Benefit</a>
+            <div class="collapse-divider"></div>
+            <h6 class="collapse-header">General Setting</h6>
+            <a class="collapse-item" href="add_referral_bonus">Add Referral Bonus</a>
+            <a class="collapse-item" href="update_referral_bonus">Update Referral Bonus</a>
           </div>
         </div>
       </li>

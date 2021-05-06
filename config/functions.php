@@ -2961,58 +2961,33 @@ function insert_into_db($table,$data,$param,$validate_value){
 }
 
 
-function update_db($table, $unique_id, $param, $validate_value, array $data){
+function update_data($table, $data,$conditional_param,$conditional_value){
   global $dbc;
-  $table = secure_database($table);
-  $unique_id = secure_database($unique_id);
-  $emptyfound = 0;
-  $check = check_record_by_one_param($table,$param,$validate_value);
-  if($check === true){
-    return  json_encode(["status"=>"0", "msg"=>"Record already exists"]);
+  $conditional_value = secure_database($conditional_value);
+
+  if( is_array($data) && !empty($data) ){
+   $sql = "UPDATE `$table` SET ";
+      for($i = 0; $i < count($data); $i++){
+          $each_data = $data[$i];
+          if($i ==  (count($data) - 1)  ){
+            $sql .= " $data[$i] = '$_POST[$each_data]' ";
+          }else{
+            $sql .= " $data[$i] = '$_POST[$each_data]' ,";
+          }
+
+      }
+
+      $sql .= "WHERE `$conditional_param` = '$conditional_value'";
+  
+    $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    if($query){
+       return json_encode(["status"=>"1", "msg"=>"success"]);
+    }else{
+      return json_encode(["status"=>"0", "msg"=>"db_error"]);
+    }
   }
   else{
-      if( is_array($data) && !empty($data) ){
-     $sql = "UPDATE `$table` SET ";
-     $sql .= "`date_created` = now(), ";
-     //$sql .= "`privilege` = '1', ";
-        for($i = 0; $i < count($data); $i++){
-            $each_data = $data[$i];
-            
-            if($_POST[$each_data] == ""  ){
-              $emptyfound++;
-            }
-
-            if($i ==  (count($data) - 1)  ){
-                 $sql .= " $data[$i] = '$_POST[$each_data]' WHERE `unique_id` = '$unique_id'";
-              }else{
-                if($data[$i] === "password"){
-                $enc_password = md5($_POST[$data[$i]]); 
-                $sql .= " $data[$i] = '$enc_password' ,";
-                }else{
-                $sql .= " $data[$i] = '$_POST[$each_data]' ,";
-                } 
-            }
-
-        }
-      
-      if($emptyfound > 0){
-          return json_encode(["status"=>"0", "msg"=>"Empty field(s)"]);
-      } 
-       else{
-        //var_dump($sql);
-        $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
-        if($query){
-          return json_encode(["status"=>"1", "msg"=>"success"]);
-        }else{
-          return json_encode(["status"=>"0", "msg"=>"db_error"]);
-        }
-
-      }  
-
-    }
-    else{
-      return json_encode(["status"=>"0", "msg"=>"error"]);
-    }
+    return json_encode(["status"=>"0", "msg"=>"error"]);
   }
 }
 
@@ -3844,6 +3819,10 @@ function repayment_cron(){
     $approval_day = $explode_date[2];
     $today = date("Y-m-d");
     $new_approval_date = date_create($repayment['approval_date']);
+    $get_user = get_one_row_from_one_table('users', 'unique_id', $repayment['user_id']);
+    $referrer_code = $get_user['referrer_code'];
+    $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+    $referrer_id = $get_referrer['unique_id'];
     if($salary_payday != ''){
       if (abs($salary_payday - $approval_day) >= 5){
         $repayment_date = date_create($explode_date[0].'-'.$explode_date[1].'-'.$salary_payday);
@@ -3859,10 +3838,84 @@ function repayment_cron(){
     
     if($today == date_format($repayment_date,"Y-m-d")){
       $deduct_money = okra_recurrent($repayment['amount_to_repay'], $account_to_debit, $account_to_credit);
-      $add_referral = add_referral($referrer_id, $user_id, 'loan', $total, "Referral Bonus for Vehicle Registration");
+      $deduct_money_decode = json_decode($deduct_money);
+      if($deduct_money_decode['status'] == "success"){
+        $update_loan_status = update_by_one_param('personal_loan_application','approval_status', 4, 'unique_id', $repayment['unique_id']);
+        $add_referral = add_referral($referrer_id, $repayment['user_id'], 'loan', $repayment['amount_to_repay'], "Referral Bonus for Loan repayment");
+        $add_referral_decode = json_decode($add_referral, true);
+        if($add_referral_decode['status'] == 1){
+          echo "success";
+        }else{
+          echo "error";
+        }
+      }
     }
     
   }
+}
+
+function vechicle_installment_repayment_cron(){
+  $get_loans = get_rows_from_one_table('vehicle_reg_installment','date_created');
+  foreach ($get_loans as $loan_application) {
+    $get_employment_details = get_one_row_from_one_table('user_employment_details', 'user_id', $loan_application['user_id']);
+    $loan_id = $loan_application['unique_id'];
+    $get_customer_id = get_one_row_from_one_table('disbured_loan', 'loan_id', $loan_application['unique_id']);
+    $customer_id = $get_customer_id['received_json'];
+    $get_repayment_details = get_one_row_from_one_table_by_id('repayment_tbl','loan_id', $loan_id, 'date_created');
+    $amount_paid_so_far = $get_repayment_details['amount_paid_so_far'] + $loan_application['amount_deducted_per_month'];
+    $balance = $get_repayment_details['total_amount_to_pay'] - $amount_paid_so_far;
+    if($loan_application['no_of_repayment_month'] <= $loan_application['current_repayment_month']){
+      echo "user has finished paying<br>";
+      $update_current_repayment_month = update_by_one_param('vehicle_reg_installment','approval_status',4,'unique_id', $loan_id);
+      continue;
+    }
+    //else{
+      $decode = json_decode($customer_id, true);
+      $account_to_debit = $decode['customer_id'];
+      $account_to_credit = '';
+      $salary_payday = $get_employment_details['salary_payday'];
+      $approval_date = $loan_application['approval_date'];
+      $explode_date = explode('-', $approval_date);
+      $approval_day = $explode_date[2];
+      $today = date("Y-m-d");
+      $new_approval_date = date_create($loan_application['approval_date']);
+      $get_user = get_one_row_from_one_table('users', 'unique_id', $loan_application['user_id']);
+      $referrer_code = $get_user['referrer_code'];
+      $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+      $referrer_id = $get_referrer['unique_id'];
+      if($salary_payday != ''){
+        if (abs($salary_payday - $approval_day) >= 5){
+          $repayment_date = date_create($explode_date[0].'-'.$explode_date[1].'-'.$salary_payday);
+        }else{
+          $date_to_add = '30 days';
+          $repayment_date = date_add($new_approval_date, date_interval_create_from_date_string($date_to_add));
+        }
+      }
+      else{
+        $date_to_add = '28 days';
+        $repayment_date = date_add($new_approval_date, date_interval_create_from_date_string($date_to_add));
+      }
+      
+      if($today == date_format($repayment_date,"Y-m-d")){
+        $deduct_money = okra_recurrent($loan_application['amount_to_repay'], $account_to_debit, $account_to_credit);
+        $deduct_money_decode = json_decode($deduct_money);
+        if($deduct_money_decode['status'] == "success"){
+          $update_loan_status = update_by_one_param('vehicle_reg_installment','approval_status', 4, 'unique_id', $loan_application['unique_id']);
+          $current_repayment_month = $loan_application['current_repayment_month'] + 1;
+          $update_current_repayment_month = update_by_one_param('vehicle_reg_installment','current_repayment_month', $current_repayment_month,'unique_id', $loan_application['unique_id']);
+          $update_repayment_tbl = "UPDATE `repayment_tbl` SET `current_repayment_month`='$current_repayment_month', `amount_paid_so_far`='$amount_paid_so_far', `balance`='$balance', `date_created` = now()  WHERE `loan_id`='$loan_id'";
+          $add_referral = add_referral($referrer_id, $repayment['user_id'], 'loan', $loan_application['amount_to_repay'], "Referral Bonus for Loan repayment");
+          $add_referral_decode = json_decode($add_referral, true);
+          if($add_referral_decode['status'] == 1){
+            echo "success";
+          }else{
+            echo "error";
+          }
+        }
+      }
+        //echo $result;
+      }
+    //}
 }
 
 function add_time_frame($admin_id, $time_frame){
@@ -3963,9 +4016,13 @@ function add_vehicle_brand($brand_name){
   $brand_name = secure_database($brand_name);
   $unique_id = unique_id_generator($brand_name);
   // $loan_id = $guarantor_array['loan_id'];
+  $check = check_record_by_one_param('vehicle_brands', 'brand_name', $brand_name);
 
   if($brand_name == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else if($check == true){
+    return json_encode(["status"=>"0", "msg"=>"Record already Exists"]);
   }
   else{
     $insert_data_sql = "INSERT INTO `vehicle_brands` SET `unique_id` = '$unique_id', `brand_name` = '$brand_name', `datetime` = now()";
@@ -3984,10 +4041,14 @@ function add_vehicle_model($brand_id, $model_name){
   $brand_id = secure_database($brand_id);
   $model_name = secure_database($model_name);
   $unique_id = unique_id_generator($brand_id);
+  $check = check_record_by_one_param('vehicle_models', 'model_name', $model_name);
   // $loan_id = $guarantor_array['loan_id'];
 
   if($brand_id == '' || $model_name == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
+  }
+  else if($check == true){
+    return json_encode(["status"=>"0", "msg"=>"Record already Exists"]);
   }
   else{
     $insert_data_sql = "INSERT INTO `vehicle_models` SET `unique_id` = '$unique_id', `brand_id` = '$brand_id', `model_name` = '$model_name', `datetime` = now()";
@@ -4140,6 +4201,7 @@ function installmental_payment($unique_id, $installment_id){
   global $dbc;
   $unique_id = secure_database($unique_id);
   $installment_id = secure_database($installment_id);
+  $unique_id2= unique_id_generator($installment_id);
   if($unique_id == '' || $installment_id == ''){
    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
@@ -4154,9 +4216,13 @@ function installmental_payment($unique_id, $installment_id){
     $total_interest = (int) $interest_per_month * $get_installment_details['no_of_month'];
     $total_amount_to_pay = $total_interest + $balance;
     $amount_to_pay_per_month = $total_amount_to_pay / $get_installment_details['no_of_month'];
-    $update_data_sql = "UPDATE `vehicle_reg_installment` SET `installment_id` = '$installment_id', `amount_to_repay` = '$total_amount_to_pay', `interest_per_month` = '$interest_per_month', `amount_deducted_per_month` = '$amount_to_pay_per_month' WHERE `unique_id` = '$unique_id'";
+    $user_id = $get_details['user_id'];
+    $no_of_repayment_month = $get_installment_details['no_of_month'];
+    $update_data_sql = "UPDATE `vehicle_reg_installment` SET `installment_id` = '$installment_id', `amount_to_repay` = '$total_amount_to_pay', `interest_per_month` = '$interest_per_month', `amount_deducted_per_month` = '$amount_to_pay_per_month', `no_of_repayment_month` = '$no_of_repayment_month'  WHERE `unique_id` = '$unique_id'";
+    $insert_repayment = "INSERT INTO `repayment_tbl` SET `unique_id`='$unique_id2', `user_id`='$user_id', `loan_id`='$unique_id', `total_amount_to_pay`='$total_amount_to_pay', `amount_deducted_per_month`='$amount_to_pay_per_month', `amount_paid_so_far` = 0, `balance`='$total_amount_to_pay', `date_created` = now()";
+    $insert_repayment_query = mysqli_query($dbc, $insert_repayment) or die(mysqli_error($dbc));
     $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
-    if($update_data_query){
+    if($update_data_query AND $insert_repayment_query){
       return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
     }
     else{
