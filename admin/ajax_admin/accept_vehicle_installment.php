@@ -7,7 +7,7 @@
 	$subject = "Loan Application - Zennal";
 	$content = "Hello, your Vehicle Registration Installment Payment on Zennal has been approved, please login to finish your application<br>Thanks";
 	$approve_application = update_by_one_param('vehicle_reg_installment','approval_status', 1, 'unique_id',$unique_id);
-	$change_approval_date = update_by_one_param('vehicle_reg_installment','approval_date', now(), 'unique_id',$unique_id);
+	$change_approval_date = update_by_one_param('vehicle_reg_installment','approval_date', date('Y-m-d H:i:s'), 'unique_id',$unique_id);
 	//$approve_application_decode = json_decode($approve_application, true);
 	if($approve_application AND $change_approval_date){
 		echo "success";

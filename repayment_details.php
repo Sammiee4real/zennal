@@ -7,6 +7,7 @@
   $interest_per_month = $get_details['interest_per_month'];
   $total_amount_to_repay = $get_details['amount_to_repay'];
   $amount_deducted_per_month = $get_details['amount_deducted_per_month'];
+  $amount_to_borrow = $get_details['total'] - $equity_contribution;
     //$balance = $get_details['total'] - $equity_contribution;
 ?>
 <div id="main">
@@ -61,6 +62,11 @@ a:hover {
                             <td>Equity Contribution</td>
                             <td></td>
                             <td><span class="ml-3 font-weight-bold" style="font-size: 16px">&#8358;<?= number_format($equity_contribution, 2);?></span></td>
+                          </tr>
+                          <tr>
+                            <td>Amount to borrow</td>
+                            <td></td>
+                            <td><span class="ml-3 font-weight-bold" style="font-size: 16px">&#8358;<?= number_format($amount_to_borrow, 2);?></span></td>
                           </tr>
                           <tr>
                             <td>Interest Rate</td>

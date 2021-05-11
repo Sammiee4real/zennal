@@ -4392,6 +4392,24 @@ function save_vehicle_permit($post_data){
     return json_encode(array('msg'=>'Error saving application.'));
   }
 }
+
+function calculate_repayment_details($amount_to_borrow, $installment_id){
+  $get_installment_details = get_one_row_from_one_table('installment_payment_interest', 'unique_id', $installment_id);
+  $balance = $amount_to_borrow;
+  $interest = $get_installment_details['interest_rate'];
+  $interest_per_month = (int) (($interest /100) * $balance);
+  $total_interest = (int) $interest_per_month * $get_installment_details['no_of_month'];
+  $total_amount_to_pay = $total_interest + $balance;
+  $amount_to_pay_per_month = $total_amount_to_pay / $get_installment_details['no_of_month'];
+  $no_of_repayment_month = $get_installment_details['no_of_month'];
+  return json_encode([
+    'msg' => "success", 
+    "status" => 1,
+    "interest_per_month" => $interest_per_month,
+    "total_amount_to_pay" => $total_amount_to_pay,
+    "amount_to_pay_per_month" => $amount_to_pay_per_month
+  ]);
+}
 /////// MOST IMPORTANT FUNCTIONS END HERE
 
 

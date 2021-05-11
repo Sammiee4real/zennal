@@ -10,6 +10,7 @@
     $get_num_running_loan = get_number_of_rows_two_params('personal_loan_application','user_id',$user_id,'approval_status', 3);
     $get_recent_activities = get_user_recent_activities($user_id);
     $get_wallet_balance = get_one_row_from_one_table_by_id('wallet','user_id', $user_id, 'date_created');
+    $balance = $get_wallet_balance != null ? $get_wallet_balance['balance']: 0;
     include("includes/header.php");
 ?>
 <div id="main">
@@ -83,7 +84,7 @@
                             <div class='px-3 py-3 d-flex justify-content-between'>
                                 <h3 class='card-title'>WALLET</h3>
                                 <div class="card-right d-flex align-items-center">
-                                    <p>&#8358;<?= number_format($get_wallet_balance['balance']);?></p>
+                                    <p>&#8358;<?= number_format($balance);?></p>
                                 </div>
                             </div>
                             <div class="px-3 py-3 d-flex justify-content-between">
