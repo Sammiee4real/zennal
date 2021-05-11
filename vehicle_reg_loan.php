@@ -94,7 +94,7 @@ $(document).ready(function(){
       
 <div class="main-content container-fluid">
     <div class="page-title">
-        <h3>Vehicle Registration Installmental Payment</h3>
+        <h3>Vehicle Registration Installment Payment</h3>
         <p class="text-subtitle text-muted">Let's know you better</p>
     </div>
 

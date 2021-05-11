@@ -2473,12 +2473,12 @@ $(document).ready(function(){
 		                success_message: 'You are doing well!',
 		                onSuccess: function (data) {
 		                    console.log('success', data);
-		                    // Swal.fire({
-		                    //     title: "Congratulations!",
-		                    //     text: "You've submitted your vehicle details",
-		                    //     icon: "success",
-		                    // }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
-		                    // window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+		                    Swal.fire({
+		                        title: "Congratulations!",
+		                        text: "Your payment was successful",
+		                        icon: "success",
+		                    }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+		                    //window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
 		                    //window.location.href = 'http://localhost/new_zennal/online_generation_callback?payment_id='+data.payment_id;
 		                    //window.location.href = '<?php //echo $redirect_url?>';
 		                    //console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
@@ -3192,8 +3192,8 @@ $(document).ready(function(){
 			data:$("#buy-package-form").serialize(),
 			success: function(res){
 				oneTimePay.empty();
-				const data = JSON.parse(res);
-				console.log(data);
+				console.log(res+" Got here");
+				// const data = JSON.parse(res);
 				if (data.status == '1'){
 					
 					if (paymentType == "oneTime") {

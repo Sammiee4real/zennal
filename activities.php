@@ -31,7 +31,8 @@
             <tbody>
               <?php
                 $count = 1;
-                foreach ($get_recent_activities as $value) {
+                if($get_recent_activities != null){
+                  foreach ($get_recent_activities as $value) {
               ?>
               <tr>
                 <td class="text-bold-500"><?= $count;?></td>
@@ -39,7 +40,7 @@
                 <td class="text-bold-500"><?= $value['description'];?></td>
                 <td><?= $value['date_created'];?></td>
               </tr>
-              <?php $count++;} ?>
+              <?php $count++;} }?>
             </tbody>
           </table>
         </div>
