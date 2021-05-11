@@ -364,7 +364,19 @@ function register_user($post){
 
   $hash_password = md5($password);
 
-  $sql = "INSERT INTO `users` SET `unique_id` = '$unique_id', `title` = '$title' `first_name` = '$first_name', `last_name` = '$last_name', `other_names` = '$other_name', `referral_code` = '$referral_code', `referrer_code` = '$referrer_code', `email` = '$email', `phone` = '$phone_no', `password` = '$hash_password', `registered_on` = now()";
+  $sql = "INSERT INTO `users` SET
+    `unique_id` = '$unique_id',
+    `title` = '$title',
+    `first_name` = '$first_name',
+    `last_name` = '$last_name',
+    `other_names` = '$other_name',
+    `referral_code` = '$referral_code',
+    `referrer_code` = '$referrer_code',
+    `email` = '$email',
+    `phone` = '$phone_no',
+    `password` = '$hash_password',
+    `registered_on` = now()
+  ";
 
   $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
 
