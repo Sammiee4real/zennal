@@ -369,6 +369,7 @@ function register_user($post){
   $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
 
   if($query){
+    $insert_into_wallet = insert_into_wallet($unique_id, 0);
     return json_encode(array("status"=>1, "msg"=>"success"));
   }
 }
