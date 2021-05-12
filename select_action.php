@@ -5,7 +5,7 @@
 <?php include("includes/header.php");?>            
 <div class="main-content container-fluid">
     <div class="page-title">
-        <h3>Select Action</h3>
+        <h3>Select an Option</h3>
         <p class="text-subtitle text-muted"></p>
     </div>
 
