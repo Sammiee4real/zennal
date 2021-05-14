@@ -111,7 +111,9 @@ $user = $_SESSION['user'];
                         <li>
                             <a href="approved_vehicle_reg">View Approved Installmental Payment</a>
                         </li>
-                        
+                        <li>
+                            <a href="running_vehicle_reg">View Running Installmental Payment</a>
+                        </li>
                     </ul>
                     
                 </li>

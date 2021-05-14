@@ -60,7 +60,7 @@ a:hover {
                         <thead>
                           <tr>
                             <th>Number of month</th>
-                            <th>Interest Rate</th>
+                            <th>Interest Rate (per month)</th>
                             <th>Total amount to repay</th>
                             <th>Amount to pay per month</th>
                             <th>Action</th>

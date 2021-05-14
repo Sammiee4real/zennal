@@ -1931,7 +1931,7 @@ function get_rows_from_one_table_group_by($table,$theid){
 function get_rows_from_one_table_by_two_params($table,$param,$value,$param2,$value2){
          global $dbc;
         $table = secure_database($table);
-        $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' ORDER BY date_added DESC";
+        $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' ORDER BY date_created DESC";
         $query = mysqli_query($dbc, $sql);
         $num = mysqli_num_rows($query);
        if($num > 0){
@@ -3869,9 +3869,9 @@ function repayment_cron(){
     $today = date("Y-m-d");
     $new_approval_date = date_create($repayment['approval_date']);
     $get_user = get_one_row_from_one_table('users', 'unique_id', $repayment['user_id']);
-    $referrer_code = $get_user['referrer_code'];
-    $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
-    $referrer_id = $get_referrer['unique_id'];
+    // $referrer_code = $get_user['referrer_code'];
+    // $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+    // $referrer_id = $get_referrer['unique_id'];
     if($salary_payday != ''){
       if (abs($salary_payday - $approval_day) >= 5){
         $repayment_date = date_create($explode_date[0].'-'.$explode_date[1].'-'.$salary_payday);
@@ -3890,12 +3890,19 @@ function repayment_cron(){
       $deduct_money_decode = json_decode($deduct_money);
       if($deduct_money_decode['status'] == "success"){
         $update_loan_status = update_by_one_param('personal_loan_application','approval_status', 4, 'unique_id', $repayment['unique_id']);
-        $add_referral = add_referral($referrer_id, $repayment['user_id'], 'loan', $repayment['amount_to_repay'], "Referral Bonus for Loan repayment");
-        $add_referral_decode = json_decode($add_referral, true);
-        if($add_referral_decode['status'] == 1){
+        if($referrer_code != null){
+          $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+          $referrer_id = $get_referrer['unique_id'];
+          $add_referral = add_referral($referrer_id, $repayment['user_id'], 'loan', $repayment['amount_to_repay'], "Referral Bonus for Loan repayment");
+          $add_referral_decode = json_decode($add_referral, true);
+          if($add_referral_decode['status'] == 1){
+            echo "success";
+          }else{
+             echo "error";
+          }
+        }
+        else{
           echo "success";
-        }else{
-          echo "error";
         }
       }
     }
@@ -3930,8 +3937,8 @@ function vechicle_installment_repayment_cron(){
       $new_approval_date = date_create($loan_application['approval_date']);
       $get_user = get_one_row_from_one_table('users', 'unique_id', $loan_application['user_id']);
       $referrer_code = $get_user['referrer_code'];
-      $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
-      $referrer_id = $get_referrer['unique_id'];
+      //$get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+      //$referrer_id = $get_referrer['unique_id'];
       if($salary_payday != ''){
         if (abs($salary_payday - $approval_day) >= 5){
           $repayment_date = date_create($explode_date[0].'-'.$explode_date[1].'-'.$salary_payday);
@@ -3953,12 +3960,19 @@ function vechicle_installment_repayment_cron(){
           $current_repayment_month = $loan_application['current_repayment_month'] + 1;
           $update_current_repayment_month = update_by_one_param('vehicle_reg_installment','current_repayment_month', $current_repayment_month,'unique_id', $loan_application['unique_id']);
           $update_repayment_tbl = "UPDATE `repayment_tbl` SET `current_repayment_month`='$current_repayment_month', `amount_paid_so_far`='$amount_paid_so_far', `balance`='$balance', `date_created` = now()  WHERE `loan_id`='$loan_id'";
-          $add_referral = add_referral($referrer_id, $repayment['user_id'], 'loan', $loan_application['amount_to_repay'], "Referral Bonus for Loan repayment");
-          $add_referral_decode = json_decode($add_referral, true);
-          if($add_referral_decode['status'] == 1){
+          if($referrer_code != null){
+            $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+            $referrer_id = $get_referrer['unique_id'];
+            $add_referral = add_referral($referrer_id, $repayment['user_id'], 'loan', $loan_application['amount_to_repay'], "Referral Bonus for Loan repayment");
+            $add_referral_decode = json_decode($add_referral, true);
+            if($add_referral_decode['status'] == 1){
+              echo "success";
+            }else{
+               echo "error";
+            }
+          }
+          else{
             echo "success";
-          }else{
-            echo "error";
           }
         }
       }
@@ -4187,8 +4201,6 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
   $check = check_record_by_one_param($table, 'reg_id', $reg_id);
   $get_user = get_one_row_from_one_table('users', 'unique_id', $user_id);
   $referrer_code = $get_user['referrer_code'];
-  $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
-  $referrer_id = $get_referrer['unique_id'];
   if($user_id == '' || $total == ''){
    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
@@ -4205,12 +4217,19 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
     $insert_data_sql = "INSERT INTO `$table` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `email`='$email', `service_type` = '$service_type', `date_created` = now()";
     $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
-      $add_referral = add_referral($referrer_id, $user_id, 'vehicle_registration', $total, "Referral Bonus for Vehicle Registration");
-      $add_referral_decode = json_decode($add_referral, true);
-      if($add_referral_decode['status'] == 1){
+      if($referrer_code != null){
+        $get_referrer = get_one_row_from_one_table('users', 'referral_code', $referrer_code);
+        $referrer_id = $get_referrer['unique_id'];
+        $add_referral = add_referral($referrer_id, $user_id, 'vehicle_registration', $total, "Referral Bonus for Vehicle Registration");
+        $add_referral_decode = json_decode($add_referral, true);
+        if($add_referral_decode['status'] == 1){
+          return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
+        }else{
+          return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+        }
+      }
+      else{
         return json_encode(["status"=>"1", "msg"=>"success", "data" => $equity_contribution]);
-      }else{
-        return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
       }
     }
     else{
@@ -4267,7 +4286,7 @@ function installmental_payment($unique_id, $installment_id){
     $amount_to_pay_per_month = $total_amount_to_pay / $get_installment_details['no_of_month'];
     $user_id = $get_details['user_id'];
     $no_of_repayment_month = $get_installment_details['no_of_month'];
-    $update_data_sql = "UPDATE `vehicle_reg_installment` SET `installment_id` = '$installment_id', `amount_to_repay` = '$total_amount_to_pay', `interest_per_month` = '$interest_per_month', `amount_deducted_per_month` = '$amount_to_pay_per_month', `no_of_repayment_month` = '$no_of_repayment_month'  WHERE `unique_id` = '$unique_id'";
+    $update_data_sql = "UPDATE `vehicle_reg_installment` SET `installment_id` = '$installment_id', `amount_to_repay` = '$total_amount_to_pay', `interest_per_month` = '$interest_per_month', `amount_deducted_per_month` = '$amount_to_pay_per_month', `no_of_repayment_month` = '$no_of_repayment_month', `approval_date` = now()  WHERE `unique_id` = '$unique_id'";
     $insert_repayment = "INSERT INTO `repayment_tbl` SET `unique_id`='$unique_id2', `user_id`='$user_id', `loan_id`='$unique_id', `total_amount_to_pay`='$total_amount_to_pay', `amount_deducted_per_month`='$amount_to_pay_per_month', `amount_paid_so_far` = 0, `balance`='$total_amount_to_pay', `date_created` = now()";
     $insert_repayment_query = mysqli_query($dbc, $insert_repayment) or die(mysqli_error($dbc));
     $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
