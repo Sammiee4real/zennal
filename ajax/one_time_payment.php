@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	header('Content-Type: application/json');
+	// header('Content-Type: application/json');
 	require_once('../config/functions.php');
 	$user_id = $_SESSION['user']['unique_id'];
 	$email = $_SESSION['user']['email'];
@@ -15,7 +15,7 @@
 	$remove_from_wallet = isset($_POST['remove_from_wallet']) ? $_POST['remove_from_wallet'] : '';;
 	$response_array = [];
 	$table = "vehicle_reg_payment";
-	$content = 'Vehicle Registration', 'You have successfully ordered for Vehicle Registration, your documents will be delivered to you soon <br> Thanks.';
+	$content = 'Vehicle Registration, You have successfully ordered for Vehicle Registration, your documents will be delivered to you soon <br> Thanks.';
 	$insert_payment = insert_payment($email, $table, $user_id, $reg_id, $city, $delivery_area, $delivery_address, $total, $installment_id, $service_type, $remove_from_wallet);
 	$insert_payment_decode = json_decode($insert_payment, true);
 	if($insert_payment_decode['status'] == 1){

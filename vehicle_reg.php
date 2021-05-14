@@ -187,12 +187,12 @@
                                                 <option value="personalized_number">Custom number plate</option>
                                             </select>
                                         </div>
-                                <div id="cus">
-                                    <div class="form-group">
-                                        <span>Preferrred Number Plate</span>
-                                        <input type="text" name="number_plate" id="number_plate" class="form-control" placeholder="e.g (KET-123A)">
-                                    </div>
-                                </div>
+                                        <div id="cus">
+                                            <div class="form-group">
+                                                <span>Preferrred Number Plate</span>
+                                                <input type="text" name="number_plate" id="number_plate" class="form-control" placeholder="e.g (KET-123A)">
+                                            </div>
+                                        </div>
 
                                 <div class="form-group">
                                             <select name="state" class="form-select" id="state">

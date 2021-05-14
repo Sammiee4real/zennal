@@ -2065,12 +2065,13 @@ function calculate_renew_vehicle_particulars($particulars_id){
     $insurance_cost = 0;
   }
   elseif ($insurance_type == 'comprehensive_insurance') {
-    $insurance_cost = "";
+    $insurance_cost = 0;
   }
 
-  $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'renew_vehicle_particulars');
-  $delivery_fee = $get_delivery_fee['fee'];
+  // $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'renew_vehicle_particulars');
 
+  $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
+  $delivery_fee = $get_delivery_fee['fee'];
   $total = $cost+$insurance_cost+$delivery_fee;
   $email_delivery_total = $cost+$insurance_cost;
 
@@ -2084,14 +2085,18 @@ function calculate_vehicle_permit($particulars_record_id){
   
   global $dbc;
   
-  $sql = "SELECT services.cost FROM `vehicle_permit` JOIN `services` ON vehicle_permit.permit_type = services.unique_id WHERE vehicle_permit.unique_id = '$particulars_record_id'";
+  $sql = "SELECT services.cost FROM `vehicle_permit`
+    JOIN `services`
+    ON vehicle_permit.permit_type = services.unique_id
+    WHERE vehicle_permit.unique_id = '$particulars_record_id'
+  ";
   $exe = mysqli_query($dbc, $sql);
 
   $data = mysqli_fetch_assoc($exe);
 
   $cost = $data['cost'];
 
-  $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'renew_vehicle_particulars');
+  $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
   $delivery_fee = $get_delivery_fee['fee'];
 
   $total = $cost+$delivery_fee;

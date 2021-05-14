@@ -1,16 +1,17 @@
 <?php
-include("includes/sidebar.php");
-include("includes/header.php");
+    include("includes/sidebar.php");
+    include("includes/header.php");
 
-$get_vehicle_types = get_rows_from_table('vehicles');
-$get_vehicle_brands = get_rows_from_table('vehicle_brands');
-$get_permit_types = get_rows_from_table('services');
+    $get_vehicle_types = get_rows_from_table('vehicles');
+    $get_vehicle_brands = get_rows_from_table('vehicle_brands');
+    $get_permit_types = get_rows_from_table('services');
+    $get_insurer = get_rows_from_one_table('insurers', 'datetime');
 ?> 
 
 <div id="main">
 
 <style type="text/css">
-/* #bar, #cus {display:none;} */
+#bar, #cus {display:none;}
 </style>
 <script>
 // function show(el, txt){
@@ -161,7 +162,7 @@ $get_permit_types = get_rows_from_table('services');
                                 </select>
                             </div>
                             <div class="form-group">
-                                <select name="insurance_type" class="form-select" required> <!--  onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" -->
+                                <select name="insurance_type" class="form-select" id="insurance_type" required> <!--  onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" -->
                                     <option value="">Insurance type</option>
                                     <option value="third_party_insurance">3rd Party Insurance</option>
                                     <option value="comprehensive_insurance">Comprehensive Insurance</option>
@@ -209,3 +210,14 @@ $get_permit_types = get_rows_from_table('services');
 
 </div>
 <?php include("includes/footer.php");?>
+
+<script>
+    // $("#insurance_type").change(function(){
+    //     var selected_option = $(this).val();
+    //     $("#bar").hide();
+    //     if(selected_option == 'comprehensive_insurance'){
+    //         $("#bar").show();
+    //     }
+    // });
+
+</script>

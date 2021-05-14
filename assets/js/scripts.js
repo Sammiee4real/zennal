@@ -2151,12 +2151,18 @@ $(document).ready(function(){
 			
 			if(paymentOption == "one_time"){
 
+				console.log("Got here 1");
+
 				$.ajax({
 					url:"ajax/one_time_payment.php",
 					method: "POST",
 					data: payload,
 					success: function(data){
+						console.log("Got here 2");
+						console.log(data);
 						// let data = JSON.parse(res);
+						data = JSON.parse(res);
+
 						if(data.status == "success"){
 							// alert('saved');
 							Okra.buildWithOptions({
@@ -2217,6 +2223,11 @@ $(document).ready(function(){
 						}
 						$('#submit_insurer_form').attr('disabled', false);
 						$('#submit_insurer_form').text('Submit');
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						console.log(textStatus);
+						console.log(errorThrown);
 					}
 				})
 		}else if(paymentOption == "installment"){
