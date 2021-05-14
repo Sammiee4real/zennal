@@ -281,9 +281,16 @@ function show(el, txt){
       var total = $("#total2").val();
       var initial_total = $("#initial_total2").val();
       if($('#remove_from_wallet2').is(':checked')){
-        var new_total = parseInt(total - wallet_balance);
-        $("#new_total2").html(formatNumber(new_total));
-        $("#total2").val(new_total);
+        if(parseInt(wallet_balance) > parseInt(total)){
+          var new_total = 0;
+          $("#new_total2").html(formatNumber(0));
+          $("#total2").val(new_total);
+        }
+        else{
+          var new_total = parseInt(total - wallet_balance);
+          $("#new_total2").html(formatNumber(new_total));
+          $("#total").val(new_total);
+        }
       }
       else{
         $("#new_total2").html(formatNumber(initial_total));
@@ -313,7 +320,7 @@ function show(el, txt){
               $("#total2").val(data['total_without_format']);
               $("#initial_total2").val(data['total_without_format']);
               $("#apply_coupon_code2").attr("disabled", true);
-                $("#apply_coupon_code2").text("Applied");
+              $("#apply_coupon_code2").text("Applied");
             } 
             else{
               Swal.fire({
@@ -329,69 +336,127 @@ function show(el, txt){
       }
     });
 $("#proceed_to_payment2").click(function(e){
-      e.preventDefault();
-      $('#proceed_to_payment2').attr('disabled', true);
+    e.preventDefault();
+    $('#proceed_to_payment2').attr('disabled', true);
     $('#proceed_to_payment2').text('Please wait...');
     var total = $("#total2").val();
-    $.ajax({
-      url:"ajax/one_time_payment.php",
-      method: "POST",
-      data: $("#proceed_to_payment_form2").serialize(),
-      success: function(data){
-        //alert(data);
-        if(data['status'] == "success"){
-          Okra.buildWithOptions({
-            name: 'Cloudware Technologies',
-            env: 'production-sandbox',
-            key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
-            token: '5f5a2e5f140a7a088fdeb0ac', 
-            source: 'link',
-            color: '#ffaa00',
-            limit: '24',
-            // amount: 5000,
-            // currency: 'NGN',
-            garnish: true,
-            charge: {
-              type: 'one-time',
-              amount: parseInt(total*100),
-              note: '',
+    var reg_id = $("#reg_id2").val();
+    if(total != 0){
+      $.ajax({
+        url:"ajax/check_veh_reg_exist.php",
+        method: "POST",
+        data: {reg_id},
+        success: function(data){
+          // alert(data);
+          if(data == "false"){
+            Okra.buildWithOptions({
+              name: 'Cloudware Technologies',
+              env: 'production-sandbox',
+              key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+              token: '5f5a2e5f140a7a088fdeb0ac', 
+              source: 'link',
+              color: '#ffaa00',
+              limit: '24',
+              // amount: 5000,
+              // currency: 'NGN',
+              garnish: true,
+              charge: {
+                type: 'one-time',
+                amount: parseInt(total*100),
+                note: '',
+                currency: 'NGN',
+                account: '5ecfd65b45006210350becce'
+              },
+              corporate: null,
+              connectMessage: 'Which account do you want to connect with?',
+              products: ["auth", "transactions", "balance"],
+              //callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+              //callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+              //redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+              logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+              filter: {
+                  banks: [],
+                  industry_type: 'all',
+              },
+              widget_success: 'Your account was successfully linked to Cloudware Technologies',
+              widget_failed: 'An unknown error occurred, please try again.',
               currency: 'NGN',
-              account: '5ecfd65b45006210350becce'
-            },
-            corporate: null,
-            connectMessage: 'Which account do you want to connect with?',
-            products: ["auth", "transactions", "balance"],
-            logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
-            filter: {
-                banks: [],
-                industry_type: 'all',
-            },
-            widget_success: 'Your account was successfully linked to Cloudware Technologies',
-            widget_failed: 'An unknown error occurred, please try again.',
-            currency: 'NGN',
-            exp: null,
-            success_title: 'Cloudware Technologies!',
-            success_message: 'You are doing well!',
-            onSuccess: function (data) {
+              exp: null,
+              success_title: 'Cloudware Technologies!',
+              success_message: 'You are doing well!',
+              onSuccess: function (data) {
                 console.log('success', data);
-            },
+                $.ajax({
+                  url:"ajax/one_time_payment.php",
+                  method: "POST",
+                  data: $("#proceed_to_payment_form").serialize(),
+                  success: function(data){
+                    //alert(data);
+                    if(data['status'] == "success"){
+                      Swal.fire({
+                        title: "Congratulations!",
+                        text: "Your payment was successful",
+                        icon: "success",
+                      }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+                    }
+                    else{
+                      Swal.fire({
+                        title: "Error!",
+                        text: data['status'],
+                        icon: "error",
+                      });
+                    }
+                    $('#proceed_to_payment').attr('disabled', false);
+                    $('#proceed_to_payment').text('Proceed');
+                  }
+                })
+              },
             onClose: function () {
-                console.log('closed')
+              console.log('closed');
+              $('#proceed_to_payment').attr('disabled', false);
+              $('#proceed_to_payment').text('Proceed');
             }
-        })
-        }
-        else{
-          Swal.fire({
+          })
+          }
+          else{
+            Swal.fire({
               title: "Error!",
-              text: data['status'],
+              text: "Record Exists",
               icon: "error",
-          });
+            });
+          }
+          $('#proceed_to_payment').attr('disabled', false);
+          $('#proceed_to_payment').text('Proceed');
         }
-        $('#proceed_to_payment2').attr('disabled', false);
-        $('#proceed_to_payment2').text('Proceed');
-      }
-    })
-    })
+      })
+    }
+    else{
+      $.ajax({
+        url:"ajax/one_time_payment.php",
+        method: "POST",
+        data: $("#proceed_to_payment_form").serialize(),
+        success: function(data){
+          //alert(data);
+          if(data['status'] == "success"){
+            Swal.fire({
+                      title: "Congratulations!",
+                      text: "Your payment was successful",
+                      icon: "success",
+                  }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+          }
+          else{
+            Swal.fire({
+                          title: "Error!",
+                          text: data['status'],
+                          icon: "error",
+                      });
+          }
+          $('#proceed_to_payment').attr('disabled', false);
+          $('#proceed_to_payment').text('Proceed');
+        }
+      })
+    }
+  })
 
   });
 </script>
