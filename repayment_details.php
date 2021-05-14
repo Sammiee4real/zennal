@@ -8,7 +8,7 @@
   $total_amount_to_repay = $get_details['amount_to_repay'];
   $amount_deducted_per_month = $get_details['amount_deducted_per_month'];
   $amount_to_borrow = $get_details['total'] - $equity_contribution;
-    //$balance = $get_details['total'] - $equity_contribution;
+  $no_of_repayment = $get_interest_rate['no_of_month'];
 ?>
 <div id="main">
 
@@ -77,6 +77,11 @@ a:hover {
                             <td>Interest per Month</td>
                             <td></td>
                             <td><span class="ml-3 font-weight-bold" style="font-size: 16px">&#8358;<?= number_format($interest_per_month, 2);?></span></td>
+                          </tr>
+                          <tr>
+                            <td>Number of Repayment</td>
+                            <td></td>
+                            <td><span class="ml-3 font-weight-bold" style="font-size: 16px"><?= $no_of_repayment;?></span></td>
                           </tr>
                           <tr>
                             <td>Total Amount to repay</td>

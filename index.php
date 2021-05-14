@@ -6,7 +6,7 @@
     $get_personal_loan = get_one_row_from_one_table_by_id('loan_category','type', 1, 'date_created');
     $get_num_personal_loan = get_number_of_rows_two_params('user_loan_details','user_id',$user_id,'loan_category_id',$get_personal_loan['unique_id']);
     $get_num_insurance = get_number_of_rows_one_param('insurance','user_id',$user_id);
-    // $get_num_vehicle_reg = get_number_of_rows_one_param('vehicle_registration','user_id',$user_id);
+    $get_num_vehicle_reg = get_number_of_rows_one_param('vehicle_registration','user_id',$user_id);
     $get_num_running_loan = get_number_of_rows_two_params('personal_loan_application','user_id',$user_id,'approval_status', 3);
     $get_recent_activities = get_user_recent_activities($user_id);
     $get_wallet_balance = get_one_row_from_one_table_by_id('wallet','user_id', $user_id, 'date_created');
@@ -67,7 +67,7 @@
                             <div class='px-3 py-3 d-flex justify-content-between'>
                                 <h3 class='card-title'>VEHICLE REGISTRATION</h3>
                                 <div class="card-right d-flex align-items-center">
-                                    <p>1 </p>
+                                    <p><?= $get_num_vehicle_reg;?></p>
                                 </div>
                             </div>
                             <div class="px-3 py-3 d-flex justify-content-between">

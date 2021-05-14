@@ -73,6 +73,8 @@
             <a class="collapse-item" href="view_insurance">View Insurance Bought</a>
             <a class="collapse-item" href="view_loan_packages">View Loan Packages</a>
             <a class="collapse-item" href="view_insurance_plans">View Insurance Plans</a>
+            <a class="collapse-item" href="running_loan">View Running Loan</a>
+            <a class="collapse-item" href="running_installment">View Running Installment Loan</a>
             <a class="collapse-item" href="view_insurance_pricing">View Insurance Pricing Plans</a>
             <a class="collapse-item" href="personal_loan_application_requests">Personal Loan Requests</a>
             <a class="collapse-item" href="withdrawal_requests">Withdrawal Requests</a>
