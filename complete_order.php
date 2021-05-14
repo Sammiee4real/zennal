@@ -95,8 +95,11 @@ $(document).ready(function(){
                                 </div>
 
                                 <div class="form-group">
-                                   <input type="text" name="" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>" class="form-control coupon_field" placeholder="Coupon Code">
+                                   <input type="text" name="" class="form-control coupon_field" placeholder="Coupon Code">
                                    <i class="coupon_code_help_txt"></i>
+                                </div>
+                                <div class="form-group">
+                                  <button type="button" class="btn btn-primary coupon_btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
                                 </div>
 
     <h4 class="card-title mt-5">Order Summary</h4>
@@ -162,12 +165,19 @@ $(document).ready(function(){
         </div>
 
         <div class="form-group">
-            <select data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" name="thename" class="form-select payment-option" >
+            <select name="thename" class="form-select payment-option" id="paymentOptionEmail" >
               <option value="">--- Payment Option --</option>
               <option value="one_time">One time Payment</option>
               <option value="installment">On installment</option>
             </select>
         </div> 
+        
+        <div>
+          <button class="btn btn-primary payment-proceed-btn" type="button"
+          data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionEmail">
+            Proceed
+          </button>
+        </div>
 
     <div  class="one box">      
         <div class="col-12 mt-3 d-flex justify-content-end">
@@ -220,8 +230,11 @@ $(document).ready(function(){
         </div>
 
         <div class="form-group">
-        <input type="text" name="" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>" class="form-control coupon_field" placeholder="Coupon Code">
+        <input type="text" name="" class="form-control coupon_field" placeholder="Coupon Code">
         <i class="coupon_code_help_txt"></i>
+      </div>
+      <div class="form-group">
+        <button type="button" class="btn btn-primary coupon_btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
       </div>
 
          <h4 class="card-title mt-5">Order Summary</h4>
@@ -251,11 +264,17 @@ $(document).ready(function(){
                 </tr>
               <?php
               }?>
+              <?php
+                // if($wallet_balance > 0){
+              ?>
               <tr>
                 <td class="text-bold-500 text-blue">Delivery Fee</td>
                 <td></td>
                 <td class="text-bold-500 text-dark">₦<?= number_format($get_payment_details_decode['delivery_fee']) ?></td>
               </tr>
+              <?php
+                // }
+              ?>
               <tr>
                 <td class="text-bold-500 text-blue">Sub Total</td>
                 <td></td>
@@ -285,12 +304,18 @@ $(document).ready(function(){
             </tbody>
           </table>
           <div class="form-group">
-            <select data-amount="<?= $get_payment_details_decode['total'] ?>" name="thename" class="form-select payment-option" >
+            <select name="thename" class="form-select payment-option" id="paymentOptionPhysical">
               <option value="">--- Payment Option --</option>
               <option value="one_time">One time Payment</option>
               <option value="installment">On installment</option>
             </select>
-        </div> 
+        </div>
+        <div>
+          <button class="btn btn-primary payment-proceed-btn" type="button"
+          data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionPhysical">
+            Proceed
+          </button>
+        </div>
         </div>
 
                                       
