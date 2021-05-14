@@ -4206,6 +4206,8 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
   $check = check_record_by_one_param($table, 'reg_id', $reg_id);
   $get_user = get_one_row_from_one_table('users', 'unique_id', $user_id);
   $referrer_code = $get_user['referrer_code'];
+  $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
+  $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
   if($user_id == '' || $total == ''){
    return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
@@ -4216,7 +4218,7 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
     $payment_type = 1;
     $equity_contribution = 0;
     if($remove_from_wallet != ''){
-      $balance = 0;
+      $balance = ($wallet_balance > $total) ? ($wallet_balance - $total): 0;
       $update_wallet = update_by_one_param('wallet','balance', $balance, 'user_id',$user_id);
     }
     $insert_data_sql = "INSERT INTO `$table` SET `unique_id` = '$unique_id', `user_id` = '$user_id', `reg_id`= '$reg_id', `city` = '$city',  `delivery_area`='$delivery_area', `delivery_address`='$delivery_address', `total` = '$total', `payment_type` = '$payment_type', `email`='$email', `service_type` = '$service_type', `date_created` = now()";
