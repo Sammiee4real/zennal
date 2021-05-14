@@ -107,14 +107,20 @@
                         <td></td>
                         <td class="text-bold-500 text-dark">&#8358;<?= number_format($delivery_fee)?></td>
                       </tr>
-                      <tr>
-                        <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="customCheck2" id="remove_from_wallet"> 
-                          Remove from my Zennal Wallet
-                        </td>
-                        <td></td>
-                        <td class="text-bold-500 text-dark">&#8358;<?= number_format($wallet_balance);?></td>
-                        <input type="hidden" name="" id="wallet_balance" value="<?= $wallet_balance;?>">
-                      </tr>
+                      <?php
+                        if($wallet_balance != 0){
+                          ?>
+                          <tr>
+                            <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="customCheck2" id="remove_from_wallet"> 
+                              Remove from my Zennal Wallet
+                            </td>
+                            <td></td>
+                            <td class="text-bold-500 text-dark">&#8358;<?= number_format($wallet_balance);?></td>
+                            <input type="hidden" name="" id="wallet_balance" value="<?= $wallet_balance;?>">
+                          </tr>
+                      <?php
+                        }
+                      ?>
                       <tr>
                         <td class="text-bold-500 text-blue">Total</td>
                         <td></td>

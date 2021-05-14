@@ -29,7 +29,6 @@
                         echo "<tr><td>No record found...</td></tr>";
                     } else{ ?>
                   <tr>
-                    
                     <th scope="col">Fullname</th>
                     <th>Type</th>
                     <th scope="col">Loan Amount</th>
@@ -38,7 +37,6 @@
                     <th scope="col">Amount To repay</th>
                     <th scope="col">Amount Deducted per month</th>
                     <th scope="col">Date of Application</th>
-
                   </tr>
                 </thead>
                 <tbody>
