@@ -126,11 +126,11 @@ $(document).ready(function(){
                 </tr>
               <?php
               }?>
-              <tr>
+              <!-- <tr>
                 <td class="text-bold-500 text-blue">Delivery Fee</td>
                 <td></td>
                 <td class="text-bold-500 text-dark">₦0</td><?php //number_format($get_payment_details_decode['delivery_fee']) ?>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="text-bold-500 text-blue">Sub Total</td>
                 <td></td>
@@ -141,11 +141,17 @@ $(document).ready(function(){
                 <td></td>
                 <td class="text-bold-500 text-dark coupon_discount" id="coupon_discount">₦0.00</td>
               </tr>
+              <?php
+                // if($wallet_balance > 0){
+              ?>
               <tr>
                 <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary remove_from_wallet"  name="customCheck2" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
                 <td></td>
                 <td class="text-bold-500 text-dark">₦<?= number_format($wallet_balance)?></td>
               </tr>
+              <?php
+                // }
+              ?>
               <tr>
                 <td class="text-bold-500 text-blue">Total</td>
                 <td></td>

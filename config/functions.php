@@ -2065,14 +2065,13 @@ function calculate_renew_vehicle_particulars($particulars_id){
     $insurance_cost = 0;
   }
   elseif ($insurance_type == 'comprehensive_insurance') {
-    $insurance_cost = "";
+    $insurance_cost = 0;
   }
 
   // $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'renew_vehicle_particulars');
 
   $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
   $delivery_fee = $get_delivery_fee['fee'];
-  var_dump([$cost, $insurance_cost, $delivery_fee]);
   $total = $cost+$insurance_cost+$delivery_fee;
   $email_delivery_total = $cost+$insurance_cost;
 
