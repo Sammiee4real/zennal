@@ -39,7 +39,7 @@
                 <div class="col-md-12 col-12">
                   <h4 class="card-title mt-3 mb-3">Type of Delivery</h4>
                   <div class="form-group">
-                    <select  name="thename" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
+                    <select  name="thename" class="form-select delivery_type" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
                       <option selected>--- Delivery Type ---</option>
                       <option value="email">Email Delivery</option>
                       <option value="physical">Physical Delivery</option>

@@ -1993,6 +1993,12 @@ $(document).ready(function(){
 		})
 	});
 
+
+	var couponApplied = 0;
+	var currentTotal = 0;
+	var couponDiscount = 0;
+	var removeFromWallet = 0;
+
 	// Badmus
 	$("#renew-particulars-form").submit(function(e){
 		e.preventDefault();
@@ -2030,8 +2036,35 @@ $(document).ready(function(){
 		})
 	})
 
+	$(".remove-coupon").click(function(){
+
+		var btn = $(this);
+		couponApplied = 0;
+		currentTotal = currentTotal + couponDiscount;
+		couponDiscount = 0;
+
+		btn.parents(".order-area").find(".total_cost").text(`${formatNumber(currentTotal)}`);
+		btn.parents(".order-area").find(".coupon_discount").text(`${formatNumber(couponDiscount)}`);
+
+		btn.parents(".order-area").find(".coupon-btn").show();
+		btn.hide();
+	})
+
+	$(".coupon_field").keyup(function(){
+		couponApplied = 0;
+		currentTotal = currentTotal + couponDiscount;
+		couponDiscount = 0;
+
+		$(this).parents(".order-area").find(".total_cost").text(`${formatNumber(currentTotal)}`);
+		$(this).parents(".order-area").find(".coupon_discount").text(`${formatNumber(couponDiscount)}`);
+
+		$(this).parents(".order-area").find(".coupon-btn").show();
+		$(this).parents(".order-area").find(".remove-coupon").show();
+	})
+
 
 	$(".coupon_btn").click(function() {
+
 		var btn = $(this)
 		let payload;
 		const couponCode = btn.parents(".order-area").find(".coupon_field").val();
@@ -2054,13 +2087,23 @@ $(document).ready(function(){
 					$(".coupon_code_help_txt").text(`Invalid coupon code`);
 					$(".coupon_code_help_txt").css('color', 'tomato');
 				}else{
+
 					let resData = JSON.parse(data);
+
+					couponApplied = 1;
+					couponDiscount = resData.discount;
+					currentTotal = resData.total;
+
 					btn.parents(".order-area").find(".coupon_code_help_txt").text("Valid coupon code");
 					btn.parents(".order-area").find(".coupon_code_help_txt").css('color', 'green');
 					// console.log(resData.discount);
-					btn.parents(".order-area").find(".coupon_discount").text(`₦${formatNumber(resData.discount)}`);
-					btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(resData.total)}`);
+					btn.parents(".order-area").find(".coupon_discount").text(`${formatNumber(resData.discount)}`);
+					btn.parents(".order-area").find(".total_cost").text(`${formatNumber(resData.total)}`);
 					btn.parents(".order-area").find(".payment-proceed-btn").attr("data-amount", resData.total);
+
+					btn.hide();
+					btn.parents(".order-area").find(".remove-coupon").show();
+
 					// $(".payment-proceed-btn").attr("data-discountamount", resData.total);
 
 				}
@@ -2077,6 +2120,7 @@ $(document).ready(function(){
 		console.log(initial_total);
 
 		if(checkbox.is(':checked')){
+			removeFromWallet = 1;
 			if( parseInt(wallet_balance) > parseInt(total) ){
 				var new_total = 0;
 				btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(new_total)}`);
@@ -2088,6 +2132,7 @@ $(document).ready(function(){
 				btn.data("amount", new_total)
 		  	}
 		}else{
+			removeFromWallet = 0;
 			btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(initial_total)}`);
 			btn.data("amount", initial_total)
 		}
@@ -2132,23 +2177,25 @@ $(document).ready(function(){
 
 	$(".payment-proceed-btn").click(function() {
 
-		console.log("Got here");
+		// console.log("Got here");
+
+		var btn = $(this)
 
 		// alert(1);
 		let total;
 		let payload;
-		let reg_id = $("#record_id").val();
-		let delivery_address = $("#delivery_address").val();
-		let delivery_city = $(".delivery-city").find(':selected').val();
-		let delivery_area = $("#delivery-area").find(':selected').val();
+		let reg_id = btn.parents(".order-area").find("#record_id").val();
+		let delivery_address = btn.parents(".order-area").find("#delivery_address").val();
+		let delivery_city = btn.parents(".order-area").find(".delivery-city").val();
+		let delivery_area = btn.parents(".order-area").find("#delivery-area").val();
 		let service_type = "renew_vehicle_particulars";
-		let remove_from_wallet = $(".remove_from_wallet").val();
+		let remove_from_wallet = btn.parents(".order-area").find(".remove_from_wallet").val();
 		let paymentOptionElem = $("#"+$(this).data("paymentoption"));
 		let paymentOption = paymentOptionElem.find(':selected').val()
 		let walletBalance = $(this).data("walletbalance");
 
 		if (paymentOption != "") {
-			let deliveryType = $(".delivery_type").find(':selected').val();
+			// let deliveryType = $(".delivery_type").find(':selected').val();
 
 			total = $(this).data("amount");
 
@@ -2158,6 +2205,19 @@ $(document).ready(function(){
 			// }else{
 			// 	total = $(this).data("amount");
 			// }
+
+			const couponCode = btn.parents(".order-area").find(".coupon_field").val();
+
+			const deliveryType = btn.parents(".order-area").find(".delivery_type").val();
+
+			var payLoadCheck = {
+				reg_id,
+				coupon_applied: couponApplied,
+				coupon_code: couponCode,
+				remove_from_wallet: removeFromWallet,
+				delivery_type: deliveryType,
+				service_type: 'particulars'
+			}
 
 			if (deliveryType == "email") {
 				let email = $("#delivery-email").val();
@@ -2190,13 +2250,15 @@ $(document).ready(function(){
 			$.ajax({
 				url:"ajax/check_veh_reg_exist.php",
 				method: "POST",
-				data: {reg_id},
+				data: payLoadCheck,
 				success: function(data){
 					// alert(data);
-					if(data == "false"){
+					var data = JSON.parse(data)
+					if(data.check_status == "false"){
 						if(paymentOption == "one_time"){
 			
-							if(total != 0){
+							payload.total = data.total;
+							if(data.total_after_remove_wallet != 0){
 								Okra.buildWithOptions({
 									name: 'Cloudware Technologies',
 									env: 'production-sandbox',
@@ -2210,7 +2272,7 @@ $(document).ready(function(){
 									garnish: true,
 									charge: {
 										type: 'one-time',
-										amount: total*100,
+										amount: data.total*100,
 										note: '',
 										currency: 'NGN',
 										account: '5ecfd65b45006210350becce'
@@ -2471,6 +2533,9 @@ $(document).ready(function(){
 
 	// Come here
 	$("#apply_coupon_code").click(function(){
+
+		var btn = $(this);
+
       	var coupon_code = $("#coupon_code").val();
       	var total = $("#total").val();
 		if(coupon_code == ''){
@@ -2487,12 +2552,20 @@ $(document).ready(function(){
 				},
 				success: function(data){
 					if(data['status'] == "success"){
+
+						couponApplied = 1;
+						couponDiscount = data['discount_without_format'];
+						currentTotal = data['total_without_format'];
+
 						$("#coupon_discount").html(data['discount']);
 						$("#new_total").html(data['total']);
 						$("#total").val(data['total_without_format']);
 						$("#initial_total").val(data['total_without_format']);
 						$("#apply_coupon_code").attr("disabled", false);
 				  		$("#apply_coupon_code").text("Applied");
+
+						btn.hide();
+						btn.parents(".order-area").find(".remove-coupon").show();
 					}
 					else{
 						Swal.fire({
@@ -2515,6 +2588,7 @@ $(document).ready(function(){
       	var total = $("#total").val();
       	var initial_total = $("#initial_total").val();
       	if($('#remove_from_wallet').is(':checked')){
+			removeFromWallet = 1;
       		if( parseInt(wallet_balance) > parseInt(total) ){
       			var new_total = 0;
       			$("#new_total").html(formatNumber(0));
@@ -2525,8 +2599,8 @@ $(document).ready(function(){
       			$("#new_total").html(formatNumber(new_total));
 				$("#total").val(new_total);
 			}
-      	}
-      	else{
+      	}else{
+			removeFromWallet = 0;
       		$("#new_total").html(formatNumber(initial_total));
 			$("#total").val(initial_total);
       	}
@@ -2535,58 +2609,75 @@ $(document).ready(function(){
 	// Come here
     $("#proceed_to_payment").click(function(e){
     	e.preventDefault();
+		var btn = $(this);
     	$('#proceed_to_payment').attr('disabled', true);
 		$('#proceed_to_payment').text('Please wait...');
 		var total = $("#total").val();
 		var reg_id = $("#reg_id").val();
-		// console.log(total);
 
-		if(total != 0){
-			$.ajax({
-				url:"ajax/check_veh_reg_exist.php",
-				method: "POST",
-				data: {reg_id},
-				success: function(data){
-					// alert(data);
-					if(data == "false"){
+		const couponCode = btn.parents(".order-area").find(".coupon_field").val();
+
+		const deliveryType = "physical";
+
+		// const deliveryType = btn.parents(".order-area").find(".delivery_type").val();
+
+		var payLoad = {
+			reg_id,
+			coupon_applied: couponApplied,
+			coupon_code: couponCode,
+			remove_from_wallet: removeFromWallet,
+			delivery_type: deliveryType,
+			service_type: 'vehicle_reg'
+		}
+		
+		$.ajax({
+			url:"ajax/check_veh_reg_exist.php",
+			method: "POST",
+			data: payLoad,
+			success: function(data){
+				// alert(data);
+				data =  JSON.parse(data)
+				
+				if(data.check_status == "false"){
+					if(data.total_after_remove_wallet == 0){
 						Okra.buildWithOptions({
-				            name: 'Cloudware Technologies',
-				            env: 'production-sandbox',
-				            key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
-				            token: '5f5a2e5f140a7a088fdeb0ac', 
-				            source: 'link',
-				            color: '#ffaa00',
-				            limit: '24',
-				            // amount: 5000,
-				            // currency: 'NGN',
-				            garnish: true,
-				            charge: {
-				              type: 'one-time',
-				              amount: parseInt(total*100),
-				              note: '',
-				              currency: 'NGN',
-				              account: '5ecfd65b45006210350becce'
-				            },
-				            corporate: null,
-				            connectMessage: 'Which account do you want to connect with?',
-				            products: ["auth", "transactions", "balance"],
-				            //callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
-				            //callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
-				            //redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
-				            logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
-				            filter: {
-				                banks: [],
-				                industry_type: 'all',
-				            },
-				            widget_success: 'Your account was successfully linked to Cloudware Technologies',
-				            widget_failed: 'An unknown error occurred, please try again.',
-				            currency: 'NGN',
-				            exp: null,
-				            success_title: 'Cloudware Technologies!',
-				            success_message: 'You are doing well!',
-				            onSuccess: function (data) {
-				                console.log('success', data);
-				                $.ajax({
+							name: 'Cloudware Technologies',
+							env: 'production-sandbox',
+							key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+							token: '5f5a2e5f140a7a088fdeb0ac', 
+							source: 'link',
+							color: '#ffaa00',
+							limit: '24',
+							// amount: 5000,
+							// currency: 'NGN',
+							garnish: true,
+							charge: {
+							type: 'one-time',
+							amount: parseInt(total*100),
+							note: '',
+							currency: 'NGN',
+							account: '5ecfd65b45006210350becce'
+							},
+							corporate: null,
+							connectMessage: 'Which account do you want to connect with?',
+							products: ["auth", "transactions", "balance"],
+							//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+							//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+							//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+							logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+							filter: {
+								banks: [],
+								industry_type: 'all',
+							},
+							widget_success: 'Your account was successfully linked to Cloudware Technologies',
+							widget_failed: 'An unknown error occurred, please try again.',
+							currency: 'NGN',
+							exp: null,
+							success_title: 'Cloudware Technologies!',
+							success_message: 'You are doing well!',
+							onSuccess: function (data) {
+								console.log('success', data);
+								$.ajax({
 									url:"ajax/one_time_payment.php",
 									method: "POST",
 									data: $("#proceed_to_payment_form").serialize(),
@@ -2594,68 +2685,69 @@ $(document).ready(function(){
 										//alert(data);
 										if(data['status'] == "success"){
 											Swal.fire({
-							                 	title: "Congratulations!",
-							                	text: "Your payment was successful",
-							                	icon: "success",
-							             	}).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+												title: "Congratulations!",
+												text: "Your payment was successful",
+												icon: "success",
+											}).then(setTimeout( function(){ window.location.href = "index"}, 3000));
 										}
 										else{
 											Swal.fire({
-						                        title: "Error!",
-						                        text: data['status'],
-						                        icon: "error",
-						                    });
+												title: "Error!",
+												text: data['status'],
+												icon: "error",
+											});
 										}
 										$('#proceed_to_payment').attr('disabled', false);
 										$('#proceed_to_payment').text('Proceed');
 									}
 								})
-				            },
-				            onClose: function () {
-				                console.log('closed');
-				                $('#proceed_to_payment').attr('disabled', false);
+							},
+							onClose: function () {
+								console.log('closed');
+								$('#proceed_to_payment').attr('disabled', false);
 								$('#proceed_to_payment').text('Proceed');
-				            }
-				        })
+							}
+						})
+					}else{
+						$("#total").val(data.total);
+						$.ajax({
+							url:"ajax/one_time_payment.php",
+							method: "POST",
+							data: $("#proceed_to_payment_form").serialize(),
+							success: function(data){
+								//alert(data);
+								if(data['status'] == "success"){
+									Swal.fire({
+										title: "Congratulations!",
+										text: "Your payment was successful",
+										icon: "success",
+									}).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+								}
+								else{
+									Swal.fire({
+										title: "Error!",
+										text: data['status'],
+										icon: "error",
+									});
+								}
+								$('#proceed_to_payment').attr('disabled', false);
+								$('#proceed_to_payment').text('Proceed');
+							}
+						})
 					}
-					else{
-						Swal.fire({
-	                        title: "Error!",
-	                        text: "Record Exists",
-	                        icon: "error",
-	                    });
-					}
-					$('#proceed_to_payment').attr('disabled', false);
-					$('#proceed_to_payment').text('Proceed');
 				}
-			})
-		}
-		else{
-			$.ajax({
-				url:"ajax/one_time_payment.php",
-				method: "POST",
-				data: $("#proceed_to_payment_form").serialize(),
-				success: function(data){
-					//alert(data);
-					if(data['status'] == "success"){
-						Swal.fire({
-		                 	title: "Congratulations!",
-		                	text: "Your payment was successful",
-		                	icon: "success",
-		             	}).then(setTimeout( function(){ window.location.href = "index"}, 3000));
-					}
-					else{
-						Swal.fire({
-	                        title: "Error!",
-	                        text: data['status'],
-	                        icon: "error",
-	                    });
-					}
-					$('#proceed_to_payment').attr('disabled', false);
-					$('#proceed_to_payment').text('Proceed');
+				else{
+					Swal.fire({
+						title: "Error!",
+						text: "Record Exists",
+						icon: "error",
+					});
 				}
-			})
-		}
+				$('#proceed_to_payment').attr('disabled', false);
+				$('#proceed_to_payment').text('Proceed');
+			}
+		})
+		
     })
 
 

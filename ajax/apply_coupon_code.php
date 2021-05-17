@@ -15,6 +15,7 @@
 		$response_array = [
 			"status"=>"success",
 			"discount" => number_format($discount),
+			"discount_without_format" => $discount,
 			"total" => number_format($total),
 			"total_without_format" => $total
 		];
