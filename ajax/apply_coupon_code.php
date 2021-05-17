@@ -17,11 +17,11 @@
 		$total = $my_total - $discount;
 		$remove_from_wallet = $_POST['remove_from_wallet'];
 		if($remove_from_wallet == 1){
-			if($wallet_balance > $my_total){
+			if($wallet_balance > $total){
 				$total = 0;
 			}
 			else{
-				$total = $my_total-$wallet_balance;
+				$total = $total - $wallet_balance;
 			}
 		}
 		$response_array = [

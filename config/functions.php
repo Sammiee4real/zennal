@@ -2004,7 +2004,9 @@ function get_coupon_discount($data){
   $coupon_code = $data['couponCode'];
 	$particulars_id = $data['particularsId'];
 	$amount = $data['totalAmount'];
-
+  $remove_from_wallet = $data['remove_from_wallet'];
+  $user_id = $_SESSION['user']['unique_id'];
+  $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
   // $coupon_code, $particulars_id, $amount
 
   $get_coupon = get_rows_from_table_with_one_params('coupon_code','coupon_code',$coupon_code);
@@ -2019,6 +2021,15 @@ function get_coupon_discount($data){
     $exe_query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
     $discount = $get_coupon[0]['discount'];
     $total = (intval($amount) - intval($discount));
+    
+    if($remove_from_wallet == 1){
+      if($wallet_balance > $total){
+        $total = 0;
+      }
+      else{
+        $total = $total - $wallet_balance;
+      }
+    }
 
     return json_encode(array('total'=>$total, 'discount'=>$discount));
   }
