@@ -89,7 +89,7 @@ $(document).ready(function(){
                                       <input type="hidden" id="record_id" name="record_id" value="<?= $particulars_record_id?>">
                                     </div>
 
-                            <div id="bar">
+                            <div id="bar" class="order-area">
                                  <div class="form-group">
                                    <input id="delivery-email" type="email" name="" class="form-control delivery-email" placeholder="johndoe@gmail.com">
                                 </div>
@@ -148,9 +148,9 @@ $(document).ready(function(){
                 // if($wallet_balance > 0){
               ?>
               <tr>
-                <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary remove_from_wallet"  name="customCheck2" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
+                <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary remove_from_wallet remove-from-wallet"  name="customCheck2" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
                 <td></td>
-                <td class="text-bold-500 text-dark">₦<?= number_format($wallet_balance)?></td>
+                <td class="text-bold-500 text-dark">₦<span class="wallet-balance"><?= number_format($wallet_balance)?></span></td>
               </tr>
               <?php
                 // }
@@ -173,13 +173,14 @@ $(document).ready(function(){
         </div> 
         
         <div>
+          <!-- Email Payment -->
           <button class="btn btn-primary payment-proceed-btn" type="button"
-          data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionEmail">
+          data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionEmail" data-initialamount="<?= $get_payment_details_decode['email_delivery_total'] ?>">
             Proceed
           </button>
         </div>
 
-    <div  class="one box">      
+    <!-- <div  class="one box">      
         <div class="col-12 mt-3 d-flex justify-content-end">
             <a href="apply_loan.php" type="submit" class="btn btn-primary mr-1 mb-1">Proceed (₦ 21,000.00)</a>
         </div>
@@ -188,11 +189,14 @@ $(document).ready(function(){
         <div class="col-12 mt-3 d-flex justify-content-end">
             <a href="apply_loan.php" type="submit" class="btn btn-primary mr-1 mb-1">Proceed (₦ 21,000.00)</a>
         </div>
-   </div>
+   </div> -->
    </div>
 
 <!--  -->
-   <div id="physical">
+
+    <!-- Physical -->
+
+   <div id="physical" class="order-area">
         <div class="form-group">
             <select id="delivery-city" class="form-select delivery-city">
              <option>Select your city</option>
@@ -283,12 +287,12 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Coupon Discount</td>
                 <td></td>
-                <td class="text-bold-500 text-dark coupon_discount" id="coupon_discount">₦0.00</td>
+                <td class="text-bold-500 text-dark coupon_discount">₦<span id="coupon_discount">0.00</span></td>
               </tr>
               <tr>
-                <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary remove_from_wallet"  name="customCheck2" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
+                <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary remove_from_wallet remove-from-wallet"  name="customCheck2" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
                 <td></td>
-                <td class="text-bold-500 text-dark">₦<?= number_format($wallet_balance)?></td>
+                <td class="text-bold-500 text-dark">₦<span class="wallet-balance"><?= number_format($wallet_balance)?></span></td>
               </tr>
               <tr>
                 <td class="text-bold-500 text-blue">Total</td>
@@ -311,19 +315,20 @@ $(document).ready(function(){
             </select>
         </div>
         <div>
+          <!-- Physical payment -->
           <button class="btn btn-primary payment-proceed-btn" type="button"
-          data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionPhysical">
+          data-amount="<?= $get_payment_details_decode['total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionPhysical" data-initialamount="<?= $get_payment_details_decode['total'] ?>">
             Proceed
           </button>
         </div>
         </div>
 
                                       
-    <div  class="one box">      
+    <!-- <div  class="one box">      
         <div class="col-12 mt-3 d-flex justify-content-end">
             <a href="apply_loan.php" type="submit" class="btn btn-primary mr-1 mb-1">Proceed (₦ 21,000.00)</a>
         </div>
-   </div>
+   </div> -->
    <!-- <div  class="green box">      
         <div class="col-12 mt-3 d-flex justify-content-end">
             <a href="apply_loan.php" type="submit" class="btn btn-primary mr-1 mb-1">Proceed (₦ 21,000.00)</a>

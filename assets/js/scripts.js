@@ -2032,12 +2032,14 @@ $(document).ready(function(){
 
 
 	$(".coupon_btn").click(function() {
+		var btn = $(this)
 		let payload;
-		const couponCode = $(this).val();
-		const particularsId = $(this).attr('data-particularsId');
-		const totalAmount = $(this).attr('data-total');
-		if($(this).attr('data-type')){
-			const type = $(this).attr('data-type')
+		const couponCode = btn.parents(".order-area").find(".coupon_field").val();
+		const particularsId = btn.attr('data-particularsId');
+		const totalAmount = btn.attr('data-total');
+		console.log(couponCode);
+		if(btn.attr('data-type')){
+			const type = btn.attr('data-type')
 			payload = {couponCode, particularsId, totalAmount, type}
 		}else{
 			payload = {couponCode, particularsId, totalAmount}
@@ -2047,22 +2049,49 @@ $(document).ready(function(){
 			method: "GET",
 			data: payload,
 			success: function(data){
+				console.log(data);
 				if (data == '0') {
 					$(".coupon_code_help_txt").text(`Invalid coupon code`);
 					$(".coupon_code_help_txt").css('color', 'tomato');
 				}else{
 					let resData = JSON.parse(data);
-					$(".coupon_code_help_txt").text("Valid coupon code");
-					$(".coupon_code_help_txt").css('color', 'green');
+					btn.parents(".order-area").find(".coupon_code_help_txt").text("Valid coupon code");
+					btn.parents(".order-area").find(".coupon_code_help_txt").css('color', 'green');
 					// console.log(resData.discount);
-					$(".coupon_discount").text(`₦${formatNumber(resData.discount)}`);
-					$(".total_cost").text(`₦${formatNumber(resData.total)}`);
-					$(".payment-option").attr("data-discountamount", resData.total);
+					btn.parents(".order-area").find(".coupon_discount").text(`₦${formatNumber(resData.discount)}`);
+					btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(resData.total)}`);
+					btn.parents(".order-area").find(".payment-proceed-btn").attr("data-amount", resData.total);
+					// $(".payment-proceed-btn").attr("data-discountamount", resData.total);
 
 				}
 			}
 		})
 	})
+	$(".remove-from-wallet").click(function(){
+		var checkbox = $(this);
+		var btn = checkbox.parents(".order-area").find(".payment-proceed-btn")
+		
+		var wallet_balance = btn.data("walletbalance");
+		var total = btn.data("amount");
+		var initial_total = btn.data("initialamount");
+		console.log(initial_total);
+
+		if(checkbox.is(':checked')){
+			if( parseInt(wallet_balance) > parseInt(total) ){
+				var new_total = 0;
+				btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(new_total)}`);
+				btn.data("amount", new_total)
+			}
+			else{
+				var new_total = parseInt(total - wallet_balance);
+				btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(new_total)}`);
+				btn.data("amount", new_total)
+		  	}
+		}else{
+			btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(initial_total)}`);
+			btn.data("amount", initial_total)
+		}
+  	});
 
 	// Badmus
 	$('#add_insurer_form').submit(function(e){
@@ -2102,7 +2131,9 @@ $(document).ready(function(){
 	});
 
 	$(".payment-proceed-btn").click(function() {
+
 		console.log("Got here");
+
 		// alert(1);
 		let total;
 		let payload;
@@ -2119,11 +2150,14 @@ $(document).ready(function(){
 		if (paymentOption != "") {
 			let deliveryType = $(".delivery_type").find(':selected').val();
 
-			if($(this).data("discountamount")){
-				total = $(this).data("discountamount");
-			}else{
-				total = $(this).data("amount");
-			}
+			total = $(this).data("amount");
+
+
+			// if($(this).data("discountamount")){
+			// 	total = $(this).data("discountamount");
+			// }else{
+			// 	total = $(this).data("amount");
+			// }
 
 			if (deliveryType == "email") {
 				let email = $("#delivery-email").val();
@@ -2153,113 +2187,151 @@ $(document).ready(function(){
 				}
 			}
 			
-			if(paymentOption == "one_time"){
-
-				if(walletBalance < total){
-					Okra.buildWithOptions({
-						name: 'Cloudware Technologies',
-						env: 'production-sandbox',
-						key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
-						token: '5f5a2e5f140a7a088fdeb0ac', 
-						source: 'link',
-						color: '#ffaa00',
-						limit: '24',
-						// amount: 5000,
-						// currency: 'NGN',
-						garnish: true,
-						charge: {
-							type: 'one-time',
-							amount: total*100,
-							note: '',
-							currency: 'NGN',
-							account: '5ecfd65b45006210350becce'
-						},
-						corporate: null,
-						connectMessage: 'Which account do you want to connect with?',
-						products: ["auth", "transactions", "balance"],
-						//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
-						//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
-						//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
-						logo: 'http://localhost/zennal/assets/images/logozennal.png',
-						filter: {
-							banks: [],
-							industry_type: 'all',
-						},
-						widget_success: 'Your account was successfully linked to Cloudware Technologies',
-						widget_failed: 'An unknown error occurred, please try again.',
-						currency: 'NGN',
-						exp: null,
-						success_title: 'Cloudware Technologies!',
-						success_message: 'You are doing well!',
-						onSuccess: function (data) {
-							$.ajax({
-								url:"ajax/one_time_payment.php",
-								method: "POST",
-								data: payload,
-								success: function(data){
-									console.log("Got here 2");
-									console.log(data);
-									// let data = JSON.parse(res);
-									// data = JSON.parse(res);
-
-									if(data.status == "success"){
-										// alert('saved');
-										// console.log('success', data);
-										// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
-										setTimeout(() => {
-											window.location.href = `http://localhost/zennal/vehicle_payment_callback.php?payment_id="${data.payment_id}"&reg_id="${reg_id}"`;
-											//window.location.href = '<?php //echo $redirect_url?>';
-											//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
-										}, 200);
+			$.ajax({
+				url:"ajax/check_veh_reg_exist.php",
+				method: "POST",
+				data: {reg_id},
+				success: function(data){
+					// alert(data);
+					if(data == "false"){
+						if(paymentOption == "one_time"){
+			
+							if(total != 0){
+								Okra.buildWithOptions({
+									name: 'Cloudware Technologies',
+									env: 'production-sandbox',
+									key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+									token: '5f5a2e5f140a7a088fdeb0ac', 
+									source: 'link',
+									color: '#ffaa00',
+									limit: '24',
+									// amount: 5000,
+									// currency: 'NGN',
+									garnish: true,
+									charge: {
+										type: 'one-time',
+										amount: total*100,
+										note: '',
+										currency: 'NGN',
+										account: '5ecfd65b45006210350becce'
+									},
+									corporate: null,
+									connectMessage: 'Which account do you want to connect with?',
+									products: ["auth", "transactions", "balance"],
+									//callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+									//callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+									//redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+									logo: 'http://localhost/zennal/assets/images/logozennal.png',
+									filter: {
+										banks: [],
+										industry_type: 'all',
+									},
+									widget_success: 'Your account was successfully linked to Cloudware Technologies',
+									widget_failed: 'An unknown error occurred, please try again.',
+									currency: 'NGN',
+									exp: null,
+									success_title: 'Cloudware Technologies!',
+									success_message: 'You are doing well!',
+									onSuccess: function (data) {
+			
+										$.ajax({
+											url:"ajax/one_time_payment.php",
+											method: "POST",
+											data: payload,
+											success: function(data){
+												console.log("Got here 2");
+												console.log(data);
+												// let data = JSON.parse(res);
+												// data = JSON.parse(res);
+			
+												if(data.status == "success"){
+													// alert('saved');
+													// console.log('success', data);
+													// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+													setTimeout(() => {
+														window.location.href = `http://localhost/zennal/vehicle_payment_callback.php?payment_id="${data.payment_id}"&reg_id="${reg_id}"`;
+														//window.location.href = '<?php //echo $redirect_url?>';
+														//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+													}, 200);
+													
+												}
+												else{
+													Swal.fire({
+														title: "Error!",
+														text: data.status,
+														icon: "error",
+													});
+													// setTimeout( function(){ location.reload(); }, 3000)
+												}
+												$('#submit_insurer_form').attr('disabled', false);
+												$('#submit_insurer_form').text('Submit');
+											},
+											error: function (jqXHR, textStatus, errorThrown) {
+												console.log(jqXHR);
+												console.log(textStatus);
+												console.log(errorThrown);
+											}
+										})
 										
+									},
+									onClose: function () {
+										console.log('closed')
 									}
-									else{
-										Swal.fire({
-											title: "Error!",
-											text: data.status,
-											icon: "error",
-										});
-										// setTimeout( function(){ location.reload(); }, 3000)
+								})
+							}else{
+								$.ajax({
+									url:"ajax/one_time_payment.php",
+									method: "POST",
+									data: payload,
+									success: function(data){
+										console.log("Got here 2");
+										console.log(data);
+										// let data = JSON.parse(res);
+										// data = JSON.parse(res);
+			
+										if(data.status == "success"){
+											// alert('saved');
+											// console.log('success', data);
+											// window.location.href = "http://getstarted.naicfund.ng/zennal_redirect.php";
+											setTimeout(() => {
+												window.location.href = `http://localhost/zennal/vehicle_payment_callback.php?payment_id="${data.payment_id}"&reg_id="${reg_id}"`;
+												//window.location.href = '<?php //echo $redirect_url?>';
+												//console.log('http://localhost/zennal/zennal_callback.php?transaction_id='+<?php //echo $transaction_id;?>);
+											}, 200);
+											
+										}
+										else{
+											Swal.fire({
+												title: "Error!",
+												text: data.status,
+												icon: "error",
+											});
+											// setTimeout( function(){ location.reload(); }, 3000)
+										}
+										$('#submit_insurer_form').attr('disabled', false);
+										$('#submit_insurer_form').text('Submit');
+									},
+									error: function (jqXHR, textStatus, errorThrown) {
+										console.log(jqXHR);
+										console.log(textStatus);
+										console.log(errorThrown);
 									}
-									$('#submit_insurer_form').attr('disabled', false);
-									$('#submit_insurer_form').text('Submit');
-								},
-								error: function (jqXHR, textStatus, errorThrown) {
-									console.log(jqXHR);
-									console.log(textStatus);
-									console.log(errorThrown);
-								}
-							})
+								})
+							}
 							
-						},
-						onClose: function () {
-							console.log('closed')
-						}
-					})
-				}
-
-				
-			}else if(paymentOption == "installment"){
-				$.ajax({
-					url:"ajax/one_time_payment.php",
-					method: "POST",
-					data: payload,
-					success: function(data){
-						// let data = JSON.parse(res);
-						if(data.status == "success"){
+						}else if(paymentOption == "installment"){
 							window.location = `vehicle_reg_loan.php?reg_id=${reg_id}`;
 						}
-						else{
-							Swal.fire({
-								title: "Error!",
-								text: data.status,
-								icon: "error",
-							});
-						}
 					}
-				})
-				
-			}
+					else{
+						Swal.fire({
+							title: "Error!",
+							text: "Record Exists",
+							icon: "error",
+						});
+					}
+				}
+			})
 		}else{
 			Swal.fire({
 				title: "Error!",
@@ -2397,6 +2469,7 @@ $(document).ready(function(){
 		})
 	});
 
+	// Come here
 	$("#apply_coupon_code").click(function(){
       	var coupon_code = $("#coupon_code").val();
       	var total = $("#total").val();
@@ -2418,7 +2491,7 @@ $(document).ready(function(){
 						$("#new_total").html(data['total']);
 						$("#total").val(data['total_without_format']);
 						$("#initial_total").val(data['total_without_format']);
-						$("#apply_coupon_code").attr("disabled", true);
+						$("#apply_coupon_code").attr("disabled", false);
 				  		$("#apply_coupon_code").text("Applied");
 					}
 					else{
@@ -2435,6 +2508,8 @@ $(document).ready(function(){
 		}
     });
 
+	
+	// Come here
     $("#remove_from_wallet").click(function(){
       	var wallet_balance = $("#wallet_balance").val();
       	var total = $("#total").val();
@@ -2457,6 +2532,7 @@ $(document).ready(function(){
       	}
     });
 
+	// Come here
     $("#proceed_to_payment").click(function(e){
     	e.preventDefault();
     	$('#proceed_to_payment').attr('disabled', true);
@@ -3578,6 +3654,7 @@ $(document).ready(function(){
 	/* Badmus */
 
 	function formatNumber(num){
-		return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g,'$1,');
+		num = ""+num;
+		return num.replace(/(\d)(?=(\d{3})+(?!\d))/g,'$1,');
 	}
 });
