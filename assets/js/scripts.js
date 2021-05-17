@@ -2087,9 +2087,9 @@ $(document).ready(function(){
 		console.log(couponCode);
 		if(btn.attr('data-type')){
 			const type = btn.attr('data-type')
-			payload = {couponCode, particularsId, totalAmount, type}
+			payload = {couponCode, particularsId, totalAmount, type, remove_from_wallet: removeFromWallet}
 		}else{
-			payload = {couponCode, particularsId, totalAmount}
+			payload = {couponCode, particularsId, totalAmount, remove_from_wallet: removeFromWallet}
 		}
 		$.ajax({
 			url:"ajax/validate_coupon_code.php",
@@ -2131,35 +2131,43 @@ $(document).ready(function(){
 		var wallet_balance = btn.data("walletbalance");
 		var total = btn.data("amount");
 		var initial_total = btn.data("initialamount");
-		console.log(initial_total);
 
-		if(checkbox.is(':checked')){
+		if($('#remove_from_wallet').is(':checked')){
 			removeFromWallet = 1;
-
-			if(couponApplied == 1){
-				total = currentTotal; 
-			}else{
-				total = parseInt(currentTotal) + parseInt(couponDiscount); 
-			}
 			
-			if( parseInt(wallet_balance) > parseInt(total) ){
-				var new_total = 0;
-				btn.parents(".order-area").find(".total_cost").text(`${formatNumber(new_total)}`);
-			}
-			else{
-				var new_total = parseInt(total - wallet_balance);
-				btn.parents(".order-area").find(".total_cost").text(`${formatNumber(new_total)}`);
-		  	}
-		}else{
-			removeFromWallet = 0;
-
 			if(couponApplied == 1){
-				total = currentTotal
+				total = parseInt(currentTotal); 
 			}else{
-				total = parseInt(currentTotal) + parseInt(couponDiscount); 
+				if(parseInt(currentTotal) > 0){
+					total = parseInt(currentTotal)
+				}
+				total = parseInt(total) + parseInt(couponDiscount); 
 			}
-			btn.parents(".order-area").find(".total_cost").text(`${formatNumber(total)}`);
-		}
+
+      		if( parseInt(wallet_balance) > parseInt(total) ){
+      			var new_total = 0;
+      			btn.parents(".order-area").find(".total_cost").text(formatNumber(0));
+      		}else{
+      			var new_total = parseInt(total - wallet_balance);
+				
+      			btn.parents(".order-area").find(".total_cost").text(formatNumber(new_total));
+			}
+			currentTotal = new_total;
+      	}else{
+			removeFromWallet = 0;
+			if(couponApplied == 1){
+				if(parseInt(currentTotal) > 0){
+					total = parseInt(currentTotal)
+				}
+				total = parseInt(total) - parseInt(couponDiscount)
+			}else{
+				console.log("Got here", total);
+				total = parseInt(total)
+			}
+			btn.parents(".order-area").find(".total_cost").text(formatNumber(total));
+			currentTotal = total;
+			// $("#total").val(total);
+      	}
   	});
 
 	// Badmus
@@ -2581,6 +2589,8 @@ $(document).ready(function(){
 						couponDiscount = data['discount_without_format'];
 						currentTotal = data['total_without_format'];
 
+						console.log({couponDiscount, currentTotal});
+
 						$("#coupon_discount").html(data['discount']);
 						$("#new_total").html(data['total']);
 						// $("#total").val(data['total_without_format']);
@@ -2645,8 +2655,9 @@ $(document).ready(function(){
 			removeFromWallet = 0;
 			if(couponApplied == 1){
 				if(parseInt(currentTotal) > 0){
-					total = parseInt(currentTotal) - parseInt(couponDiscount)
+					total = parseInt(currentTotal)
 				}
+				total = parseInt(total) - parseInt(couponDiscount)
 			}else{
 				console.log("Got here", total);
 				total = parseInt(total)
