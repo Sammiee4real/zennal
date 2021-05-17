@@ -21,7 +21,7 @@
 				$total = 0;
 			}
 			else{
-				$total = $total-$wallet_balance;
+				$total = $total - $wallet_balance;
 			}
 		}
 		$response_array = [

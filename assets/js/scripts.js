@@ -2715,7 +2715,7 @@ $(document).ready(function(){
 							garnish: true,
 							charge: {
 							type: 'one-time',
-							amount: parseInt(total*100),
+							amount: parseInt(data.total*100),
 							note: '',
 							currency: 'NGN',
 							account: '5ecfd65b45006210350becce'
