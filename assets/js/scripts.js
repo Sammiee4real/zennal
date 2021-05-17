@@ -2132,7 +2132,7 @@ $(document).ready(function(){
 		var total = btn.data("amount");
 		var initial_total = btn.data("initialamount");
 
-		if($('#remove_from_wallet').is(':checked')){
+		if($(this).is(':checked')){
 			removeFromWallet = 1;
 			
 			if(couponApplied == 1){
