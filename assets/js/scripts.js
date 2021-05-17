@@ -2040,11 +2040,13 @@ $(document).ready(function(){
 
 		var btn = $(this);
 		couponApplied = 0;
-		currentTotal = currentTotal + couponDiscount;
+		currentTotal = parseInt(currentTotal) + parseInt(couponDiscount);
 		couponDiscount = 0;
 
 		btn.parents(".order-area").find(".total_cost").text(`${formatNumber(currentTotal)}`);
 		btn.parents(".order-area").find(".coupon_discount").text(`${formatNumber(couponDiscount)}`);
+
+		btn.parents(".order-area").find(".coupon_field").val("");
 
 		btn.parents(".order-area").find(".coupon-btn").show();
 		btn.hide();
@@ -2052,14 +2054,26 @@ $(document).ready(function(){
 
 	$(".coupon_field").keyup(function(){
 		couponApplied = 0;
-		currentTotal = currentTotal + couponDiscount;
+		// currentTotal = parseInt(currentTotal) + parseInt(couponDiscount);
+		currentTotal = $(this).parents(".order-area").find(".coupon-btn").data("total");
+		let walletBalance = $(this).parents(".order-area").find(".coupon-btn").data("walletbalance");
 		couponDiscount = 0;
+
+		// console.log({currentTotal:currentTotal, walletBalance});
+
+		if(removeFromWallet == 1){
+			if(walletBalance > currentTotal){
+				currentTotal = 0;
+			}else{
+				currentTotal = currentTotal - walletBalance;
+			}
+		}
 
 		$(this).parents(".order-area").find(".total_cost").text(`${formatNumber(currentTotal)}`);
 		$(this).parents(".order-area").find(".coupon_discount").text(`${formatNumber(couponDiscount)}`);
 
 		$(this).parents(".order-area").find(".coupon-btn").show();
-		$(this).parents(".order-area").find(".remove-coupon").show();
+		$(this).parents(".order-area").find(".remove-coupon").hide();
 	})
 
 
@@ -2121,20 +2135,30 @@ $(document).ready(function(){
 
 		if(checkbox.is(':checked')){
 			removeFromWallet = 1;
+
+			if(couponApplied == 1){
+				total = currentTotal; 
+			}else{
+				total = parseInt(currentTotal) + parseInt(couponDiscount); 
+			}
+			
 			if( parseInt(wallet_balance) > parseInt(total) ){
 				var new_total = 0;
-				btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(new_total)}`);
-				btn.data("amount", new_total)
+				btn.parents(".order-area").find(".total_cost").text(`${formatNumber(new_total)}`);
 			}
 			else{
 				var new_total = parseInt(total - wallet_balance);
-				btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(new_total)}`);
-				btn.data("amount", new_total)
+				btn.parents(".order-area").find(".total_cost").text(`${formatNumber(new_total)}`);
 		  	}
 		}else{
 			removeFromWallet = 0;
-			btn.parents(".order-area").find(".total_cost").text(`₦${formatNumber(initial_total)}`);
-			btn.data("amount", initial_total)
+
+			if(couponApplied == 1){
+				total = currentTotal
+			}else{
+				total = parseInt(currentTotal) + parseInt(couponDiscount); 
+			}
+			btn.parents(".order-area").find(".total_cost").text(`${formatNumber(total)}`);
 		}
   	});
 
@@ -2545,7 +2569,7 @@ $(document).ready(function(){
 			$.ajax({
 				url: "ajax/apply_coupon_code.php",
 				method: "POST",
-				data: {coupon_code, total},
+				data: {coupon_code, total, remove_from_wallet: removeFromWallet},
 				beforeSend: function(){
 				  $("#apply_coupon_code").attr("disabled", true);
 				  $("#apply_coupon_code").text("Applying...");
@@ -2559,10 +2583,10 @@ $(document).ready(function(){
 
 						$("#coupon_discount").html(data['discount']);
 						$("#new_total").html(data['total']);
-						$("#total").val(data['total_without_format']);
+						// $("#total").val(data['total_without_format']);
 						$("#initial_total").val(data['total_without_format']);
 						$("#apply_coupon_code").attr("disabled", false);
-				  		$("#apply_coupon_code").text("Applied");
+				  		$("#apply_coupon_code").text("Apply Coupon");
 
 						btn.hide();
 						btn.parents(".order-area").find(".remove-coupon").show();
@@ -2585,24 +2609,51 @@ $(document).ready(function(){
 	// Come here
     $("#remove_from_wallet").click(function(){
       	var wallet_balance = $("#wallet_balance").val();
-      	var total = $("#total").val();
+      	let total = $("#total").val();
+		console.log({total});
       	var initial_total = $("#initial_total").val();
+
+		// if(currentTotal == 0){
+		// 	total = total;
+		// }else{
+		// 	total = currentTotal;
+		// }
       	if($('#remove_from_wallet').is(':checked')){
 			removeFromWallet = 1;
+
+			
+			
+			if(couponApplied == 1){
+				total = parseInt(currentTotal); 
+			}else{
+				if(parseInt(currentTotal) > 0){
+					total = parseInt(currentTotal)
+				}
+				total = parseInt(total) + parseInt(couponDiscount); 
+			}
+
       		if( parseInt(wallet_balance) > parseInt(total) ){
       			var new_total = 0;
       			$("#new_total").html(formatNumber(0));
-				$("#total").val(new_total);
-      		}
-      		else{
+      		}else{
       			var new_total = parseInt(total - wallet_balance);
+				
       			$("#new_total").html(formatNumber(new_total));
-				$("#total").val(new_total);
 			}
+			currentTotal = new_total;
       	}else{
 			removeFromWallet = 0;
-      		$("#new_total").html(formatNumber(initial_total));
-			$("#total").val(initial_total);
+			if(couponApplied == 1){
+				if(parseInt(currentTotal) > 0){
+					total = parseInt(currentTotal) - parseInt(couponDiscount)
+				}
+			}else{
+				console.log("Got here", total);
+				total = parseInt(total)
+			}
+      		$("#new_total").html(formatNumber(total));
+			currentTotal = total;
+			// $("#total").val(total);
       	}
     });
 
@@ -2637,7 +2688,7 @@ $(document).ready(function(){
 			success: function(data){
 				// alert(data);
 				data =  JSON.parse(data)
-				
+
 				if(data.check_status == "false"){
 					if(data.total_after_remove_wallet == 0){
 						Okra.buildWithOptions({

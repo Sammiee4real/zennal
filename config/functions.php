@@ -4137,6 +4137,9 @@ function calculate_vehicle_registration($reg_id){
   $get_vehicle_particulars = get_one_row_from_one_table('vehicle_particulars', 'vehicle_id', $vehicle_type);
   $get_insurance_rate = get_one_row_from_one_table('insurance_plans', 'unique_id', $get_registration_details['plan_type']);
   // $get_number_plate
+  $service_charge = 0;
+  $insurance_charge = 0;
+  $number_plate_charge = 0;
   if($get_registration_details['tinted_permit'] == 'yes'){
     $service = "Tinted Glass Permit";
     $get_service = get_one_row_from_one_table('services', 'service', $service);

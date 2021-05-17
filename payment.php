@@ -17,7 +17,7 @@
 
 <?php include("includes/header.php");?>
 <style type="text/css">
-#one, #on {display:none;}
+#one, #on, .remove-coupon {display:none;}
 </style>
      
 <div class="main-content container-fluid">
@@ -74,9 +74,13 @@
                   <input type="text" class="form-control" placeholder="Enter delivery address" id="delivery_address" name="delivery_address">
                 </div>
                 <div class="form-group">
+
                   <label>Coupon Code (if any)</label>
                   <input type="text" name="coupon_code" id="coupon_code" class="form-control coupon_field" placeholder="Enter Coupon Code">
-                  <button type="button" class="btn btn-primary mt-2" id="apply_coupon_code" class="coupon-btn">Apply Code</button>
+                  <button type="button" class="btn btn-primary mt-2 coupon-btn" id="apply_coupon_code" data-total="<?= $total ?>" data-walletbalance="<?= $wallet_balance?>">Apply Code</button>
+
+                  <button type="button" class="btn btn-danger mt-2 remove-coupon">Remove Coupon</button>
+
                 </div>
                 <h4 class="card-title mt-5">Order Summary</h4>
                 <div class="table-responsive">
