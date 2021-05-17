@@ -32,7 +32,7 @@
       <!-- <div class="card-header">
       <h4 class="card-title">Delivery Details</h4>
       </div> -->
-      <div class="card-content">
+      <div class="card-content order-area">
         <div class="card-body">
           <form class="form" method="post" id="proceed_to_payment_form">
             <input type="hidden" name="service_type" id="service_type" value="vehicle_registration">
@@ -75,8 +75,8 @@
                 </div>
                 <div class="form-group">
                   <label>Coupon Code (if any)</label>
-                  <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Enter Coupon Code">
-                  <button type="button" class="btn btn-primary mt-2" id="apply_coupon_code">Apply Code</button>
+                  <input type="text" name="coupon_code" id="coupon_code" class="form-control coupon_field" placeholder="Enter Coupon Code">
+                  <button type="button" class="btn btn-primary mt-2" id="apply_coupon_code" class="coupon-btn">Apply Code</button>
                 </div>
                 <h4 class="card-title mt-5">Order Summary</h4>
                 <div class="table-responsive">
@@ -100,7 +100,7 @@
                       <tr>
                         <td class="text-bold-500 text-blue">Coupon Discount</td>
                         <td></td>
-                        <td class="text-bold-500 text-dark">&#8358;<span id="coupon_discount">0</span></td>
+                        <td class="text-bold-500 text-dark">&#8358;<span id="coupon_discount" class="coupon_discount">0</span></td>
                       </tr>
                       <tr>
                         <td class="text-bold-500 text-blue">Delivery Fee</td>
@@ -124,7 +124,7 @@
                       <tr>
                         <td class="text-bold-500 text-blue">Total</td>
                         <td></td>
-                        <td class="text-bold-500 text-dark">&#8358;<span id="new_total"><?php echo number_format($total)?></span></td>
+                        <td class="text-bold-500 text-dark">&#8358;<span id="new_total" class="total_cost"><?php echo number_format($total)?></span></td>
                         <input type="hidden" name="total" id="total" value="<?= $total?>">
                         <input type="hidden" name="initial_total" id="initial_total" value="<?= $total?>">
                         <input type="hidden" name="reg_id" id="reg_id" value="<?= $reg_id?>">

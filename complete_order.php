@@ -99,7 +99,11 @@ $(document).ready(function(){
                                    <i class="coupon_code_help_txt"></i>
                                 </div>
                                 <div class="form-group">
-                                  <button type="button" class="btn btn-primary coupon_btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
+                                
+                                  <button type="button" class="btn btn-primary coupon_btn coupon-btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
+
+                                  <button type="button" class="btn btn-danger remove-coupon">Remove Coupon</button>
+
                                 </div>
 
     <h4 class="card-title mt-5">Order Summary</h4>
@@ -142,7 +146,7 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Coupon Discount</td>
                 <td></td>
-                <td class="text-bold-500 text-dark coupon_discount" id="coupon_discount">₦0.00</td>
+                <td class="text-bold-500 text-dark" id="coupon_discount">₦<span class="coupon_discount">0.00</span></td>
               </tr>
               <?php
                 // if($wallet_balance > 0){
@@ -158,7 +162,7 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Total</td>
                 <td></td>
-                <td class="text-bold-500 text-dark total_cost" id="total_cost">₦<?= number_format($get_payment_details_decode['email_delivery_total']) ?></td>
+                <td class="text-bold-500 text-dark" id="total_cost">₦<span class="total_cost"><?= number_format($get_payment_details_decode['email_delivery_total']) ?><span></td>
               </tr>
             </tbody>
           </table>
@@ -238,7 +242,11 @@ $(document).ready(function(){
         <i class="coupon_code_help_txt"></i>
       </div>
       <div class="form-group">
-        <button type="button" class="btn btn-primary coupon_btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
+
+        <button type="button" class="btn btn-primary coupon_btn coupon-btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
+
+        <button type="button" class="btn btn-danger remove-coupon">Remove Coupon</button>
+
       </div>
 
          <h4 class="card-title mt-5">Order Summary</h4>
@@ -287,7 +295,7 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Coupon Discount</td>
                 <td></td>
-                <td class="text-bold-500 text-dark coupon_discount">₦<span id="coupon_discount">0.00</span></td>
+                <td class="text-bold-500 text-dark">₦<span class="coupon_discount" id="coupon_discount">0.00</span></td>
               </tr>
               <tr>
                 <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary remove_from_wallet remove-from-wallet"  name="customCheck2" id="remove_from_wallet"> Remove from my Zennal Wallet</td>
@@ -297,7 +305,7 @@ $(document).ready(function(){
               <tr>
                 <td class="text-bold-500 text-blue">Total</td>
                 <td></td>
-                <td class="text-bold-500 text-dark total_cost" id="total_cost">₦<?= number_format($get_payment_details_decode['total']) ?></td>
+                <td class="text-bold-500 text-dark" id="total_cost">₦<span class="total_cost"><?= number_format($get_payment_details_decode['total']) ?></span></td>
               </tr>
             </tbody>
           </table>
