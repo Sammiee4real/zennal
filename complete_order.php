@@ -31,7 +31,7 @@
   $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
 ?>
 <style type="text/css">
-#bar, #physical {display:none;}
+#bar, #physical, .remove-coupon {display:none;}
 </style>
 <script>
 function show(el, txt){
@@ -95,12 +95,12 @@ $(document).ready(function(){
                                 </div>
 
                                 <div class="form-group">
-                                   <input type="text" name="" class="form-control coupon_field" placeholder="Coupon Code">
+                                   <input type="text" name="" class="form-control coupon_field" placeholder="Coupon Code" data-total="<?= $get_payment_details_decode['total'] ?>" data-walletbalance="<?= $wallet_balance?>">
                                    <i class="coupon_code_help_txt"></i>
                                 </div>
                                 <div class="form-group">
-                                
-                                  <button type="button" class="btn btn-primary coupon_btn coupon-btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
+
+                                  <button type="button" class="btn btn-primary coupon_btn coupon-btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-walletbalance="<?= $wallet_balance?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
 
                                   <button type="button" class="btn btn-danger remove-coupon">Remove Coupon</button>
 
@@ -304,7 +304,7 @@ $(document).ready(function(){
               </tr>
               <tr>
                 <td class="text-bold-500 text-blue">Total</td>
-                <td></td>
+                <td><?php echo $get_payment_details_decode['total'];?></td>
                 <td class="text-bold-500 text-dark" id="total_cost">₦<span class="total_cost"><?= number_format($get_payment_details_decode['total']) ?></span></td>
               </tr>
             </tbody>
