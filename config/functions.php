@@ -4370,7 +4370,8 @@ function calculate_change_vehicle_ownership($unique_id){
   $registration_type = $get_details['registration_type'];
   $plate_number_type = $get_details['plate_number_type'];
   $get_vehicle_particulars = get_one_row_from_one_table('vehicle_particulars', 'vehicle_id', $vehicle_id);
-
+  $number_plate_charge = 0;
+  $registration_charge = 0;
   if($registration_type != ''){
     if($registration_type == "private_with_third"){
       $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','private','vehicle_id',$vehicle_id, 'date_created');
