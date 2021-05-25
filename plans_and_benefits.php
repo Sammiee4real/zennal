@@ -17,9 +17,9 @@ $get_insurer = get_rows_from_table_with_one_params('insurers', 'unique_id', $ins
 
     <div class="row">
       <nav aria-label="breadcrumb">
-          <ol class="breadcrumb breadcrumb-right">
-            <li class="breadcrumb-item"><a href="compare_insurance.php">Compare Insurance</a></li>
-            <li class="breadcrumb-item"><a href="#"><?php echo $get_insurer[0]['name'];?></a></li>
+        <ol class="breadcrumb breadcrumb-right">
+          <li class="breadcrumb-item"><a href="compare_insurance.php">Compare Insurance</a></li>
+          <li class="breadcrumb-item"><a href="#"><?php echo $get_insurer[0]['name'];?></a></li>
         </ol>
       </nav>
     </div>
@@ -207,7 +207,12 @@ $get_insurer = get_rows_from_table_with_one_params('insurers', 'unique_id', $ins
                 <th></th>
                 <?php
                   foreach($get_plans as $plan){
-                    echo "<th> <button data-plan_id=".$plan["unique_id"]."' class='btn btn-primary'>Compare</button></th>";
+                    $plan_name = $plan["plan_name"];
+                    echo "<th>
+                      <button data-plan_id=".$plan["unique_id"]."' data-plan_name='$plan_name' class='btn btn-primary compare-insurance-plans' type='button' data-toggle='modal' data-target='#exampleModal'>
+                        Compare
+                      </button>
+                    </th>";
                   }
                 ?>
                 <!-- <th><a href="#" class="btn btn-primary">Select Package</a></th>
@@ -235,9 +240,70 @@ $get_insurer = get_rows_from_table_with_one_params('insurers', 'unique_id', $ins
 
             <!--  -->
         </div>
+
+      
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body"  id="comparePlansModalBody">
+
+              <div class="text-center" id="comparePlansSpinner">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
     </section>
 
 
 </div>
 <?php include("includes/footer.php");?>
+
+<script>
+  $(".compare-insurance-plans").click(function(e){
+    var btn = $(this)
+    var plan_id = $(this).data("plan_id");
+    var plan_name = $(this).data("plan_name");
+
+    $("#comparePlansSpinner").show()
+
+    console.log({plan_id, plan_name});
+    
+    $.ajax({
+      url: "ajax/compare_insurance_plans.php",
+      method: "POST",
+      data: {plan_id, plan_name},
+      success: function(data){
+        console.log("Got here");
+        console.log(data);
+        $("#comparePlansSpinner").hide();
+        $("#comparePlansModalBody").html(data)
+      },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log(textStatus, errorThrown);
+        }
+    });
+  })
+</script>
             

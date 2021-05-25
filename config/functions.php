@@ -1512,10 +1512,13 @@ function unique_id_generator($data){
 
 
 
-function get_rows_from_one_table($table,$order_option){
-   global $dbc;
- 
-  $sql = "SELECT * FROM `$table` ORDER BY `$order_option` DESC";
+function get_rows_from_one_table($table,$order_option=""){
+  global $dbc;
+
+  $sql = "SELECT * FROM `$table`";
+  if(!empty($order_option)){
+    $sql .= " ORDER BY `$order_option` DESC";
+  }
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
  if($num > 0){
@@ -1530,21 +1533,49 @@ function get_rows_from_one_table($table,$order_option){
     }
 }
 
-function get_rows_from_one_table_by_id($table,$param,$value,$order_option){
+function get_rows_from_one_table_by_id($table,$param,$value,$order_option=""){
   global $dbc;
   $table = secure_database($table);
-  $sql = "SELECT * FROM `$table` WHERE `$param`='$value' ORDER BY `$order_option` DESC";
+  $sql = "SELECT * FROM `$table` WHERE `$param`='$value'";
+  if(!empty($order_option)){
+    $sql .= " ORDER BY `$order_option` DESC";
+  }
+  
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
   if($num > 0){
-       while($row = mysqli_fetch_array($query)){
-          $display[] = $row;
-       }              
-       return $display;
-    }
-    else{
-       return null;
-    }
+    while($row = mysqli_fetch_array($query)){
+      $display[] = $row;
+    }              
+    return $display;
+  }else{
+    return null;
+  }
+
+}
+
+function get_plan_benefits($plan_name){
+  global $dbc;
+  $plan_name = secure_database($plan_name);
+  $sql = "SELECT
+  plan.unique_id AS plan_id, plan.plan_name, plan.insurer_id, plan.plan_percentage,
+  benefit.unique_id AS benefit_id, benefit.benefit, benefit.status, benefit.description, benefit.insurer_id
+  FROM insurance_benefits AS benefit
+  JOIN insurance_plans AS plan
+  ON plan.unique_id = benefit.plan_id
+  WHERE plan.plan_name = '$plan_name'
+  GROUP BY benefit.benefit";
+
+  $query = mysqli_query($dbc, $sql);
+  $num = mysqli_num_rows($query);
+  if($num > 0){
+    while($row = mysqli_fetch_array($query)){
+      $display[] = $row;
+    }              
+    return $display;
+  }else{
+    return null;
+  }
 }
 
 function  get_loan_packages_by_category($table,$param,$value,$order_option){
@@ -1739,10 +1770,14 @@ function admin_login($email,$password){
 }
 
 
-function get_one_row_from_one_table_by_id($table,$param,$value,$order_option){
+function get_one_row_from_one_table_by_id($table,$param,$value,$order_option=""){
   global $dbc;
   $table = secure_database($table);
-  $sql = "SELECT * FROM `$table` WHERE `$param`='$value' ORDER BY `$order_option` DESC";
+  $sql = "SELECT * FROM `$table` WHERE `$param`='$value'";
+  if(!empty($order_option)){
+    $sql.= " ORDER BY `$order_option` DESC";
+  }
+  
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
   if($num > 0){
@@ -1754,10 +1789,14 @@ function get_one_row_from_one_table_by_id($table,$param,$value,$order_option){
   }
 }
 
-  function get_one_row_from_one_table_by_two_params($table,$param,$value,$param2,$value2,$order_option){
+  function get_one_row_from_one_table_by_two_params($table,$param,$value,$param2,$value2,$order_option=""){
     global $dbc;
     $table = secure_database($table);
-    $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' ORDER BY `$order_option` DESC";
+    $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2'";
+    if(!empty($order_option)){
+      $sql .= " ORDER BY `$order_option` DESC";
+    }
+    
     $query = mysqli_query($dbc, $sql);
     $num = mysqli_num_rows($query);
    if($num > 0){
@@ -1929,20 +1968,20 @@ function get_rows_from_one_table_group_by($table,$theid){
 
 
 function get_rows_from_one_table_by_two_params($table,$param,$value,$param2,$value2){
-         global $dbc;
-        $table = secure_database($table);
-        $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' ORDER BY date_created DESC";
-        $query = mysqli_query($dbc, $sql);
-        $num = mysqli_num_rows($query);
-       if($num > 0){
-             while($row = mysqli_fetch_array($query)){
-                $display[] = $row;
-             }              
-             return $display;
-          }
-          else{
-             return null;
-          }
+  global $dbc;
+  $table = secure_database($table);
+  $sql = "SELECT * FROM `$table` WHERE `$param`='$value' AND `$param2`='$value2' ORDER BY date_created DESC";
+  $query = mysqli_query($dbc, $sql);
+  $num = mysqli_num_rows($query);
+  if($num > 0){
+        while($row = mysqli_fetch_array($query)){
+          $display[] = $row;
+        }              
+        return $display;
+    }
+    else{
+        return null;
+    }
 }
 
 

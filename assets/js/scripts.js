@@ -2084,7 +2084,7 @@ $(document).ready(function(){
 		const couponCode = btn.parents(".order-area").find(".coupon_field").val();
 		const particularsId = btn.attr('data-particularsId');
 		const totalAmount = btn.attr('data-total');
-		console.log(couponCode);
+		console.log(totalAmount);
 		if(btn.attr('data-type')){
 			const type = btn.attr('data-type')
 			payload = {couponCode, particularsId, totalAmount, type, remove_from_wallet: removeFromWallet}
@@ -2216,7 +2216,7 @@ $(document).ready(function(){
 		// alert(1);
 		let total;
 		let payload;
-		let reg_id = btn.parents(".order-area").find("#record_id").val();
+		let reg_id = btn.data("recordid");
 		let delivery_address = btn.parents(".order-area").find("#delivery_address").val();
 		let delivery_city = btn.parents(".order-area").find(".delivery-city").val();
 		let delivery_area = btn.parents(".order-area").find("#delivery-area").val();
@@ -2240,7 +2240,7 @@ $(document).ready(function(){
 
 			const couponCode = btn.parents(".order-area").find(".coupon_field").val();
 
-			const deliveryType = btn.parents(".order-area").find(".delivery_type").val();
+			const deliveryType = btn.data("deliverytype");
 
 			var payLoadCheck = {
 				reg_id,
@@ -2250,6 +2250,8 @@ $(document).ready(function(){
 				delivery_type: deliveryType,
 				service_type: 'particulars'
 			}
+
+			console.log({payLoadCheck});
 
 			if (deliveryType == "email") {
 				let email = $("#delivery-email").val();
@@ -2285,6 +2287,7 @@ $(document).ready(function(){
 				data: payLoadCheck,
 				success: function(data){
 					// alert(data);
+					console.log(data);
 					var data = JSON.parse(data)
 					if(data.check_status == "false"){
 						if(paymentOption == "one_time"){
@@ -2701,7 +2704,7 @@ $(document).ready(function(){
 				data =  JSON.parse(data)
 
 				if(data.check_status == "false"){
-					if(data.total_after_remove_wallet == 0){
+					if(data.total_after_remove_wallet != 0){
 						Okra.buildWithOptions({
 							name: 'Cloudware Technologies',
 							env: 'production-sandbox',

@@ -27,6 +27,7 @@
     // print_r($get_payment_details_decode);
     
   }
+  
   $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
   $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
 ?>
@@ -95,12 +96,12 @@ $(document).ready(function(){
                                 </div>
 
                                 <div class="form-group">
-                                   <input type="text" name="" class="form-control coupon_field" placeholder="Coupon Code" data-total="<?= $get_payment_details_decode['total'] ?>" data-walletbalance="<?= $wallet_balance?>">
+                                   <input type="text" name="" class="form-control coupon_field" placeholder="Coupon Code" data-total="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance?>">
                                    <i class="coupon_code_help_txt"></i>
                                 </div>
                                 <div class="form-group">
 
-                                  <button type="button" class="btn btn-primary coupon_btn coupon-btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['total'] ?>" data-walletbalance="<?= $wallet_balance?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
+                                  <button type="button" class="btn btn-primary coupon_btn coupon-btn" data-type="vehicle_permit" data-total="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance?>" data-particularsId="<?= $particulars_record_id ?>">Apply Coupon</button>
 
                                   <button type="button" class="btn btn-danger remove-coupon">Remove Coupon</button>
 
@@ -179,7 +180,7 @@ $(document).ready(function(){
         <div>
           <!-- Email Payment -->
           <button class="btn btn-primary payment-proceed-btn" type="button"
-          data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionEmail" data-initialamount="<?= $get_payment_details_decode['email_delivery_total'] ?>">
+          data-amount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionEmail" data-deliverytype="email" data-initialamount="<?= $get_payment_details_decode['email_delivery_total'] ?>" data-recordid="<?= $particulars_record_id?>">
             Proceed
           </button>
         </div>
@@ -325,7 +326,7 @@ $(document).ready(function(){
         <div>
           <!-- Physical payment -->
           <button class="btn btn-primary payment-proceed-btn" type="button"
-          data-amount="<?= $get_payment_details_decode['total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionPhysical" data-initialamount="<?= $get_payment_details_decode['total'] ?>">
+          data-amount="<?= $get_payment_details_decode['total'] ?>" data-walletbalance="<?= $wallet_balance ?>" data-paymentoption="paymentOptionPhysical"data-deliverytype="physical" data-initialamount="<?= $get_payment_details_decode['total'] ?>" data-recordid="<?= $particulars_record_id?>">
             Proceed
           </button>
         </div>
