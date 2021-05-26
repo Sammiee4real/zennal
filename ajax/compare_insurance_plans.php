@@ -10,12 +10,14 @@
 
     $benefits = get_plan_benefits($plan_name);
 
+    // var_dump($benefits)
+
 ?>
 
 
 
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th><?php echo $plan_name;?></th>
@@ -38,8 +40,9 @@
             foreach ($benefits as $benefit) {
                 # code...
                 $plan_id = $benefit['plan_id'];
+                $plan_id = $benefit['plan_id'];
 
-                $benefit = get_one_row_from_one_table_by_id("insurance_benefits","plan_id",$plan_id);
+                // $benefit = get_one_row_from_one_table_by_id("insurance_benefits","plan_id",$plan_id);
         ?>
 
             <tr>
