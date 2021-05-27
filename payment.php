@@ -115,7 +115,8 @@
                         if($wallet_balance != 0){
                           ?>
                           <tr>
-                            <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="customCheck2" id="remove_from_wallet"> 
+                            <td class="text-bold-500 text-blue">
+                              <input type="checkbox" class="form-check-input form-check-secondary"  name="remove_from_wallet" id="remove_from_wallet"> 
                               Remove from my Zennal Wallet
                             </td>
                             <td></td>

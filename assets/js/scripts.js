@@ -2135,6 +2135,7 @@ $(document).ready(function(){
 		if($('#remove_from_wallet').is(':checked')){
 			removeFromWallet = 1;
 			
+			
 			if(couponApplied == 1){
 				total = parseInt(currentTotal); 
 			}else{
@@ -2631,7 +2632,7 @@ $(document).ready(function(){
       	if($('#remove_from_wallet').is(':checked')){
 			removeFromWallet = 1;
 
-			
+			$('#remove_from_wallet').val(removeFromWallet);
 			
 			if(couponApplied == 1){
 				total = parseInt(currentTotal); 
@@ -2691,6 +2692,7 @@ $(document).ready(function(){
 			delivery_type: deliveryType,
 			service_type: 'vehicle_reg'
 		}
+		console.log(removeFromWallet);
 		
 		$.ajax({
 			url:"ajax/check_veh_reg_exist.php",
@@ -2701,7 +2703,7 @@ $(document).ready(function(){
 				data =  JSON.parse(data)
 
 				if(data.check_status == "false"){
-					if(data.total_after_remove_wallet == 0){
+					if(data.total_after_remove_wallet != 0){
 						Okra.buildWithOptions({
 							name: 'Cloudware Technologies',
 							env: 'production-sandbox',

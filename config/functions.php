@@ -3339,22 +3339,17 @@ function insert_disbursed_loan($user_id, $loan_id, $amount, $received_json){
 }
 
 
-function submit_guarantor($user_id, array $guarantor_array){
+function submit_guarantor($user_id, $data){
   global $dbc;
   $user_id = secure_database($user_id);
   $unique_id = unique_id_generator($user_id);
-  $guarantor_name = $guarantor_array['guarantor_name'];
-  $relationship = $guarantor_array['relationship'];
-  $phone = $guarantor_array['phone'];
-  $loan_details = $guarantor_array['loan_details'];
-  // $loan_id = $guarantor_array['loan_id'];
-
-  if($user_id == ''  || $guarantor_name == '' || $phone == '' || $relationship == '' || $loan_details == ''){
+  $data = json_encode($data);
+  if($user_id == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    $insert_data_sql = "INSERT INTO `user_guarantor` SET `unique_id` = '$unique_id', `user_id` = '$user_id',  `guarantor_name`='$guarantor_name', `phone_number`='$phone', `relationship`='$relationship', `loan_details`='$loan_details', `date_created` = now()";
-    $insert_data_query = mysqli_query($dbc, $insert_data_sql);
+    $insert_data_sql = "INSERT INTO `user_guarantor` SET `unique_id` = '$unique_id', `user_id` = '$user_id',  `received_json`='$data', `date_received` = now()";
+    $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
     if($insert_data_query){
       return json_encode(["status"=>"1", "msg"=>"success"]);
     }
@@ -4234,7 +4229,7 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
   else{
     $payment_type = 1;
     $equity_contribution = 0;
-    if($remove_from_wallet != ''){
+    if($remove_from_wallet == 1){
       $balance = ($wallet_balance > $total) ? ($wallet_balance - $total): 0;
       $update_wallet = update_by_one_param('wallet','balance', $balance, 'user_id',$user_id);
     }
