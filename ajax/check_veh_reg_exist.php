@@ -1,6 +1,5 @@
 <?php
 	require_once('../config/functions.php');
-	// exit(var_dump($_POST));
 	$reg_id = $_POST['reg_id'];
 	$user_id = $_SESSION['user']['unique_id'];
 	$coupon_applied = $_POST['coupon_applied'];
@@ -22,10 +21,10 @@
     		$get_payment_details_decode = json_decode($get_payment_details, true);
     		if($delivery_type == 'physical'){
 				$total = $get_payment_details_decode['total'];
-				$total_after_remove_wallet = $total;
+				$total_after_remove_wallet = $get_payment_details_decode['total'];
 			}else{
 				$total = $get_payment_details_decode['email_delivery_total'];
-				$total_after_remove_wallet = $total;
+				$total_after_remove_wallet = $get_payment_details_decode['email_delivery_total'];
 			}
 			break;
 		case 'particulars':
@@ -33,10 +32,10 @@
     		$get_payment_details_decode = json_decode($get_payment_details, true);
     		if($delivery_type == 'physical'){
 				$total = $get_payment_details_decode['total'];
-				$total_after_remove_wallet = $total;
+				$total_after_remove_wallet = $get_payment_details_decode['total'];
 			}else{
 				$total = $get_payment_details_decode['email_delivery_total'];
-				$total_after_remove_wallet = $total;
+				$total_after_remove_wallet = $get_payment_details_decode['email_delivery_total'];
 			}
 			break;
 		case 'vehicle_reg':
@@ -46,22 +45,24 @@
   			$insurance_charge = $get_payment_details_decode['insurance_charge'];
   			if($delivery_type == 'physical'){
 				$total = $vehicle_registration_charge + $insurance_charge + $delivery_fee;
-				$total_after_remove_wallet = $total;
+				$total_after_remove_wallet = $vehicle_registration_charge + $insurance_charge + $delivery_fee;
 			}else{
 				$total = $vehicle_registration_charge + $insurance_charge;
-				$total_after_remove_wallet = $total;
+				$total_after_remove_wallet = $vehicle_registration_charge + $insurance_charge;
 			}
 			break;
 		case 'change_ownership':
 			$get_payment_details = calculate_change_vehicle_ownership($reg_id);
-  			$get_payment_details_decode = json_decode($get_payment_details, true);
-  			$vehicle_registration_fee = $get_payment_details_decode['change_of_ownership_fee'];
+			$get_payment_details_decode = json_decode($get_payment_details, true);
+			$vehicle_registration_fee = $get_payment_details_decode['change_of_ownership_fee'];
+			$get_change_of_ownership_fee = get_one_row_from_one_table('services', 'service', 'Change of ownership');
+			$change_of_ownership_fee = $get_change_of_ownership_fee['cost'];
   			if($delivery_type == 'physical'){
 				$total = $change_of_ownership_fee + $vehicle_registration_fee + $delivery_fee;
-				$total_after_remove_wallet = $total;
+				$total_after_remove_wallet = $change_of_ownership_fee + $vehicle_registration_fee + $delivery_fee;
 			}else{
-				$total = $change_of_ownership_fee + $vehicle_registration_fee;
-				$total_after_remove_wallet = $total;
+				$total = $change_of_ownership_fee + $vehicle_registration_fee ;
+				$total_after_remove_wallet = $change_of_ownership_fee + $vehicle_registration_fee ;
 			}
 			break;
 		default:
@@ -80,9 +81,11 @@
 	if($remove_from_wallet == 1){
 		if($wallet_balance > $total){
 			$total_after_remove_wallet = 0;
+			$total = 0;
 		}
 		else{
 			$total_after_remove_wallet = $total - $wallet_balance;
+			$total = $total_after_remove_wallet;
 		}
 	}
 	$check = check_record_by_one_param('vehicle_reg_payment', 'reg_id', $reg_id);

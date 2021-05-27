@@ -36,6 +36,7 @@
         <div class="card-body">
           <form class="form" method="post" id="proceed_to_payment_form">
             <input type="hidden" name="service_type" id="service_type" value="vehicle_registration">
+            <input type="hidden" name="page_name" id="page_name" value="payment">
             <div class="row">
               <h4 class="card-title">Delivery Details</h4>
               <div class="col-md-12 col-12">

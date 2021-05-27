@@ -35,6 +35,7 @@
             <div class="card-body">
               <form class="form" method="post" id="proceed_to_payment_form">
                 <input type="hidden" name="service_type" id="service_type" value="change_of_ownership">
+                <input type="hidden" name="page_name" id="page_name" value="complete_change_ownership_order">
               <div class="row">
                 <div class="col-md-12 col-12">
                   <h4 class="card-title mt-3 mb-3">Type of Delivery</h4>
@@ -52,8 +53,9 @@
                     </div>
 
                     <div class="form-group">
-                      <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Enter Coupon Code">
-                      <button type="button" class="btn btn-primary mt-2" id="apply_coupon_code">Apply Code</button>
+                      <input type="text" name="coupon_code" id="coupon_code" class="form-control coupon_field" placeholder="Enter Coupon Code">
+                      <button type="button" class="btn btn-primary mt-2 coupon-btn" id="apply_coupon_code" data-total="<?= $subtotal ?>" data-walletbalance="<?= $wallet_balance?>">Apply Code</button>
+                      <button type="button" class="btn btn-danger mt-2 remove-coupon">Remove Coupon</button>
                     </div>
 
                     <h4 class="card-title mt-5">Order Summary</h4>
@@ -92,7 +94,7 @@
                           <tr>
                             <td class="text-bold-500 text-blue">Total</td>
                             <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<span id="new_total"><?php echo number_format($subtotal)?></span></td>
+                            <td class="text-bold-500 text-dark">&#8358;<span id="new_total" class="total_cost"><?php echo number_format($subtotal)?></span></td>
                             <input type="hidden" name="total" id="total" value="<?= $subtotal?>">
                             <input type="hidden" name="initial_total" id="initial_total" value="<?= $subtotal?>">
                             <input type="hidden" name="reg_id" id="reg_id" value="<?= $unique_id?>">
@@ -401,6 +403,7 @@ function show(el, txt){
               currentTotal = data['total_without_format'];
 
               console.log({couponDiscount, currentTotal});
+              console.log(couponApplied);
 
               $("#coupon_discount2").html(data['discount']);
               $("#new_total2").html(data['total']);
@@ -442,6 +445,7 @@ $("#proceed_to_payment2").click(function(e){
       delivery_type: deliveryType,
       service_type: 'change_ownership'
     }
+    console.log(coupon_code);
     $.ajax({
       url:"ajax/check_veh_reg_exist.php",
       method: "POST",
