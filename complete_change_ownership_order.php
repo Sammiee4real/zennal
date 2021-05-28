@@ -287,9 +287,10 @@ function show(el, txt){
           $("#total2").val(new_total);
         }
         else{
-          var new_total = parseInt(total - wallet_balance);
+          // var new_total = parseInt(total - wallet_balance);
+          new_total = parseInt(total + wallet_balance)
           $("#new_total2").html(formatNumber(new_total));
-          $("#total").val(new_total);
+          $("#total2").val(new_total);
         }
       }
       else{

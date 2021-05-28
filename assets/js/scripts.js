@@ -2159,10 +2159,12 @@ $(document).ready(function(){
 				if(parseInt(currentTotal) > 0){
 					total = parseInt(currentTotal)
 				}
-				total = parseInt(total) - parseInt(couponDiscount)
+				// total = parseInt(total + wallet_balance) - parseInt(couponDiscount)
+				total = parseInt(total + wallet_balance)
+
 			}else{
 				console.log("Got here", total);
-				total = parseInt(total)
+				total = parseInt(total + wallet_balance)
 			}
 			btn.parents(".order-area").find(".total_cost").text(formatNumber(total));
 			currentTotal = total;
@@ -2633,8 +2635,6 @@ $(document).ready(function(){
 		// }
       	if($('#remove_from_wallet').is(':checked')){
 			removeFromWallet = 1;
-
-			
 			
 			if(couponApplied == 1){
 				total = parseInt(currentTotal); 
@@ -2660,10 +2660,11 @@ $(document).ready(function(){
 				if(parseInt(currentTotal) > 0){
 					total = parseInt(currentTotal)
 				}
-				total = parseInt(total) - parseInt(couponDiscount)
+				total = parseInt(total + wallet_balance);
+				// total = parseInt(total + wallet_balance) - parseInt(couponDiscount);
 			}else{
 				console.log("Got here", total);
-				total = parseInt(total)
+				total = parseInt(total + wallet_balance)
 			}
       		$("#new_total").html(formatNumber(total));
 			currentTotal = total;
