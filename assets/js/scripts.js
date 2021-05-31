@@ -2135,6 +2135,7 @@ $(document).ready(function(){
 		if($(this).is(':checked')){
 			removeFromWallet = 1;
 			
+			
 			if(couponApplied == 1){
 				total = parseInt(currentTotal); 
 			}else{
@@ -2635,6 +2636,8 @@ $(document).ready(function(){
 		// }
       	if($('#remove_from_wallet').is(':checked')){
 			removeFromWallet = 1;
+
+			$('#remove_from_wallet').val(removeFromWallet);
 			
 			if(couponApplied == 1){
 				total = parseInt(currentTotal); 
@@ -2680,10 +2683,17 @@ $(document).ready(function(){
 		$('#proceed_to_payment').text('Please wait...');
 		var total = $("#total").val();
 		var reg_id = $("#reg_id").val();
+		var page_name = $("#page_name").val();
+		console.log(page_name);
 
 		const couponCode = btn.parents(".order-area").find(".coupon_field").val();
-
-		const deliveryType = "physical";
+		if(page_name == 'payment'){
+			var deliveryType = "physical";
+			var service_type = "vehicle_reg";
+		}else if(page_name == 'complete_change_ownership_order'){
+			var deliveryType = "email";
+			var service_type = "change_ownership";
+		}
 
 		// const deliveryType = btn.parents(".order-area").find(".delivery_type").val();
 
@@ -2693,8 +2703,9 @@ $(document).ready(function(){
 			coupon_code: couponCode,
 			remove_from_wallet: removeFromWallet,
 			delivery_type: deliveryType,
-			service_type: 'vehicle_reg'
+			service_type: service_type
 		}
+		console.log(removeFromWallet);
 		
 		$.ajax({
 			url:"ajax/check_veh_reg_exist.php",

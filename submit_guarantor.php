@@ -161,7 +161,28 @@ function show(el, txt){
             success_message: 'You are doing well!',
             onSuccess: function (data) {
                 console.log('success', data);
-                //window.location.href = '<?php //echo $redirect_url;?>';
+                $.ajax({
+                    url: "ajax/submit_guarantor.php",
+                    method: "POST",
+                    data: {data},
+                    success: function(data){
+                        if(data == "success"){
+                            // Swal.fire({
+                            //     title: "Congratulations!",
+                            //     text: "Your Guarantors' details have been submitted successfully, you will be redirected shortly",
+                            //     icon: "success",
+                            // }).then(setTimeout( function(){ window.location.href = "success"}, 5000));
+                            setTimeout( function(){ window.location.href = "success"}, 5000);
+                        }
+                        else{
+                            Swal.fire({
+                                title: "Error!",
+                                text: data,
+                                icon: "error",
+                            });
+                        }
+                    }
+                })
             },
             onClose: function () {
                 console.log('closed')

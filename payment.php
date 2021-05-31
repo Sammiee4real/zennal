@@ -36,6 +36,7 @@
         <div class="card-body">
           <form class="form" method="post" id="proceed_to_payment_form">
             <input type="hidden" name="service_type" id="service_type" value="vehicle_registration">
+            <input type="hidden" name="page_name" id="page_name" value="payment">
             <div class="row">
               <h4 class="card-title">Delivery Details</h4>
               <div class="col-md-12 col-12">
@@ -115,7 +116,8 @@
                         if($wallet_balance != 0){
                           ?>
                           <tr>
-                            <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="customCheck2" id="remove_from_wallet"> 
+                            <td class="text-bold-500 text-blue">
+                              <input type="checkbox" class="form-check-input form-check-secondary"  name="remove_from_wallet" id="remove_from_wallet"> 
                               Remove from my Zennal Wallet
                             </td>
                             <td></td>
