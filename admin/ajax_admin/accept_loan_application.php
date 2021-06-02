@@ -7,7 +7,7 @@
 	$user_email = $get_user['email']; 
 	$subject = "Loan Application - Zennal";
 	$content = "Hello, your loan application on Zennal has been approved, please login to finish your application<br>Thanks";
-	$approve_loan_application = update_db('personal_loan_application', $unique_id,'unique_id', '', $data);
+	$approve_loan_application = update_data('personal_loan_application', $data, 'unique_id', $unique_id);
 	$approve_loan_application_decode = json_decode($approve_loan_application, true);
 	if($approve_loan_application_decode['status'] == "1"){
 		echo "success";

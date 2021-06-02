@@ -191,7 +191,7 @@ $(document).ready(function(){
 				if(data == "success"){
 					Swal.fire({
                         title: "Congratulations!",
-                        text: "Your repayment details has been sent to your mail, you will be redirected shortly",
+                        text: "Your Loan will be disbursed shortly. Loan details has been sent to your mail, you will be redirected shortly",
                         icon: "success",
                     }).then(setTimeout( function(){ window.location.href = "okra_debit_confirmation.php?loan_id="+loan_id}, 5000));
 				}
@@ -813,6 +813,12 @@ $(document).ready(function(){
       
 
 	$("#accept_loan_application_btn").click(function(){
+		let admin_selection_amount_max = $("#admin_selection_amount_max").val();
+        let admin_selection_amount_min = $("#admin_selection_amount_min").val();
+        if(admin_selection_amount_min > admin_selection_amount_max){
+        	alert("Minimum Approval amount must be less than Maximum Approval amount");
+        }
+        else{
           $.ajax({
               url: "ajax_admin/accept_loan_application.php",
               method: "POST",
@@ -838,6 +844,7 @@ $(document).ready(function(){
                 $("#accept_loan_application_btn").text("Yes");
               }
           });
+  		}
       });
 
 	$("#reject_loan_application_btn").click(function(){
@@ -1840,7 +1847,7 @@ $(document).ready(function(){
                         title: "Congratulations!",
                         text: "You've submitted your financial details",
                         icon: "success",
-                    }).then(setTimeout( function(){ window.location.href = "loan_purpose";}, 3000));
+                    }).then(setTimeout( function(){ window.location.href = location;}, 3000));
 				}
 				else{
 					Swal.fire({
@@ -2160,12 +2167,10 @@ $(document).ready(function(){
 				if(parseInt(currentTotal) > 0){
 					total = parseInt(currentTotal)
 				}
-				// total = parseInt(total + wallet_balance) - parseInt(couponDiscount)
-				total = parseInt(total + wallet_balance)
-
+				total = parseInt(total) - parseInt(couponDiscount)
 			}else{
 				console.log("Got here", total);
-				total = parseInt(total + wallet_balance)
+				total = parseInt(total)
 			}
 			btn.parents(".order-area").find(".total_cost").text(formatNumber(total));
 			currentTotal = total;
@@ -2663,11 +2668,10 @@ $(document).ready(function(){
 				if(parseInt(currentTotal) > 0){
 					total = parseInt(currentTotal)
 				}
-				total = parseInt(total + wallet_balance);
-				// total = parseInt(total + wallet_balance) - parseInt(couponDiscount);
+				total = parseInt(total) - parseInt(couponDiscount)
 			}else{
 				console.log("Got here", total);
-				total = parseInt(total + wallet_balance)
+				total = parseInt(total)
 			}
       		$("#new_total").html(formatNumber(total));
 			currentTotal = total;
