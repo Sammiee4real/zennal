@@ -105,11 +105,11 @@ $get_loan_requests = get_rows_from_one_table_by_id('personal_loan_application','
                     <div class="row justify-content-center">
                       <div class="col-md-10">
                         <label>Minimum Approval Amount</label>
-                        <input type="number" name="admin_selection_amount_min" class="form-control">
+                        <input type="number" name="admin_selection_amount_min" id="admin_selection_amount_min" class="form-control">
                       </div>
                       <div class="col-md-10">
                         <label>Maximum Approval Amount</label>
-                        <input type="number" name="admin_selection_amount_max" class="form-control">
+                        <input type="number" name="admin_selection_amount_max" id="admin_selection_amount_max" class="form-control">
                       </div>
                       <div class="col-md-10 mt-3">
                         <label>Interest per Month (in percentage)</label>

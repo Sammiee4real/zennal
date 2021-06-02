@@ -4,6 +4,10 @@
     $get_bank_name = list_of_banks();
     $get_bank_name_decode = json_decode($get_bank_name, true);
     $reg_id = isset($_GET['reg_id']) ? $_GET['reg_id'] : '';
+    $get_employment_details = get_one_row_from_one_table_by_id('user_employment_details','user_id',$user_id, 'date_created');
+    // if($get_employment_details['email_verification_status'] == 0){
+    //     echo '<meta http-equiv="refresh" content="0; url=otp_error_page" />';
+    // }
 ?>
 <div id="main">
 

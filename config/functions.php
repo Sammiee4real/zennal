@@ -2303,7 +2303,8 @@ function save_employment_details($user_id, array $employment_array){
       `cac_number`='$cac_number' ,
       `company_name`='$company_name' ,
       `company_address`='$company_address' ,
-      `monthly_income`='$monthly_income'    
+      `monthly_income`='$monthly_income',
+      `email_verification_status`= 0    
       WHERE `user_id`='$user_id'";
       $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
       if($update_data_query){
@@ -2357,20 +2358,24 @@ function save_employment_details($user_id, array $employment_array){
 
 
 // Verify OTP
-function verify_otp($otp){
+function verify_otp($otp, $user_id){
     $now = time();
     if($otp == ''){
-      return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
-        
+      return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);  
     }
     else if($now > $_SESSION['expire']){
-        return json_encode(array("status"=>"0", "msg"=>"OTP expired, please request for a new one"));
+      return json_encode(array("status"=>"0", "msg"=>"OTP expired, please request for a new one"));
     }
     else if(! isset($_SESSION["otp"]) || md5($otp) !=  $_SESSION["otp"]){
-        return json_encode(array("status"=>"0", "msg"=>"Invalid otp"));
+      return json_encode(array("status"=>"0", "msg"=>"Invalid otp"));
     }
-    unset($_SESSION["otp"]);
-    return json_encode(array("status"=>"1", "msg"=>"success"));
+    else{
+      $update_status = update_by_one_param('user_employment_details','email_verification_status', 1, 'user_id',$user_id);
+      if($update_status){
+        unset($_SESSION["otp"]);
+        return json_encode(array("status"=>"1", "msg"=>"success"));
+      }
+    }
 }
 
 

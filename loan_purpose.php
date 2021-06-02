@@ -52,8 +52,19 @@ include("includes/sidebar.php");
                                 
                             </div>
                             <div class="position-relative">
-                                <input type="text" name="purpose_of_loan" class="form-control" id="purpose_of_loan" placeholder="Purpose of Loan" value="<?= $loan_purpose?>"  required>
-                                <!-- value="<?= $loan_purpose?>" -->
+                                <select name="purpose_of_loan" class="form-control" id="purpose_of_loan" required>
+                                    <option>Select an Option</option>
+                                    <option value="Education" <?= ($loan_purpose == 'Education') ? 'selected' : '';?>>Education</option>
+                                    <option value="Medical" <?= ($loan_purpose == 'Medical') ? 'selected' : '';?>>Medical</option>
+                                    <option value="Rent" <?= ($loan_purpose == 'Rent') ? 'selected' : '';?>>Rent</option>
+                                    <option value="Travel" <?= ($loan_purpose == 'Travel') ? 'selected' : '';?>>Travel</option>
+                                    <option value="Business" <?= ($loan_purpose == 'Business') ? 'selected' : '';?>>Business</option>
+                                    <option value="Goods" <?= ($loan_purpose == 'Goods') ? 'selected' : '';?>>Goods</option>
+                                    <option value="Events" <?= ($loan_purpose == 'Events') ? 'selected' : '';?>>Events</option>
+                                    <option value="Household" <?= ($loan_purpose == 'Household') ? 'selected' : '';?>>Household</option>
+                                    <option value="others">Others</option>
+                                </select>
+                                <input type="text" name="other_purpose_of_loan" class="form-control mt-3" id="other_loan_purpose" placeholder="Specify" required>
                             </div>
                         </div>
 
@@ -72,9 +83,9 @@ include("includes/sidebar.php");
 
                             <div class="form-group position-relative mt-2" id="manual_upload">
                                 <div class="input-wrapper">
-                                    <span class="label" for="email1">Manual Upload</span>
+                                    <span class="label" for="email1">Manual Upload</span> <small class="text-danger font-weight-bold">(ONLY PDF FILES ARE ALLOWED)</small>
                                      <div class="custom-file-upload">
-                                <input type="file" id="fileuploadInput" accept=".png, .jpg, .jpeg, .pdf" name="file">
+                                <input type="file" id="fileuploadInput" accept=".pdf" name="file">
                                 <label for="fileuploadInput">
                                     <span>
                                         <strong>
@@ -133,6 +144,7 @@ include("includes/sidebar.php");
         $(document).ready(function(){
             $("#manual_upload").hide();
             $("#online_generation").hide();
+            $("#other_loan_purpose").hide();
             $("#bank_statement_option").change(function(){
                 var bank_statement_option = $("select#bank_statement_option").children("option:selected").val();
                 if(bank_statement_option == ""){
@@ -148,18 +160,31 @@ include("includes/sidebar.php");
                 }
             });
 
+            $("#purpose_of_loan").change(function(){
+                var purpose_of_loan = $("select#purpose_of_loan").children("option:selected").val();
+                if(purpose_of_loan == ""){
+                    alert("Please select an option");
+                }
+                else if(purpose_of_loan == 'others'){
+                    $("#other_loan_purpose").show();
+                }
+                else {
+                    $("#other_loan_purpose").hide();
+                }
+            });
+
             $(document).on('change', '#fileuploadInput', function(){
             var property = document.getElementById("fileuploadInput").files[0];
             var image_name = property.name;
             var image_size = property.size;
             var image_extension = image_name.split(".").pop().toLowerCase();
-            if(jQuery.inArray(image_extension, ['png', 'jpg', 'jpeg', 'pdf', 'doc', 'docx']) == -1){
-              alert("Invalid Image File");
-              $('#uploaded_image').html("<label class='text_primary'><b>Image Upload failed, please try again</b></label>");
+            if(jQuery.inArray(image_extension, ['pdf']) == -1){
+              alert("Invalid File File");
+              $('#uploaded_image').html("<label class='text_primary'><b>File Upload failed, please try again</b></label>");
             }
             else if(image_size > 10000000){
-              alert("Image File size is very big");
-              $('#uploaded_image').html("<label class='text_primary'><b>Image Upload failed, please try again</b></label>");
+              alert("File size is very big");
+              $('#uploaded_image').html("<label class='text_primary'><b>File Upload failed, please try again</b></label>");
             }else{
               var form_data = new FormData();
               form_data.append("file", property);
@@ -171,10 +196,10 @@ include("includes/sidebar.php");
                 cache:false,
                 processData:false,
                 beforeSend:function(){
-                  $('#uploaded_image').html("<label class='text_primary'><b>Image Uploading, please wait...</b></label>");
+                  $('#uploaded_image').html("<label class='text_primary'><b>File Uploading, please wait...</b></label>");
                 },
                 success: function(data){
-                  $('#uploaded_image').html("<label class='text_success'><b>Image Uploaded</b></label>");
+                  $('#uploaded_image').html("<label class='text_success'><b>File Uploaded</b></label>");
                   $('#bank_statement').val(data);
                 }
               })

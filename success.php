@@ -22,7 +22,7 @@
 <p class="text-justify">We are pleased to inform you that your loan application has been received and we are currently working on it. 
 Please check your mail often as a mail will be sent to you to inform you about the status of your application. </p>
 
-<p class="text-center" style="color: blue;">We will get contact you in about <?= $get_loan_time['time_frame'].' hours';?></p>
+<p class="text-center" style="color: blue;">We will contact you in about <?= $get_loan_time['time_frame'].' hours';?></p>
 
 <p class="text-center">Please contact us in case you need more information. Thanks.</p>
                 </div>

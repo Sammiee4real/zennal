@@ -278,7 +278,8 @@ function show(el, txt){
   var removeFromWallet = 0;
 
   function formatNumber(num) {
-    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    num = ""+num;
+    return num.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
   $(document).ready(function(){
     $(".remove-coupon").hide();
@@ -336,7 +337,7 @@ function show(el, txt){
     })
 
     $("#remove_from_wallet2").click(function(){
-      var wallet_balance = $("#wallet_balance2").val();
+      var wallet_balance = parseInt($("#wallet_balance2").val());
       var total = $("#total2").val();
       var initial_total = $("#initial_total2").val();
       if($('#remove_from_wallet2').is(':checked')){
@@ -356,7 +357,7 @@ function show(el, txt){
             var new_total = 0;
             $("#new_total2").html(formatNumber(0));
           }else{
-            var new_total = parseInt(total - wallet_balance);
+            var new_total = parseInt(total) - parseInt(wallet_balance);
         
             $("#new_total2").html(formatNumber(new_total));
         }
@@ -368,13 +369,13 @@ function show(el, txt){
           if(parseInt(currentTotal) > 0){
             total = parseInt(currentTotal)
           }
-          total = parseInt(total) - parseInt(couponDiscount)
+          total = parseInt(total) + parseInt(wallet_balance)
         }else{
           console.log("Got here", total);
-          total = parseInt(total)
+          total = parseInt(total) + parseInt(wallet_balance)
         }
-        $("#new_total2").html(formatNumber(total));
-        currentTotal = total;
+        $("#new_total2").html(formatNumber(parseInt(total)));
+        currentTotal = parseInt(total);
         // $("#total").val(total);
       }
     });
