@@ -3519,7 +3519,7 @@ $(document).ready(function(){
 			success: function(res){
 				oneTimePay.empty();
 				console.log(res+" Got here");
-				// const data = JSON.parse(res);
+				const data = JSON.parse(res);
 				if (data.status == '1'){
 					
 					if (paymentType == "oneTime") {
