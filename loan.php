@@ -100,7 +100,7 @@
                                     echo '<span class="badge bg-primary">Pending</span>';
                                 }
                                 else if($value['approval_status'] == 1){
-                                    echo '<span class="badge badge-success">Approved</small>';
+                                    echo '<span class="badge bg-success">Approved</small>';
                                 }
                                 else if($value['approval_status'] == 2){
                                     echo '<span class="badge bg-danger">Rejected</small>';
@@ -109,7 +109,7 @@
                                     echo '<span class="badge bg-warning">Ongoing</small>';
                                 }
                                 else if($value['approval_status'] == 4){
-                                    echo '<span class="badge badge-success">Completed</small>';
+                                    echo '<span class="badge bg-success">Completed</small>';
                                 }
                                 else{
                                     echo '<span class="badge bg-danger">No status</small>';

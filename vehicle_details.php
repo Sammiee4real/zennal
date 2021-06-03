@@ -297,14 +297,14 @@ function show(el, txt){
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="risk_location">Location Of Vehicle</span>
+                                            <span for="risk_location">Location Of Vehicle (Include city)</span>
                                             <input type="text" id="risk_location" class="form-control" value="<?php echo $vehicle_details["risk_location"] ?? ""; ?>" name="risk_location" placeholder="Enter Vehicle Location eg. Ibadan">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="InsuredName">Insured Name</span>
+                                            <span for="InsuredName">Insured Name (If different from your name)</span>
                                             <input type="text" id="InsuredName" value="<?php echo $vehicle_details["insured_name"] ?? ""; ?>" class="form-control" name="insured_name" placeholder="Insured Name">
                                         </div>
                                     </div>
@@ -338,8 +338,8 @@ function show(el, txt){
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="PolicyStartDate">Policy End Date (Policy expiry date)</span>
-                                            <input type="date" id="PolicyStartDate" class="form-control" name="policy_end_date" value="<?php echo $vehicle_details["policy_end_date"] != null? $vehicle_details["policy_end_date"]:""; ?>" placeholder="Policy Start Date">
+                                            <span for="PolicyEndDate">Policy End Date (Policy expiry date)</span>
+                                            <input type="date" id="PolicyEndDate" class="form-control" name="policy_end_date" value="<?php echo $vehicle_details["policy_end_date"] != null? $vehicle_details["policy_end_date"]:""; ?>" placeholder="Policy End Date" readonly>
                                         </div>
                                     </div>
 
@@ -410,3 +410,23 @@ function show(el, txt){
     
 </script>
 <?php include("includes/footer.php");?>
+
+<script>
+
+
+
+    $("#PolicyStartDate").on("input", function(e) {
+
+        var d = new Date($(this).val()); // Date object
+
+        var amountOfYearsRequired = 1;
+        d.setFullYear(d.getFullYear() + amountOfYearsRequired); // This sets the date object to next year date object
+
+        var date = new Date(d);
+        var result = date.toISOString().split('T')[0]; // Gives YYY-MM-DD string
+
+        $("#PolicyEndDate").val(result)
+
+
+    })
+</script>

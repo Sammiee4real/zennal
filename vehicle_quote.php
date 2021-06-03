@@ -33,7 +33,7 @@ $get_insurers = get_rows_from_table('insurers');
                                 <div class="row">
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
-                                            <span for="first-name-column">Vehicle Value (Without a delimeter)*</span>
+                                            <span for="first-name-column">Vehicle Value (Without a comma)*</span>
                                             <input type="text" id="vehicle_value" name="vehicle_value" class="form-control" placeholder="Enter Vehicle Value" name="Vehicle-column">
                                             <span id="help-text"></span>
                                         </div>

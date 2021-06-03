@@ -7,7 +7,7 @@
 	$user_email = $get_user['email']; 
 	$subject = "Loan Application - Zennal";
 	$content = "Hello, your loan application on Zennal has been rejected, we are sorry about this. <br>Please check back later. Thanks";
-	$reject_loan_application = update_db('personal_loan_application', $unique_id,'unique_id', '', $data);
+	$reject_loan_application = update_data('personal_loan_application', $data, 'unique_id', $unique_id);
 	$reject_loan_application_decode = json_decode($reject_loan_application, true);
 	if($reject_loan_application_decode['status'] == "1"){
 		echo "success";

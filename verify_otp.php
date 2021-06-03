@@ -21,7 +21,7 @@
                     <div class="col-md-4 text-center">
                         <li role="presentation" class="">
                         <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
-                            <a  href="apply_loan.php" class="">
+                            <a href="apply_loan.php" class="">
                                 <i data-feather="briefcase" width="100"></i>
                                 <p>Employment Details</p>
                                 
@@ -44,7 +44,7 @@
                     <div class="col-md-4 text-center">
                          <li role="presentation" class="disabled">
                         <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
-                            <a href="financial_details.php" class="">
+                            <a class="">
                                 <i data-feather="home" width="100"></i>
                                 <p>Financial Details</p>
                             </a>
