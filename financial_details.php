@@ -180,18 +180,20 @@
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="span" for="email1">Upload a Government Issued ID</span>
-                             <div class="custom-file-upload">
-                        <input type="file" id="file" accept=".png, .jpg, .jpeg" name="image">
-                        <label for="file">
-                            <span>
-                                <strong>
-                                    <ion-icon name="cloud-upload-outline"></ion-icon>
-                                    <i id="uploaded_image">Tap to Upload</i>
-                                </strong>
-                            </span>
-                        </label>
-                        <input type="hidden" name="image_path" id="image_url">
-                    </div>
+                            <br />
+                            <i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
+                            <div class="custom-file-upload">
+                                <input type="file" id="file" accept=".png, .jpg, .jpeg" name="image">
+                                <label for="file">
+                                    <span>
+                                        <strong>
+                                            <ion-icon name="cloud-upload-outline"></ion-icon>
+                                            <i id="uploaded_image">Tap to Upload</i>
+                                        </strong>
+                                    </span>
+                                </label>
+                                <input type="hidden" name="image_path" id="image_url">
+                            </div>
                         </div>
                     </div>
 
