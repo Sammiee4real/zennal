@@ -3523,7 +3523,7 @@ $(document).ready(function(){
 			success: function(res){
 				oneTimePay.empty();
 				console.log(res+" Got here");
-				// const data = JSON.parse(res);
+				const data = JSON.parse(res);
 				if (data.status == '1'){
 					
 					if (paymentType == "oneTime") {
@@ -3551,10 +3551,15 @@ $(document).ready(function(){
 						installment.map(month => {
 							let interestPerMonth = ((((month.interest_rate / 100) * data.amount_to_balance)+data.amount_to_balance)/month.month)
 							console.log(`${interestPerMonth} per month`);
+
+							var instalmentText = "INSTALLMENT";
+							if(month.month != 1){
+								instalmentText = "INSTALLMENTs";
+							}
 							
 							installmetalPay.append(`
 								<tr>
-									<td class="text-bold-500">${month.month} MONTH INSTALLMENTS</td>
+									<td class="text-bold-500">${month.month} MONTH ${instalmentText}</td>
 									<td><span>₦ ${formatNumber(Math.round(interestPerMonth))}/M</span>  <button id="installmental-month" data-equityAmount="${data.equity_amount}" data-installmentalMonth="${month.month}" data-insuranceId="${data.insurance_id}" class="btn btn-primary">BUY NOW</button></td>
 								</tr>
 							`);

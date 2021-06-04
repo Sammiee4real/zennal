@@ -644,7 +644,8 @@ function get_vehicle_value($plan_id, $vehicle_value){
   $percentage_interest = $data['plan_percentage'];
 
   $percentage_value = floatval((($percentage_interest / 100) * $vehicle_value));
-  $premium_value = $percentage_value + $vehicle_value;
+  // $premium_value = $percentage_value + $vehicle_value;
+  $premium_value = $percentage_value;
   return $premium_value;
 }
 
@@ -788,126 +789,159 @@ function get_insurance_quote($insurer, $package_plan, $payment_method){
    ) 
  );
     
-curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/GetQuoteComprehensiveMotorInsurance",
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => "",
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => "POST",
-    CURLOPT_POSTFIELDS =>json_encode($data),
-    CURLOPT_HTTPHEADER => array(
-        "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
-        "Content-Type: application/json"
-    ),
-));
+  curl_setopt_array($curl, array(
+      CURLOPT_URL => "https://sandbox-customerportal.yoadirect.com/api/Integration/GetQuoteComprehensiveMotorInsurance",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "POST",
+      CURLOPT_POSTFIELDS =>json_encode($data),
+      CURLOPT_HTTPHEADER => array(
+          "UserIdentity: 86b686a4-2747-457e-868b-96f857a3f48a",
+          "Content-Type: application/json"
+      ),
+  ));
 
-if (curl_exec($curl)) {
-  $response = json_decode(curl_exec($curl), true);
-  curl_close($curl);
+  if (curl_exec($curl)) {
+    $response = json_decode(curl_exec($curl), true);
+    curl_close($curl);
 
-  $returned_amount = $response['Quote']['PaymentDue'];
+    $returned_amount = $response['Quote']['PaymentDue'];
 
-  if($returned_amount == 0) return json_encode(array("status"=>0, "msg"=>"No amount returned"));
+    if($returned_amount == 0) return json_encode(array("status"=>0, "msg"=>"No amount returned"));
 
-  // Get percentage interest
-  $sql = "SELECT * FROM `insurance_plans` WHERE `unique_id` = '$package_plan'";
-  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
-  $interest_rate = mysqli_fetch_assoc($exe);
+    // Get percentage interest
+    $sql = "SELECT * FROM `insurance_plans` WHERE `unique_id` = '$package_plan'";
+    $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+    $interest_rate = mysqli_fetch_assoc($exe);
 
-  // $quote_array = array();
+    // $quote_array = array();
 
-  // $installment_interest_sql = "SELECT * FROM `insurance_interest_rate`";
+    // $installment_interest_sql = "SELECT * FROM `insurance_interest_rate`";
 
-  // $installment_interest_exe = mysqli_query($dbc, $installment_interest_sql) or die(mysqli_error($dbc));
+    // $installment_interest_exe = mysqli_query($dbc, $installment_interest_sql) or die(mysqli_error($dbc));
 
-  // $get_insurance_interest = mysqli_fetch_all($installment_interest_exe, MYSQLI_ASSOC);
+    // $get_insurance_interest = mysqli_fetch_all($installment_interest_exe, MYSQLI_ASSOC);
 
-  // foreach($get_insurance_interest as $item) {
-  //   if ($item['type'] == "1") { // If interest type is flat rate
-  //     $amount_due = intval($item['interest_rate'] + $returned_amount);
-  //     $monthly_due = array('due_amount' => $amount_due, 'month' => $item['month']);
-  //     array_push($installment_array, $monthly_due);
+    // foreach($get_insurance_interest as $item) {
+    //   if ($item['type'] == "1") { // If interest type is flat rate
+    //     $amount_due = intval($item['interest_rate'] + $returned_amount);
+    //     $monthly_due = array('due_amount' => $amount_due, 'month' => $item['month']);
+    //     array_push($installment_array, $monthly_due);
 
-  //   }
-  //   elseif ($item['type'] == "2") { // If interest type is percentage rate
-  
-  //     $percentage_amount = floatval((($item['interest_rate'] / 100) * $returned_amount));
-  
-  //     $amount_due = intval($percentage_amount + $returned_amount);
-
-  //     $monthly_due = array('due_amount' => $amount_due, 'month' => $item['month']);
-  //     array_push($installment_array, $monthly_due);
-  //   }
-  // }
-
-  if ($payment_method === "one_time") {
+    //   }
+    //   elseif ($item['type'] == "2") { // If interest type is percentage rate
     
-    $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
-    $amount_due = intval($percentage_amount + $returned_amount);
-
-    // Update vehicle insurance
-    $update_query = "UPDATE `vehicle_insurance` SET `insurer_id`='$insurer', `package_plan_id`='$package_plan', `payment_method`='$payment_method', `amount_due`='$amount_due', `datetime`=now() WHERE `user_id` = '$user_id'";
+    //     $percentage_amount = floatval((($item['interest_rate'] / 100) * $returned_amount));
     
-    // Execute query
-    mysqli_query($dbc, $update_query) or die(mysqli_error($dbc));
+    //     $amount_due = intval($percentage_amount + $returned_amount);
 
-    $quote_array = array('status' => 1, 'amount_due' => $amount_due);
-    return json_encode($quote_array);
-  }
-  elseif ($payment_method === "installmental") {
-    $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
+    //     $monthly_due = array('due_amount' => $amount_due, 'month' => $item['month']);
+    //     array_push($installment_array, $monthly_due);
+    //   }
+    // }
 
-    $amount_due = intval($percentage_amount + $returned_amount);
+    if ($payment_method === "one_time") {
+      
+      $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
+      $amount_due = intval($percentage_amount + $returned_amount);
 
-    $equity_amount = floatval(((30 / 100) * $amount_due)); //30% equity amount
+      // Update vehicle insurance
+      $update_query = "UPDATE `vehicle_insurance` SET `insurer_id`='$insurer', `package_plan_id`='$package_plan', `payment_method`='$payment_method', `amount_due`='$amount_due', `datetime`=now() WHERE `user_id` = '$user_id'";
+      
+      // Execute query
+      mysqli_query($dbc, $update_query) or die(mysqli_error($dbc));
 
-    $amount_to_balance = floatval(($amount_due - $equity_amount));
-
-    $insurance_id = $user_insurance['unique_id'];
-
-    $unique_id = unique_id_generator($amount_to_balance);
-
-    if(get_number_of_rows_one_param('installmental_payment','insurance_id',$insurance_id) == 0){
-      $installment_sql = "INSERT INTO `installmental_payment` SET `unique_id`='$unique_id', `insurance_id`='$insurance_id', `equity_amount`='$equity_amount', `amount_to_balance`='$amount_to_balance', `datetime`=now()";
+      $quote_array = array('status' => 1, 'amount_due' => $amount_due);
+      return json_encode($quote_array);
     }
-    elseif (get_number_of_rows_one_param('installmental_payment','insurance_id',$insurance_id) > 0) {
-      $installment_sql = "UPDATE `installmental_payment` SET `equity_amount`='$equity_amount', `amount_to_balance`='$amount_to_balance', `datetime`=now() WHERE `insurance_id`='$insurance_id'";
+    elseif ($payment_method === "installmental") {
+      $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));
+
+      $amount_due = intval($percentage_amount + $returned_amount);
+
+      $equity_amount = floatval(((30 / 100) * $amount_due)); //30% equity amount
+
+      $amount_to_balance = floatval(($amount_due - $equity_amount));
+
+      $insurance_id = $user_insurance['unique_id'];
+
+      $unique_id = unique_id_generator($amount_to_balance);
+
+      if(get_number_of_rows_one_param('installmental_payment','insurance_id',$insurance_id) == 0){
+        $installment_sql = "INSERT INTO `installmental_payment` SET `unique_id`='$unique_id', `insurance_id`='$insurance_id', `equity_amount`='$equity_amount', `amount_to_balance`='$amount_to_balance', `datetime`=now()";
+      }
+      elseif (get_number_of_rows_one_param('installmental_payment','insurance_id',$insurance_id) > 0) {
+        $installment_sql = "UPDATE `installmental_payment` SET `equity_amount`='$equity_amount', `amount_to_balance`='$amount_to_balance', `datetime`=now() WHERE `insurance_id`='$insurance_id'";
+      }
+      mysqli_query($dbc, $installment_sql) or die(mysqli_error($dbc));
+
+      // $insurance_installment = get_rows_from_table('insurance_interest_rate');
+
+      $insurance_installment = [
+        0 => [
+          "interest_rate" => 10,
+          "amount_to_balance" => 50000,
+          "month" => 1
+        ],
+        1 => [
+          "interest_rate" => 25,
+          "amount_to_balance" => 31000,
+          "month" => 2
+        ],
+        2 => [
+          "interest_rate" => 13,
+          "amount_to_balance" => 72000,
+          "month" => 3
+        ],
+        3 => [
+          "interest_rate" => 27,
+          "amount_to_balance" => 32000,
+          "month" => 4
+        ],
+        4 => [
+          "interest_rate" => 16,
+          "amount_to_balance" => 84000,
+          "month" => 5
+        ],
+        5 => [
+          "interest_rate" => 9,
+          "amount_to_balance" => 95000,
+          "month" => 6
+        ],
+      ];
+
+      $quote_array = array('status' => 1, 'insurance_id'=>$insurance_id, 'equity_amount' => $equity_amount, 'amount_to_balance' => $amount_to_balance, 'months' => $insurance_installment);
+      return json_encode($quote_array);
     }
-    mysqli_query($dbc, $installment_sql) or die(mysqli_error($dbc));
+    
+    
+    // $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));  8160
 
-    $insurance_installment = get_rows_from_table('insurance_interest_rate');
+    // $amount_due = intval($percentage_amount + $returned_amount);
 
-    $quote_array = array('status' => 1, 'insurance_id'=>$insurance_id, 'equity_amount' => $equity_amount, 'amount_to_balance' => $amount_to_balance, 'months' => $insurance_installment);
-    return json_encode($quote_array);
+    // // echo $response;
+    // $res = array(
+    //   'data'=> array(
+    //     'one_time' => array(
+    //       'annual_due' => $amount_due,
+    //       'quote_number' => $response['Quote']['QuoteNumber'],
+    //       'validation_result' => $response['ValidationResult']
+    //     ),
+    //     'installment' => array(
+    //       'equity_amount' => 3000,
+    //       'installmental_due' => $installment_array
+    //     )
+    //   ),
+    //   'status'=>1
+    // );
+    
+  }else {
+    return json_encode(array("status"=>0, "msg"=>"Unable to get quote"));
   }
-  
-  
-  // $percentage_amount = floatval((($interest_rate['plan_percentage'] / 100) * $returned_amount));  8160
-
-  // $amount_due = intval($percentage_amount + $returned_amount);
-
-  // // echo $response;
-  // $res = array(
-  //   'data'=> array(
-  //     'one_time' => array(
-  //       'annual_due' => $amount_due,
-  //       'quote_number' => $response['Quote']['QuoteNumber'],
-  //       'validation_result' => $response['ValidationResult']
-  //     ),
-  //     'installment' => array(
-  //       'equity_amount' => 3000,
-  //       'installmental_due' => $installment_array
-  //     )
-  //   ),
-  //   'status'=>1
-  // );
-  
-}else {
-  return json_encode(array("status"=>0, "msg"=>"Unable to get quote"));
-}
 
     // -------------------------------------------------------------------------
 }

@@ -36,8 +36,17 @@
                                 <h6 class="font-weight-bold">TOTAL BONUS</h6>
                                 <h4 class="text-success ">&#8358;<?php echo number_format($get_wallet_balance['balance']);?></h4>
 
-                                <h6>Your approved bonus must be up to <span class="font-weight-bold">&#8358;<?php echo number_format(5000)?></span> to withdraw</h6>
-                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">WITHDRAW</button>
+                                <h6>Your approved bonus must be up to <span class="font-weight-bold">&#8358;<?php echo number_format(7000)?></span> to withdraw</h6>
+                                <?php
+                                    if($get_wallet_balance['balance'] >= 5000){
+                                
+                                ?>
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">WITHDRAW</button>
+                                <?php
+                                    }else{?>
+<button type="button" class="btn btn-disabled btn-primary" data-toggle="modal" data-target="#exampleModal" disabled>WITHDRAW</button>
+                                <?php }?>
+                                
                             </div>
                         </div>
                     </div>
