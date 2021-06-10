@@ -41,7 +41,7 @@ $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id
                         <label>Interest Type</label>
                         <!-- <input type="text" name="package_name" class="form-control"> -->
                         <select class="form-control" name="interest_type" id="interest_type" required>
-                            <option value="">Selec Rate Type</option>
+                            <option value="">Select Rate Type</option>
                             <option value="1">Flat Rate</option>
                             <option value="2">Percentage Rate</option>
                         </select>

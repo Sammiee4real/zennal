@@ -3049,7 +3049,7 @@ $(document).ready(function(){
               $("#success_message").empty();
               $("#success_message").html("Success! You've successfully added coupon code");
               toastbox('success_toast', 3000);
-              setTimeout( function(){ window.location.href = "set_coupon_code.php";}, 3000);
+              setTimeout( function(){ window.location.href = "manage_coupon_code.php";}, 3000);
             }
             else{
               $("#error_message").empty();
@@ -3369,6 +3369,65 @@ $(document).ready(function(){
           }
       	});
     });
+
+    $("#hide_installment_interest_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/hide_installment_interest.php",
+          method: "POST",
+          data:$("#hide_installment_interest_form").serialize(),
+          beforeSend:function(){
+            $("#hide_installment_interest_btn").attr("disabled", true);
+            $("#hide_installment_interest_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully hidden Interest");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_installment_interest";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#hide_installment_interest_btn").attr("disabled", false);
+            $("#hide_installment_interest_btn").text("Hide");
+          }
+      	});
+    });
+
+    $("#show_installment_interest_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/hide_installment_interest.php",
+          method: "POST",
+          data:$("#show_installment_interest_form").serialize(),
+          beforeSend:function(){
+            $("#show_installment_interest_btn").attr("disabled", true);
+            $("#show_installment_interest_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully shown Interest");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_installment_interest";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#show_installment_interest_btn").attr("disabled", false);
+            $("#show_installment_interest_btn").text("Show");
+          }
+      	});
+    });
+
+
+
 
 	//Tosin's code ends
 

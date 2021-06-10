@@ -45,11 +45,12 @@
           </div>
         </div>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" href="#">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Audit Trail</span></a>
-      </li>
+          <span>Audit Trail</span>
+        </a>
+      </li> -->
 
       <!-- Divider -->
       <hr class="sidebar-divider">
@@ -98,7 +99,7 @@
             <div class="collapse-divider"></div>
             <h6 class="collapse-header">Vehicle Registration Setting</h6>
             <a class="collapse-item" href="update_delivery_fee">Update Delivery Fee</a>
-            <a class="collapse-item" href="set_coupon_code">Set Coupon Code</a>
+            <!-- <a class="collapse-item" href="set_coupon_code">Set Coupon Code</a> -->
             <a class="collapse-item" href="add_vehicle_brand">Add Vechicle Brand</a>
             <a class="collapse-item" href="add_vehicle_model">Add Vechicle Model</a>
             <a class="collapse-item" href="set_installment_interest">Set Installment Interest</a>
