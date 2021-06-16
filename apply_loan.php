@@ -11,7 +11,7 @@
     //     }
     // }
     // if($count > 0){
-    //     echo '<meta http-equiv="refresh" content="0; url=error_page" />';
+    //     echo '<meta http-equiv="refresh" content="0; url=loan_error_page" />';
     // }
 ?>
 <div id="main">

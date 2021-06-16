@@ -190,7 +190,7 @@
                     </div>
                     <div class="form-group boxed">
                         <div class="input-wrapper">
-                            <span class="span" for="email1">Upload a Government Issued ID</span>
+                            <span class="span" for="email1">Upload a Government Issued ID</span><br><i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
                              <div class="custom-file-upload">
                         <input type="file" id="file" accept=".png, .jpg, .jpeg" name="image">
                         <label for="file">
