@@ -11,7 +11,7 @@
     //     }
     // }
     // if($count > 0){
-    //     echo '<meta http-equiv="refresh" content="0; url=error_page" />';
+    //     echo '<meta http-equiv="refresh" content="0; url=loan_error_page" />';
     // }
 
     $name_of_organization = "";
@@ -201,7 +201,7 @@ $(document).ready(function(){
                 <span class="" for="city5">Employment Status</span>
                 <select name="employment_status" class="form-select" id="colorselector">
                     <option value="">Select</option>
-                    <option class="yellow" value="1">Student (Must be above 18yrs)</option>
+                    <!-- <option class="yellow" value="1">Student (Must be above 18yrs)</option> -->
                     <option class="red" value="2">NYSC</option>
                     <option class = "red" value="3">Employed</option>
                     <option class="yellow" value="4">Self employed</option>

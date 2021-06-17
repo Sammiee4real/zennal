@@ -297,14 +297,14 @@ function show(el, txt){
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="risk_location">Location Of Vehicle (Include city)</span>
+                                            <span for="risk_location">Location Of Vehicle (include city)</span>
                                             <input type="text" id="risk_location" class="form-control" value="<?php echo $vehicle_details["risk_location"] ?? ""; ?>" name="risk_location" placeholder="Enter Vehicle Location eg. Ibadan">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="InsuredName">Insured Name (If different from your name)</span>
+                                            <span for="InsuredName">Insured Name (if different from your name)</span>
                                             <input type="text" id="InsuredName" value="<?php echo $vehicle_details["insured_name"] ?? ""; ?>" class="form-control" name="insured_name" placeholder="Insured Name">
                                         </div>
                                     </div>

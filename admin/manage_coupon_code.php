@@ -1,14 +1,13 @@
 <?php
-//session_start();
-include("../config/functions.php");
-include("inc/header.php");
-$admin_id =$_SESSION['admin_id'];
-$admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-$get_coupon_code = get_rows_from_one_table('coupon_code','date_created');
+  //session_start();
+  include("../config/functions.php");
+  include("inc/header.php");
+  $admin_id =$_SESSION['admin_id'];
+  $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
+  $get_coupon_code = get_rows_from_one_table('coupon_code','date_created');
 ?>
 
 <body id="page-top">
-
   <!-- Page Wrapper -->
   <div id="wrapper">
     <!-- Sidebar -->
@@ -36,11 +35,48 @@ $get_coupon_code = get_rows_from_one_table('coupon_code','date_created');
             </div>
             <div class="card-body">
               <div class="table-responsive">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-info btn-sm float-right mb-4" data-toggle="modal" data-target="#exampleModal">
+                  Add New Code
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add New Coupon Code</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="post" id="set_coupon_code_form">
+                          <div class="row justify-content-center">
+                            <div class="col-md-8 mt-3">
+                              <label>Coupon Code</label>
+                              <input type="text" name="coupon_code" class="form-control" required>
+                            </div>
+                            <div class="col-md-8 mt-3">
+                              <label>Discount</label>
+                              <input type="number" name="discount" class="form-control" required>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="set_coupon_code_btn">Add Coupon Code</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <table class="table table-bordered" id="myTable" width="100%" cellspacing="0">
                   <thead class="thead-light">
                  <?php if($get_coupon_code == null){
-                        echo "<tr><td>No record found...</td></tr>";
-                      } else{ ?>
+                      echo "<tr><td>No record found...</td></tr>";
+                    } else{ 
+                  ?>
                   <tr>
                     
                     <th scope="col">Coupon Code</th>

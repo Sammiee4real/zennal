@@ -36,8 +36,8 @@
         </a>
         <div id="manage_user" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">View</h6>
-            <a class="collapse-item" href="view_personal_details">View Users Details</a>
+            <!-- <h6 class="collapse-header">View</h6> -->
+            <a class="collapse-item" href="view_personal_details">Users' Details</a>
              <!-- <div class="collapse-divider"></div>
             <h6 class="collapse-header">User Access</h6>
             <a class="collapse-item" href="disable_user">Disable User</a> -->
@@ -45,114 +45,167 @@
           </div>
         </div>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" href="#">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Audit Trail</span></a>
-      </li>
+          <span>Audit Trail</span>
+        </a>
+      </li> -->
 
       <!-- Divider -->
       <hr class="sidebar-divider">
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        System
+        Modules
       </div>
 
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#manage_system" aria-expanded="true" aria-controls="manage_system">
+
+        <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#loans" aria-expanded="true" aria-controls="manage_system">
           <i class="fas fa-fw fa-wrench"></i>
-          <span>Manage System</span>
+          <span>Loans</span>
         </a>
-        <div id="manage_system" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="loans" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">View</h6>
+            <!-- <h6 class="collapse-header">View</h6> -->
            <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
             <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
-            <a class="collapse-item" href="view_insurance">View Insurance Bought</a>
-            <a class="collapse-item" href="view_loan_packages">View Loan Packages</a>
-            <a class="collapse-item" href="view_insurance_plans">View Insurance Plans</a>
-            <a class="collapse-item" href="running_loan">View Running Loan</a>
-            <a class="collapse-item" href="running_installment">View Running Installment Loan</a>
-            <a class="collapse-item" href="view_insurance_pricing">View Insurance Pricing Plans</a>
+            
+            <a class="collapse-item" href="view_loan_packages">Loan Packages</a>
+           
+            <a class="collapse-item" href="running_loan">Running Loans</a>
+            <a class="collapse-item" href="running_installment">Running Installment Loans</a>
+           
             <a class="collapse-item" href="personal_loan_application_requests">Personal Loan Requests</a>
-            <a class="collapse-item" href="withdrawal_requests">Withdrawal Requests</a>
-            <a class="collapse-item" href="vehicle_reg_request">Vehicle Registration Requests</a>
-            <a class="collapse-item" href="manage_number_plate">Manage Number Plate</a>
-            <a class="collapse-item" href="manage_coupon_code">Manage Coupon Code</a>
-            <a class="collapse-item" href="manage_vehicle_particular">Manage Vehicle Particular</a>
+           
+          </div>
+      </li>
+
+
+          <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#insurance" aria-expanded="true" aria-controls="manage_system">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Insurance</span>
+        </a>
+        <div id="insurance" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">View</h6> -->
+           <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
+            <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
+            <a class="collapse-item" href="view_insurance">Insurance Bought</a>
+            
+            <a class="collapse-item" href="view_insurance_plans">Insurance Plans</a>
+         
+            <a class="collapse-item" href="view_insurance_pricing">Insurance Pricing Plans</a>
+          
+
+          </div>
+      </li>
+
+
+          <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#vehicle_reg" aria-expanded="true" aria-controls="manage_system">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Vehicle Registration</span>
+        </a>
+        <div id="vehicle_reg" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">View</h6> -->
+           <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
+            <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
+            
+          
+            <a class="collapse-item" href="vehicle_reg_request">Registration Requests</a>
+            <a class="collapse-item" href="manage_number_plate">Manage Number Plates</a>
+            <a class="collapse-item" href="manage_coupon_code">Manage Coupon Codes</a>
+            <a class="collapse-item" href="manage_vehicle_particular">Manage Vehicle Particulars</a>
             <a class="collapse-item" href="manage_services">Manage Services</a>
           </div>
       </li>
-     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#system_settings" aria-expanded="true" aria-controls="system_settings">
+
+
+          <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#referrals" aria-expanded="true" aria-controls="manage_system">
           <i class="fas fa-fw fa-wrench"></i>
-          <span>System Setting</span>
+          <span>Referrals</span>
         </a>
-        <div id="system_settings" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="referrals" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Loan Setting</h6>
-            <a class="collapse-item" href="set_loan_package">Add Loan Packages</a>
-            <a class="collapse-item" href="add_timeframe">Update Loan Timeframe</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Vehicle Registration Setting</h6>
-            <a class="collapse-item" href="update_delivery_fee">Update Delivery Fee</a>
-            <a class="collapse-item" href="set_coupon_code">Set Coupon Code</a>
-            <a class="collapse-item" href="add_vehicle_brand">Add Vechicle Brand</a>
-            <a class="collapse-item" href="add_vehicle_model">Add Vechicle Model</a>
-            <a class="collapse-item" href="set_installment_interest">Set Installment Interest</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Insurance Setting</h6>
-            <a class="collapse-item" href="add_insurer.php">Add Insurer</a>
-            <a class="collapse-item" href="set_insurance_interest.php">Set Insurance Interest</a>
-            <a class="collapse-item" href="set_product_id.php">Set Product Id</a>
-            <!-- <a class="collapse-item" href="set_pricing_plan.php">Add Insurance Pricing Plan</a> -->
-            <a class="collapse-item" href="add_insurance_package.php">Add Insurance Package</a>
-            <a class="collapse-item" href="add_insurance_benefit.php">Add Insurance Benefit</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">General Setting</h6>
-            <a class="collapse-item" href="add_referral_bonus">Add Referral Bonus</a>
-            <a class="collapse-item" href="update_referral_bonus">Update Referral Bonus</a>
+            <!-- <h6 class="collapse-header">View</h6> -->
+           <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
+            <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
+            <a class="collapse-item" href="#">All Referrals</a>
+            
           </div>
-        </div>
       </li>
+
+
+          <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#activities" aria-expanded="true" aria-controls="manage_system">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Activities</span>
+        </a>
+        <div id="activities" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">View</h6> -->
+           <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
+            <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
+            <a class="collapse-item" href="#">All Activities</a>
+            
+          </div>
+      </li>
+
+
+          <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#privilege" aria-expanded="true" aria-controls="manage_system">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Privileges</span>
+        </a>
+        <div id="privilege" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">View</h6> -->
+           <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
+            <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
+            <a class="collapse-item" href="#">All Roles</a>
+            <a class="collapse-item" href="#">Manage Roles</a>
+      
+          </div>
+      </li>
+
+
+      <!-- Nav Item - Pages Collapse Menu -->
+     
+     
 
       <!-- Divider -->
       <hr class="sidebar-divider">
 
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Document Management
-      </div>
+
       <li class="nav-item">
-        <a class="nav-link" href="upload_document">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Upload Document</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="view_documents">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>View Documents</span></a>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#documents" aria-expanded="true" aria-controls="manage_system">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Documents</span>
+        </a>
+        <div id="documents" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="#">Upload Document</a>
+            <a class="collapse-item" href="#">All Documents</a>
+          </div>
       </li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Manage Admin Rights</span></a>
+       <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#auths" aria-expanded="true" aria-controls="manage_system">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Auths</span>
+        </a>
+        <div id="auths" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="change_password">Change Password</a>
+            <a class="collapse-item" href="logout">Logout</a>
+          </div>
       </li>
 
-       <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="change_password">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Change Password</span></a>
-      </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">

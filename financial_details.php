@@ -1,6 +1,7 @@
 
 <?php include("includes/sidebar.php");
     $get_financial_details = get_one_row_from_one_table_by_id('user_financial_details','user_id',$user_id, 'date_created');
+    $get_employment_details =  get_one_row_from_one_table_by_id('user_employment_details','user_id', $user_id, 'date_created');
     $get_bank_name = list_of_banks();
     $get_bank_name_decode = json_decode($get_bank_name, true);
     $reg_id = isset($_GET['reg_id']) ? $_GET['reg_id'] : '';
@@ -95,8 +96,18 @@
                     </div>
                     <div class="form-group boxed">
                         <div class="input-wrapper">
-                             <span class="span" for="name1">Account Number (Salary Account)</span>
-                            <input type="text" class="form-control" id="account_number" name="account_number" placeholder="Account Number (please note that it must be your salary account)" >
+                            <span class="span" for="name1">Account Number
+                                <?php
+                                    if($get_employment_details['employment_status'] == 4 || $get_employment_details['employment_status'] == 5 || $get_employment_details['employment_status'] == 6) {
+                                        $placeholder= "(Please provide your most active account to increase your chance of getting a loan)";
+                                        echo $placeholder;
+                                    }else{
+                                        $placeholder = "(Salary Account)";
+                                        echo $placeholder;
+                                    }
+                                ?>
+                            </span>
+                            <input type="text" class="form-control" id="account_number" name="account_number" placeholder="Account Number <?= $placeholder;?>" >
                             <!-- value="<?= $get_financial_details['account_number']?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -179,6 +190,7 @@
                     </div>
                     <div class="form-group boxed">
                         <div class="input-wrapper">
+<<<<<<< HEAD
                             <span class="span" for="email1">Upload a Government Issued ID</span>
                             <br />
                             <i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
@@ -194,6 +206,21 @@
                                 </label>
                                 <input type="hidden" name="image_path" id="image_url">
                             </div>
+=======
+                            <span class="span" for="email1">Upload a Government Issued ID</span><br><i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
+                             <div class="custom-file-upload">
+                        <input type="file" id="file" accept=".png, .jpg, .jpeg" name="image">
+                        <label for="file">
+                            <span>
+                                <strong>
+                                    <ion-icon name="cloud-upload-outline"></ion-icon>
+                                    <i id="uploaded_image">Tap to Upload</i>
+                                </strong>
+                            </span>
+                        </label>
+                        <input type="hidden" name="image_path" id="image_url">
+                    </div>
+>>>>>>> 64f896303a73356775ba1fbbd21f446b7cfad955
                         </div>
                     </div>
 

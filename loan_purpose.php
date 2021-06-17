@@ -83,7 +83,7 @@ include("includes/sidebar.php");
 
                             <div class="form-group position-relative mt-2" id="manual_upload">
                                 <div class="input-wrapper">
-                                    <span class="label" for="email1">Manual Upload</span> <small class="text-danger font-weight-bold">(ONLY PDF FILES ARE ALLOWED)</small>
+                                    <span class="label" for="email1">Manual Upload</span> <small class="text-danger font-weight-bold">(ONLY PDF FILES AND BANK GENERATED STATMENTS ARE ALLOWED)</small>
                                      <div class="custom-file-upload">
                                 <input type="file" id="fileuploadInput" accept=".pdf" name="file">
                                 <label for="fileuploadInput">

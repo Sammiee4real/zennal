@@ -79,12 +79,32 @@ $user = $_SESSION['user'];
                     
                 </li>
             
-                <li class="sidebar-item ">
-                    <a href="insurance" class='sidebar-link'>
+     
+                <li class="sidebar-item has-sub">
+                    <a href="#" class='sidebar-link'>
                         <i data-feather="shield" width="20"></i> 
                         <span>Insurance</span>
                     </a>
+                    
+                    <ul class="submenu">
+                        <li>
+                            <a href="insurance">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="vehicle_quote">Get a Quote</a>
+                        </li>
+                        <li>
+                            <a href="compare_insurance">Compare Insurance</a>
+                        </li>
+                        <li>
+                            <a href="vehicle_details">Buy Insurance</a>
+                        </li>
+                        
+                    
+                    </ul>
+                    
                 </li>
+
                 <li class="sidebar-item has-sub">
                     <a href="#" class='sidebar-link'>
                         <i data-feather="truck" width="20"></i> 

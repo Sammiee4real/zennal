@@ -44,6 +44,7 @@ $get_interest = get_rows_from_one_table('installment_payment_interest','date_cre
                   <tr>
                     <th scope="col">Number of Month</th>
                     <th scope="col">Interest Rate (in percentage)</th>
+                    <th>Status</th>
                     <th scope="col">Date Created</th>
                     <th>Action</th>
                   </tr>
@@ -58,6 +59,16 @@ $get_interest = get_rows_from_one_table('installment_payment_interest','date_cre
                         <?php echo $value['interest_rate'].'%';?>
                       </td>
                       <td>
+                        <?php
+                          if($value['status'] == 1){
+                            echo "<small class='badge badge-success'>Visible</small>";
+                          }
+                          else if($value['status'] == 0){
+                            echo "<small class='badge badge-danger'>Hidden</small>";
+                          }
+                        ?>
+                      </td>
+                      <td>
                         <?php echo $value['date_created'];?>
                       </td>
                       <td>
@@ -68,6 +79,24 @@ $get_interest = get_rows_from_one_table('installment_payment_interest','date_cre
                         >
                           Edit
                         </button>
+                        <?php
+                          if($value['status'] == 1){
+                          ?>
+                          <button type="button" class="btn btn-sm btn-danger hide_modal"
+                        id="<?php echo $value['unique_id']?>"
+                        >
+                          Hide
+                        </button>
+                          <?php }
+                          else if($value['status'] == 0){
+                            ?>
+                            <button type="button" class="btn btn-sm btn-success show_modal"
+                        id="<?php echo $value['unique_id']?>"
+                        >
+                          Show
+                        </button>
+                         <?php }
+                        ?>
                       </td>
                     </tr>
                     <?php } } ?>
@@ -121,6 +150,54 @@ $get_interest = get_rows_from_one_table('installment_payment_interest','date_cre
       </div>
     </div>
 
+    <div class="modal" tabindex="-1" role="dialog" id="modal1">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Hide Installment Payment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to hide?
+            <form method="post" id="hide_installment_interest_form">
+              <input type="hidden" name="unique_id"  id="unique_id1" value="">
+              <input type="hidden" name="status" id="status" value="0">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="hide_installment_interest_btn">Hide</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modal2">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Show Installment Payment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to show?
+            <form method="post" id="show_installment_interest_form">
+              <input type="hidden" name="unique_id"  id="unique_id2" value="">
+              <input type="hidden" name="status" id="status" value="1">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="show_installment_interest_btn">Show</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <!-- End of Page Wrapper -->
 
@@ -140,6 +217,16 @@ $get_interest = get_rows_from_one_table('installment_payment_interest','date_cre
         $("#unique_id").val(unique_id);
         $("#no_of_month").val(no_of_month);
         $("#interest_rate").val(interest_rate);
+      });
+      $(".hide_modal").click(function(){
+        $("#modal1").modal('show');
+        let unique_id = $(this).attr('id');
+        $("#unique_id1").val(unique_id);
+      });
+      $(".show_modal").click(function(){
+        $("#modal2").modal('show');
+        let unique_id = $(this).attr('id');
+        $("#unique_id2").val(unique_id);
       });
     });
   </script>

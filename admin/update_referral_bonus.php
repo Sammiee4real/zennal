@@ -43,7 +43,7 @@ $get_referral_bonus = get_rows_from_one_table('referral_tbl','date_created');
                       <?php
                         foreach ($get_referral_bonus as $value) {
                           ?>
-                          <option value="<?= $value['referral_for'];?>"><?= $value['referral_for'];?></option>
+                          <option class="text-capitalize" value="<?= $value['referral_for'];?>"><?= $value['referral_for'];?></option>
                         <?php
                         }
                       ?>

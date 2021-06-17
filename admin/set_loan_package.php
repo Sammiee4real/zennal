@@ -41,7 +41,7 @@ $get_loan_category = get_rows_from_one_table('loan_category','date_created');
                   <div class="col-md-8">
                     <label>Package Category</label>
                     <select name="loan_category" class="form-control">
-                      <option value="">Select a package category</option>
+                      <!-- <option value="">Select a package category</option> -->
                       <?php
                         foreach ($get_loan_category as $value) {
                           if($value['type'] != 3){
@@ -60,10 +60,10 @@ $get_loan_category = get_rows_from_one_table('loan_category','date_created');
                     <label>Interest per Month (in percentage)</label>
                     <input type="number" name="interest_per_month" class="form-control">
                   </div>
-                  <div class="col-md-8 mt-3">
+                  <!-- <div class="col-md-8 mt-3">
                     <label>Equity Contribution (in percentage)</label>
                     <input type="number" name="equity_contribution" class="form-control" placeholder="Applicable to Asset finance only">
-                  </div>
+                  </div> -->
                   <div class="col-md-8 mt-3">
                     <button type="button" class="btn btn-secondary" id="set_loan_package">Create Package</button>
                   </div>
