@@ -3554,7 +3554,7 @@ $(document).ready(function(){
 
 							var instalmentText = "INSTALLMENT";
 							if(month.month != 1){
-								instalmentText = "INSTALLMENTs";
+								instalmentText = "INSTALLMENTS";
 							}
 							
 							installmetalPay.append(`

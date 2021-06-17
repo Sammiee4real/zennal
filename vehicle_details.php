@@ -73,7 +73,7 @@ function show(el, txt){
 </div>
 <!-- details -->
 
-    <div class="col-md-8 col-sm-12 mx-auto">
+    <div class="col-md-10 col-sm-12 mx-auto">
       <div class="card">
          <div class="card-body">
 
@@ -352,7 +352,7 @@ function show(el, txt){
 
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <span for="identity_image">Identity Image (Upload your valid ID)</span><br />
+                                            <span for="identity_image">Identity Image (Upload your valid Govt. issued ID)</span><br />
                                             <i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
                                             <input type="file" id="identity_image" class="form-control" name="identity_image" value="" placeholder="Policy Start Date">
                                         </div>
