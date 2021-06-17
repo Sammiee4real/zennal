@@ -94,6 +94,9 @@ $user = $_SESSION['user'];
                             <a href="vehicle_quote">Get a Quote</a>
                         </li>
                         <li>
+                            <a href="vehicle_quote_list">View Quote List</a>
+                        </li>
+                        <li>
                             <a href="compare_insurance">Compare Insurance</a>
                         </li>
                         <li>
