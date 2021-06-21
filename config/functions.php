@@ -341,14 +341,9 @@ function register_user($post){
   }
 
   $email = secure_database($post["email"]);
-  $bvn = secure_database($post["bvn"]);
 
   if (user_exists($email) === true) {
     return json_encode(array("status"=>0, "msg"=>"User already registered"));
-  }
-
-  if (user_exists_bvn($bvn) === true) {
-    return json_encode(array("status"=>0, "msg"=>"BVN exists"));
   }
 
   $password = secure_database($post["password"]);
@@ -617,7 +612,7 @@ function get_insurance_benefits($insurer_id){
 
 
 // Badmus
-function save_quote($vehicle_value, $prefered_insurer, $select_plan, $plan_name="", $plan_percentage="", $premium_amount=""){
+function save_quote($vehicle_value, $prefered_insurer, $select_plan){
   global $dbc;
 
   $user_id = $_SESSION['user']['unique_id'];
@@ -628,53 +623,13 @@ function save_quote($vehicle_value, $prefered_insurer, $select_plan, $plan_name=
 
     $unique_id = unique_id_generator($user_id);
 
-    $sql = "INSERT INTO `saved_quotes` SET
-    `unique_id`='$unique_id',
-    `user_id`='$user_id',
-    `vehicle_value`='$vehicle_value',
-    `insurer_id`='$prefered_insurer',
-    `plan_id`='$select_plan',
-    `plan_name`='$plan_name',
-    `plan_percentage`='$plan_percentage',
-    `premium_amount` = '$premium_amount',
-    `date_created`=now()";
+    $sql = "INSERT INTO `saved_quotes` SET `unique_id`='$unique_id', `user_id`='$user_id', `vehicle_value`='$vehicle_value', `insurer_id`='$prefered_insurer', `plan_id`='$select_plan', `date_created`=now()";
   }else {
-    $sql = "UPDATE `saved_quotes` SET
-    `vehicle_value`='$vehicle_value',
-    `insurer_id`='$prefered_insurer',
-    `plan_id`='$select_plan',
-    `plan_name`='$plan_name',
-    `plan_percentage`='$plan_percentage',
-    `premium_amount` = '$premium_amount',
-    `date_created`=now()
-    WHERE `user_id`='$user_id'";
+    $sql = "UPDATE `saved_quotes` SET `vehicle_value`='$vehicle_value', `insurer_id`='$prefered_insurer', `plan_id`='$select_plan', `date_created`=now() WHERE `user_id`='$user_id'";
   }
 
   $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
   return json_encode(array("status"=>1));
-}
-function fetch_quote_list($user_id){
-
-  global $dbc;
-
-  $sql = "SELECT quote.*, user.first_name, user.last_name, user.other_names, insurer.name As insurer_name
-  FROM saved_quotes AS quote
-  JOIN users AS user ON quote.user_id = user.unique_id
-  JOIN insurance_plans AS plan ON quote.plan_id = plan.unique_id
-  JOIN insurers AS insurer ON quote.insurer_id = insurer.unique_id
-  WHERE quote.user_id = '$user_id'";
-
-  $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
-
-  $data = [];
-
-  if(mysqli_num_rows($query) > 0){
-    while($row = mysqli_fetch_assoc($query)){
-      $data[] = $row;
-    }
-  }
-
-  return $data;
 }
 // Badmus
 function get_vehicle_value($plan_id, $vehicle_value){
@@ -1591,12 +1546,12 @@ function unique_id_generator($data){
 
 
 
-function get_rows_from_one_table($table, $order_option="", $order="DESC"){
+function get_rows_from_one_table($table,$order_option=""){
   global $dbc;
 
   $sql = "SELECT * FROM `$table`";
   if(!empty($order_option)){
-    $sql .= " ORDER BY `$order_option` $order";
+    $sql .= " ORDER BY `$order_option` DESC";
   }
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
@@ -1688,6 +1643,23 @@ function check_record_by_one_param($table,$param,$value){
     return false;
   }
 }
+
+function check_record_by_two_params($table,$param,$value,$param2,$value2){
+  global $dbc;
+  $table = secure_database($table);
+  $param = secure_database($param);
+  $value = secure_database($value);
+  $sql = "SELECT * FROM `$table` WHERE `$param` = '$value' AND `$param2`='$value2'" or die(mysqli_error($dbc));
+  $query = mysqli_query($dbc, $sql);
+  $num = mysqli_num_rows($query);
+  if($num > 0 ){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+
 
 
 function user_signup($fname,$lname,$email,$phone,$password,$cpassword,$refid,$gender){
@@ -2114,20 +2086,6 @@ function user_exists($email){
     }
 }
 
-function user_exists_bvn($bvn){
-  global $dbc;
-  
-  $sql = "SELECT COUNT(*) AS num FROM `user_financial_details` WHERE `bvn`='$bvn'";
-  $query = mysqli_query($dbc, $sql);
-  $re = mysqli_fetch_assoc($query);
-
-  if (intval($re['num']) === 1) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 
 // Badmus
 function get_coupon_discount($data){
@@ -2504,26 +2462,26 @@ function save_financial_record($user_id, array $financial_details_array){
   $existing_loan = $financial_details_array['existing_loan'];
   $monthly_repayment = $financial_details_array['monthly_repayment'];
   $image_path = $financial_details_array['image_path'];
-  //$get_user_financial_details = get_one_row_from_one_table_by_id('user_financial_details','user_id', $user_id, 'date_created');
-  // $acctno = $financial_details_array['account_number'];
-  // $bankcode = $get_user_financial_details['bank_name'];
-  //$id_card = $financial_details_array['id_card'];
-  //$imgchange = image_upload($file_name, $size, $tmpName, $type);
-  //$img_dec = json_decode($imgchange, true);
+ 
   if($user_id == '' || $unique_id == '' || $bank_name == '' || $account_number == '' || $account_type == '' || $bvn == '' || $existing_loan == '' || $image_path == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    // else{
+      // else{
       // $image_path = $img_dec['msg'];
       $check_row_exist = check_record_by_one_param('user_financial_details', 'user_id', $user_id);
       $verify_account_number = validate_acctno($account_number,$bank_name);
       $verify_account_number_decode = json_decode($verify_account_number, true);
+      $check_acct_no_matches_user = check_against_mismatch_acct($account_number,$user_id);
+     
       if ($verify_account_number_decode['status'] !== 111){
         return json_encode(["status"=>"0", "msg"=>$verify_account_number_decode['msg']]);
       }
+      else if(!$check_acct_no_matches_user){
+        return json_encode(["status"=>"0", "msg"=>"Mismatch found"  ]  );
+      }
       else{
-        $account_name = $verify_account_number_decode['msg']['account_name'];
+      $account_name = $verify_account_number_decode['msg']['account_name'];
       if($check_row_exist == true){
         $update_data_sql = "UPDATE `user_financial_details` SET `bank_name`='$bank_name', `account_number`='$account_number', `account_name`='$account_name', `account_type`='$account_type', `bvn`='$bvn', `existing_loan`='$existing_loan', `monthly_repayment`='$monthly_repayment', `id_card` ='$image_path', `date_created` = now()  WHERE `user_id`='$user_id'";
         $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
@@ -2547,6 +2505,19 @@ function save_financial_record($user_id, array $financial_details_array){
     }
     }
   // }
+}
+
+
+function check_against_mismatch_acct($acctno,$user_id){
+  global $dbc;
+   $sql = "SELECT * FROM `user_financial_details` WHERE `account_number`='$account_no' AND `user_id`!='$user_id'";
+   $qry = mysqli_query($dbc,$sql);
+   $countt = mysqli_num_rows($qry);
+   if($countt >= 1){
+         return false;
+   }else{
+    return true;
+   }
 }
 
 function loan_calculations($user_id, $loan_package_id, $loan_id){

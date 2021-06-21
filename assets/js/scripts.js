@@ -3062,6 +3062,37 @@ $(document).ready(function(){
       	});
     });
 
+
+  $("#set_employment_status_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/set_employment_status.php",
+          method: "POST",
+          data:$("#set_employment_status_form").serialize(),
+          beforeSend:function(){
+            $("#set_employment_status_btn").attr("disabled", true);
+            $("#set_employment_status_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully added an Employment Status");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_employment_status.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#set_employment_status_btn").attr("disabled", false);
+            $("#set_employment_status_btn").text("Add Coupon Code");
+          }
+      	});
+    });
+
+
+
     $("#edit_coupon_code_btn").click(function(){
       	$.ajax({
           url: "ajax_admin/edit_coupon_code.php",
@@ -3086,6 +3117,34 @@ $(document).ready(function(){
             }
             $("#edit_coupon_code_btn").attr("disabled", false);
             $("#edit_coupon_code_btn").text("Edit");
+          }
+      	});
+    });
+
+        $("#edit_installment_month_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/edit_installment_month.php",
+          method: "POST",
+          data:$("#edit_installment_months_form").serialize(),
+          beforeSend:function(){
+            $("#edit_installment_month_btn").attr("disabled", true);
+            $("#edit_installment_month_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully edited coupon code");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_installment_months.php";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#edit_installment_month_btn").attr("disabled", false);
+            $("#edit_installment_month_btn").text("Edit");
           }
       	});
     });
@@ -3342,6 +3401,338 @@ $(document).ready(function(){
       	});
     });
 
+
+  $("#edit_one_time_payment_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/edit_discount_one_time_payment.php",
+          method: "POST",
+          data:$("#edit_one_time_discount_form").serialize(),
+          beforeSend:function(){
+            $("#edit_one_time_payment_btn").attr("disabled", true);
+            $("#edit_one_time_payment_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully edited One-time Discount Value");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_discount_one_time_payment";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#edit_one_time_payment_btn").attr("disabled", false);
+            $("#edit_one_time_payment_btn").text("Edit");
+          }
+      	});
+    });
+
+
+  $("#hide_one_time_discount_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/hide_one_time_discount.php",
+          method: "POST",
+          data:$("#hide_one_time_discount_form").serialize(),
+          beforeSend:function(){
+            $("#hide_one_time_discount_btn").attr("disabled", true);
+            $("#hide_one_time_discount_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully disabled One-time discount");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_discount_one_time_payment";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#hide_one_time_discount_btn").attr("disabled", false);
+            $("#hide_one_time_discount_btn").text("Hide");
+          }
+      	});
+    });
+
+
+
+    $("#show_one_time_discount_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/show_one_time_discount.php",
+          method: "POST",
+          data:$("#show_one_time_discount_form").serialize(),
+          beforeSend:function(){
+            $("#show_one_time_discount_btn").attr("disabled", true);
+            $("#show_one_time_discount_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully activated One-time discount");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_discount_one_time_payment";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#show_one_time_discount_btn").attr("disabled", false);
+            $("#show_one_time_discount_btn").text("Show");
+          }
+      	});
+    });
+
+
+
+
+
+    $("#show_insurance_installment_settings_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/show_insurance_installment_settings.php",
+          method: "POST",
+          data:$("#show_insurance_installment_settings_form").serialize(),
+          beforeSend:function(){
+            $("#show_insurance_installment_settings_btn").attr("disabled", true);
+            $("#show_insurance_installment_settings_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully disabled users from using installment option for insurance");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_insurance_installments";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#show_insurance_installment_settings_btn").attr("disabled", false);
+            $("#show_insurance_installment_settings_btn").text("Show");
+          }
+      	});
+    });
+
+
+    $("#hide_insurance_installment_settings_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/hide_insurance_installment_settings.php",
+          method: "POST",
+          data:$("#hide_insurance_installment_settings_form").serialize(),
+          beforeSend:function(){
+            $("#hide_insurance_installment_settings_btn").attr("disabled", true);
+            $("#hide_insurance_installment_settings_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully enabled users in order to use the installment option for insurance");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_insurance_installments";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#hide_insurance_installment_settings_btn").attr("disabled", false);
+            $("#hide_insurance_installment_settings_btn").text("Show");
+          }
+      	});
+    });
+
+
+
+
+
+    $("#show_renew_vehicle_installment_settings_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/show_renew_vehicle_installment_settings.php",
+          method: "POST",
+          data:$("#show_renew_vehicle_installment_settings_form").serialize(),
+          beforeSend:function(){
+            $("#show_renew_vehicle_installment_settings_btn").attr("disabled", true);
+            $("#show_renew_vehicle_installment_settings_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully shown renew vehicle register setting");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_renew_vehicle_installments";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#show_renew_vehicle_installment_settings_btn").attr("disabled", false);
+            $("#show_renew_vehicle_installment_settings_btn").text("Show");
+          }
+      	});
+    });
+
+
+    $("#hide_renew_vehicle_installment_settings_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/hide_renew_vehicle_installment_settings.php",
+          method: "POST",
+          data:$("#hide_renew_vehicle_installment_settings_form").serialize(),
+          beforeSend:function(){
+            $("#hide_renew_vehicle_installment_settings_btn").attr("disabled", true);
+            $("#hide_renew_vehicle_installment_settings_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully hidden renew vehicle register setting");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_renew_vehicle_installments";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#hide_renew_vehicle_installment_settings_btn").attr("disabled", false);
+            $("#hide_renew_vehicle_installment_settings_btn").text("Show");
+          }
+      	});
+    });
+
+
+
+
+    $("#show_register_vehicle_installment_settings_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/show_register_vehicle_installment_settings.php",
+          method: "POST",
+          data:$("#show_register_vehicle_installment_settings_form").serialize(),
+          beforeSend:function(){
+            $("#show_register_vehicle_installment_settings_btn").attr("disabled", true);
+            $("#show_register_vehicle_installment_settings_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully shown register vehicle register setting");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_register_vehicle_installments";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#show_register_vehicle_installment_settings_btn").attr("disabled", false);
+            $("#show_register_vehicle_installment_settings_btn").text("Show");
+          }
+      	});
+    });
+
+
+    $("#hide_register_vehicle_installment_settings_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/hide_register_vehicle_installment_settings.php",
+          method: "POST",
+          data:$("#hide_register_vehicle_installment_settings_form").serialize(),
+          beforeSend:function(){
+            $("#hide_register_vehicle_installment_settings_btn").attr("disabled", true);
+            $("#hide_register_vehicle_installment_settings_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully hidden register vehicle register setting");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "set_register_vehicle_installments";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#hide_register_vehicle_installment_settings_btn").attr("disabled", false);
+            $("#hide_register_vehicle_installment_settings_btn").text("Show");
+          }
+      	});
+    });
+
+
+      $("#hide_employment_status_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/hide_employment_status.php",
+          method: "POST",
+          data:$("#hide_employment_status_form").serialize(),
+          beforeSend:function(){
+            $("#hide_employment_status_btn").attr("disabled", true);
+            $("#hide_employment_status_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully hidden Employment Status");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_employment_status";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#hide_employment_status_btn").attr("disabled", false);
+            $("#hide_employment_status_btn").text("Hide");
+          }
+      	});
+    });
+
+
+
+    $("#show_employment_status_btn").click(function(){
+      	$.ajax({
+          url: "ajax_admin/show_employment_status.php",
+          method: "POST",
+          data:$("#show_employment_status_form").serialize(),
+          beforeSend:function(){
+            $("#show_employment_status_btn").attr("disabled", true);
+            $("#show_employment_status_btn").text("Please wait...");
+          },
+          success: function(data){
+          	$(".modal").modal('hide');
+            if(data == "success"){
+              $("#success_message").empty();
+              $("#success_message").html("Success! You've successfully shown Employment Status");
+              toastbox('success_toast', 3000);
+              setTimeout( function(){ window.location.href = "manage_employment_status";}, 3000);
+            }
+            else{
+              $("#error_message").empty();
+              $("#error_message").html("Error! " + data);
+              toastbox('error_toast', 3000);
+            }
+            $("#show_employment_status_btn").attr("disabled", false);
+            $("#show_employment_status_btn").text("Show");
+          }
+      	});
+    });
+
+
+
+
     $("#edit_installment_interest_btn").click(function(){
       	$.ajax({
           url: "ajax_admin/edit_installment_interest.php",
@@ -3369,6 +3760,7 @@ $(document).ready(function(){
           }
       	});
     });
+
 
     $("#hide_installment_interest_btn").click(function(){
       	$.ajax({
@@ -3398,6 +3790,8 @@ $(document).ready(function(){
       	});
     });
 
+
+
     $("#show_installment_interest_btn").click(function(){
       	$.ajax({
           url: "ajax_admin/hide_installment_interest.php",
@@ -3425,6 +3819,9 @@ $(document).ready(function(){
           }
       	});
     });
+
+
+
 
 
 

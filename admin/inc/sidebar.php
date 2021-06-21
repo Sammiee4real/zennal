@@ -78,6 +78,8 @@
             <a class="collapse-item" href="running_installment">Running Installment Loans</a>
            
             <a class="collapse-item" href="personal_loan_application_requests">Personal Loan Requests</a>
+
+             <a class="collapse-item" href="manage_employment_status">Employment Status</a>
            
           </div>
       </li>
@@ -98,6 +100,8 @@
             <a class="collapse-item" href="view_insurance_plans">Insurance Plans</a>
          
             <a class="collapse-item" href="view_insurance_pricing">Insurance Pricing Plans</a>
+            
+
           
 
           </div>
@@ -193,6 +197,28 @@
             <a class="collapse-item" href="#">All Documents</a>
           </div>
       </li>
+
+
+         <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#installment_months" aria-expanded="true" aria-controls="manage_system">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Other Settings</span>
+        </a>
+        <div id="installment_months" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+          
+             <a class="collapse-item" href="set_installment_interest">Installment Months</a>
+             <a class="collapse-item" href="set_discount_one_time_payment">One-Time Discount</a>
+             <a class="collapse-item" href="set_renew_vehicle_installments">Renew Vehicle Installments</a>
+             <a class="collapse-item" href="set_register_vehicle_installments">Vehicle Reg. Installments</a>
+             <a class="collapse-item" href="set_insurance_installments">Buy Insurance Installments</a>
+
+          </div>
+      </li>
+
+
+
+
 
        <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#auths" aria-expanded="true" aria-controls="manage_system">
