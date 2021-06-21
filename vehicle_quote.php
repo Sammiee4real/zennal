@@ -71,6 +71,7 @@ $get_insurers = get_rows_from_table('insurers');
                                     <!-- <div class="col-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary mr-1 mb-1">Calculate</button>
                                     </div> -->
+                                    <input type="hidden" name="premium_amount" id="premiumAmountField">
                                     <div class="col-12 d-flex justify-content-end">
                                             <h4 for="id-column">Premium amount: ₦ <span id="premium_amount">--</span></h4>
                                         </div>

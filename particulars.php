@@ -22,7 +22,7 @@
     // elem2.style.display = (txt == 'Custom number plate') ? 'block' : 'none';
     // }
 </script>           
-<div class="main-content container-fluid">
+<div class="main-content container-fluid" id="appWrapper">
     <div class="page-title">
         <h3>Renew Vehicle Particulars</h3>
         <p class="text-subtitle text-muted">Select type of vehicle and permit below</p>
@@ -43,7 +43,8 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <select class="form-select" name="vehicle_type" required>
+                                            <select class="form-select" name="vehicle_type"
+                                            v-model="vehicleType" required>
                                                 <option value="">Select vehicle type</option>
                                                 <!-- <option>Motorcycle/Tricycle</option>
                                                 <option>Saloon Car - Med (1.4-1.9L) e.g. Picanto, Corolla, Almera</option>
@@ -62,26 +63,55 @@
                                                 ?>
                                             </select>
                                         </div>
+
+
                                         <div class="form-group">
-                                            <select class="form-select" class="make_of_vehicle" name="make_of_vehicle" id="make_of_vehicle" required>
-                                                <option value="">Vehicle make</option>
+                                            <select class="form-select" id="" name="make_of_vehicle" required
+                                            v-model="vehicleMake">
+                                                <option value="">Select vehicle make</option>
                                                 <?php
-                                                    foreach($get_vehicle_brands as $vehicle_brand){
+                                                    foreach ($get_vehicle_brands as $brand) {
+                                                    ?>
+                                                    <option value="<?= $brand['brand_name']?>" >
+                                                        <?= $brand['brand_name']?>
+                                                    </option>
+                                                <?php }
                                                 ?>
-                                                    <option data-brandId="<?php echo $vehicle_brand["unique_id"] ?>" value="<?php echo $vehicle_brand["brand_name"]?>" <?php echo isset($vehicle_details["make_of_vehicle"]) && $vehicle_details["make_of_vehicle"] == $vehicle_brand["brand_name"]?"selected":""; ?>><?php echo $vehicle_brand["brand_name"]?></option>
-                                                <?php    
-                                                }
-                                                ?>
+                                                <option value="others">Others</option>
                                             </select>
+                                            <div id="other_vehicle_make" class="mt-3 d-none">
+                                                <input type="text" name="other_vehicle_make" class="form-control" placeholder="Please Specify">
+                                            </div>
                                         </div>
+          
+                                        <center v-if="stillFetchingModels">
+                                            <div id="spinner_class">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </center>
                                         <div class="form-group">
-                                            <select class="form-select" id="vehicle_model" name="vehicle_model" required>
-                                                <option name="">Select Vehicle Model</option>
+                                            <select class="form-select" id="vehicle_model"
+                                            name="vehicle_model" v-model="vehicleMakeModel">
+                                                <option value="">Select vehicle model</option>
+                                                <option v-for="(model, index) in vehicleMakeModels"
+                                                :key="index" :value="model.Model">
+                                                    {{model.Model}}
+                                                </option>
+                                                <option value="others" v-if="finishedFetchingModels">Others</option>
                                             </select>
+                                            <div id="other_vehicle_model" class="mt-3 d-none">
+                                                <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify">
+                                            </div>
                                         </div>
+
+
+
                                         <div class="form-group">
-                                            <select class="form-select" name="year_of_make" required>
-                                                <option name="">Select year of make</option>
+                                            <select class="form-select" name="year_of_make"
+                                            v-model="year" required>
+                                                <option value="">Select year of make</option>
                                                 <?php
                                                     $year = 1995;
                                                     while($year <= 2099){
@@ -210,6 +240,8 @@
 
 </div>
 <?php include("includes/footer.php");?>
+
+<?php include("includes/VueInstance.php");?>
 
 <script>
     // $("#insurance_type").change(function(){

@@ -35,6 +35,8 @@ $user = $_SESSION['user'];
     <link rel="stylesheet" type="text/css" href="assets/vendors/sweetalert2/package/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     
 </head>
 <style type="text/css">
@@ -78,35 +80,6 @@ $user = $_SESSION['user'];
                     </ul>
                     
                 </li>
-            
-     
-                <li class="sidebar-item has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i data-feather="shield" width="20"></i> 
-                        <span>Insurance</span>
-                    </a>
-                    
-                    <ul class="submenu">
-                        <li>
-                            <a href="insurance">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="vehicle_quote">Get a Quote</a>
-                        </li>
-                        <li>
-                            <a href="vehicle_quote_list">View Quote List</a>
-                        </li>
-                        <li>
-                            <a href="compare_insurance">Compare Insurance</a>
-                        </li>
-                        <li>
-                            <a href="vehicle_details">Buy Insurance</a>
-                        </li>
-                        
-                    
-                    </ul>
-                    
-                </li>
 
                 <li class="sidebar-item has-sub">
                     <a href="#" class='sidebar-link'>
@@ -140,13 +113,35 @@ $user = $_SESSION['user'];
                     </ul>
                     
                 </li>
-                <!-- <li class="sidebar-item  ">
-                    <a href="pricing" class='sidebar-link'>
-                        <i data-feather="truck" width="20"></i> 
-                        <span>Vehicle Registration</span>
+            
+     
+                <li class="sidebar-item has-sub">
+                    <a href="#" class='sidebar-link'>
+                        <i data-feather="shield" width="20"></i> 
+                        <span>Insurance</span>
                     </a>
                     
-                </li> -->
+                    <ul class="submenu">
+                        <li>
+                            <a href="insurance">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="vehicle_quote">Get a Quote</a>
+                        </li>
+                        <li>
+                            <a href="vehicle_quote_list">View Quote List</a>
+                        </li>
+                        <li>
+                            <a href="compare_insurance">Compare Insurance</a>
+                        </li>
+                        <li>
+                            <a href="vehicle_details">Buy Insurance</a>
+                        </li>
+                        
+                    
+                    </ul>
+                    
+                </li>
             
                 <li class="sidebar-item">
                     <a href="activities" class='sidebar-link'>
@@ -174,7 +169,7 @@ $user = $_SESSION['user'];
     <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
 </div>
 </div>
-<!-- <script> 
+<!-- <script type="application/javascript"> 
     $(document).ready(function(){
   $('ul li a').click(function(){
     $('li a').removeClass("active");
@@ -182,7 +177,7 @@ $user = $_SESSION['user'];
 });
 });
 </script>  -->
-<script>
+<script type="application/javascript">
 /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
 var dropdown = document.getElementsByClassName("sidebar-item");
 var i;

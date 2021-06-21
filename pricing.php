@@ -30,7 +30,7 @@
     elem2.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
     }
 </script>                
-<div class="main-content container-fluid">
+<div class="main-content container-fluid" id="appWrapper">
     <div class="page-title">
         <h3>Vehicle Registration</h3>
         <p class="text-subtitle text-muted">Pricing</p>
@@ -50,8 +50,9 @@
           <div class="alert alert-light-info color-black">Select the type of Vehicle, then check the options you require to see the price. </div>
           <form id="renew_vehicle_form" method="POST">
             <fieldset class="form-group">
-              <select class="form-select" id="vehicle_type" name="vehicle_type" onchange="get_quote1()">
-                <option>Select vehicle type</option>
+              <select class="form-select" id="vehicle_type" name="vehicle_type" onchange="get_quote1()"
+              v-model="vehicleType">
+                <option value="">Select vehicle type</option>
                 <?php
                     foreach ($get_vehicles as $vehicle) {
                     ?>
@@ -60,6 +61,61 @@
                 ?>
               </select>
             </fieldset>
+
+            <div class="form-group">
+              <select class="form-select" id="" name="vehicle_make"
+              v-model="vehicleMake">
+                  <option value="">Select vehicle make</option>
+                  <?php
+                      foreach ($get_vehicle_brands as $brand) {
+                      ?>
+                      <option value="<?= $brand['brand_name']?>" >
+                          <?= $brand['brand_name']?>
+                      </option>
+                  <?php }
+                  ?>
+                  <option value="others">Others</option>
+              </select>
+              <div id="other_vehicle_make" class="mt-3 d-none">
+                  <input type="text" name="other_vehicle_make" class="form-control" placeholder="Please Specify">
+              </div>
+            </div>
+          
+          <center v-if="stillFetchingModels">
+              <div id="spinner_class">
+                  <div class="spinner-border text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                  </div>
+              </div>
+          </center>
+          <div class="form-group">
+              <select class="form-select" id="vehicle_model"
+              name="vehicle_model" v-model="vehicleMakeModel">
+                  <option value="">Select vehicle model</option>
+                  <option v-for="(model, index) in vehicleMakeModels"
+                  :key="index" :value="model.Model">
+                      {{model.Model}}
+                  </option>
+                  <option value="others" v-if="finishedFetchingModels">Others</option>
+              </select>
+              <div id="other_vehicle_model" class="mt-3 d-none">
+                  <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify">
+              </div>
+          </div>
+
+          <div class="form-group">
+              <select class="form-select" id="year_of_make" name="year_of_make"
+              v-model="year">
+                  <option value="">Select year</option>
+                  <?php
+                      for ($year=1990; $year <= 2099; $year++) { 
+                      ?>
+                      <option value="<?=$year?>"><?=$year;?></option>
+                      <?php
+                      }
+                  ?>
+              </select>
+          </div>
 
             <div class="form-group">
               <select name="insurance_type" id="insurance_type" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
@@ -119,7 +175,7 @@
        <h4>Total Amount - &#8358; <span id="total">0.00</span></h4>
 
        <div class="col-md-12 mt-2">
-       <a href="particulars"> <button class="btn btn-primary btn-block ">Click to buy</button></a>
+        <button class="btn btn-primary btn-block" @click="goToParticulars">Click to buy</button>
        </div>
       </div>
     </div>
@@ -336,7 +392,11 @@
 
 
 </div>
+
 <?php include("includes/footer.php");?>
+
+<?php include("includes/VueInstance.php");?>
+
 <script>
   function formatNumber(num) {
       return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')

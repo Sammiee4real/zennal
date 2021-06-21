@@ -37,20 +37,27 @@
                                     <thead>
                                         <th>Insurer</th>
                                         <th>Plan</th>
+                                        <th>Plan Percentage</th>
                                         <th>Vehicle Value</th>
+                                        <th>Premium Amount</th>
                                     </thead>
                                     <tbody>
                                     <?php
                                         foreach($quote_list as $quote){
                                             $insurer_name = $quote['insurer_name'];
                                             $plan_name = $quote['plan_name'];
+                                            $plan_percentage = $quote['plan_percentage'];
                                             $vehicle_value = $quote['vehicle_value'];
-                                            $vehicle_amount = "#".number_format($vehicle_value);
+                                            $premium_amount = $quote['premium_amount'];
+                                            $vehicle_amount = "&#8358;".number_format($vehicle_value);
+                                            $premium_amount = "&#8358;".number_format($premium_amount);
                                     ?>
                                         <tr>
                                             <td><?=$insurer_name;?></td>
                                             <td><?=$plan_name;?></td>
+                                            <td><?=$plan_percentage;?>%</td>
                                             <td><?=$vehicle_amount;?></td>
+                                            <td><?=$premium_amount;?></td>
                                         </tr>
                                     <?php
                                         }

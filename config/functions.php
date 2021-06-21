@@ -341,9 +341,14 @@ function register_user($post){
   }
 
   $email = secure_database($post["email"]);
+  $bvn = secure_database($post["bvn"]);
 
   if (user_exists($email) === true) {
     return json_encode(array("status"=>0, "msg"=>"User already registered"));
+  }
+
+  if (user_exists_bvn($bvn) === true) {
+    return json_encode(array("status"=>0, "msg"=>"BVN exists"));
   }
 
   $password = secure_database($post["password"]);
@@ -612,7 +617,7 @@ function get_insurance_benefits($insurer_id){
 
 
 // Badmus
-function save_quote($vehicle_value, $prefered_insurer, $select_plan){
+function save_quote($vehicle_value, $prefered_insurer, $select_plan, $plan_name="", $plan_percentage="", $premium_amount=""){
   global $dbc;
 
   $user_id = $_SESSION['user']['unique_id'];
@@ -623,9 +628,26 @@ function save_quote($vehicle_value, $prefered_insurer, $select_plan){
 
     $unique_id = unique_id_generator($user_id);
 
-    $sql = "INSERT INTO `saved_quotes` SET `unique_id`='$unique_id', `user_id`='$user_id', `vehicle_value`='$vehicle_value', `insurer_id`='$prefered_insurer', `plan_id`='$select_plan', `date_created`=now()";
+    $sql = "INSERT INTO `saved_quotes` SET
+    `unique_id`='$unique_id',
+    `user_id`='$user_id',
+    `vehicle_value`='$vehicle_value',
+    `insurer_id`='$prefered_insurer',
+    `plan_id`='$select_plan',
+    `plan_name`='$plan_name',
+    `plan_percentage`='$plan_percentage',
+    `premium_amount` = '$premium_amount',
+    `date_created`=now()";
   }else {
-    $sql = "UPDATE `saved_quotes` SET `vehicle_value`='$vehicle_value', `insurer_id`='$prefered_insurer', `plan_id`='$select_plan', `date_created`=now() WHERE `user_id`='$user_id'";
+    $sql = "UPDATE `saved_quotes` SET
+    `vehicle_value`='$vehicle_value',
+    `insurer_id`='$prefered_insurer',
+    `plan_id`='$select_plan',
+    `plan_name`='$plan_name',
+    `plan_percentage`='$plan_percentage',
+    `premium_amount` = '$premium_amount',
+    `date_created`=now()
+    WHERE `user_id`='$user_id'";
   }
 
   $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
@@ -635,12 +657,12 @@ function fetch_quote_list($user_id){
 
   global $dbc;
 
-  $sql = "SELECT quote.*, user.first_name, user.last_name, user.other_names,
-  plan.plan_name, insurer.name As insurer_name
+  $sql = "SELECT quote.*, user.first_name, user.last_name, user.other_names, insurer.name As insurer_name
   FROM saved_quotes AS quote
   JOIN users AS user ON quote.user_id = user.unique_id
   JOIN insurance_plans AS plan ON quote.plan_id = plan.unique_id
-  JOIN insurers AS insurer ON quote.insurer_id = insurer.unique_id";
+  JOIN insurers AS insurer ON quote.insurer_id = insurer.unique_id
+  WHERE quote.user_id = '$user_id'";
 
   $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
 
@@ -1569,12 +1591,12 @@ function unique_id_generator($data){
 
 
 
-function get_rows_from_one_table($table,$order_option=""){
+function get_rows_from_one_table($table, $order_option="", $order="DESC"){
   global $dbc;
 
   $sql = "SELECT * FROM `$table`";
   if(!empty($order_option)){
-    $sql .= " ORDER BY `$order_option` DESC";
+    $sql .= " ORDER BY `$order_option` $order";
   }
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
@@ -2090,6 +2112,20 @@ function user_exists($email){
     } else {
       return false;
     }
+}
+
+function user_exists_bvn($bvn){
+  global $dbc;
+  
+  $sql = "SELECT COUNT(*) AS num FROM `user_financial_details` WHERE `bvn`='$bvn'";
+  $query = mysqli_query($dbc, $sql);
+  $re = mysqli_fetch_assoc($query);
+
+  if (intval($re['num']) === 1) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 

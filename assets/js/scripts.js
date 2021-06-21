@@ -3519,6 +3519,7 @@ $(document).ready(function(){
 			console.log(data)
 			let premium_amount = formatNumber(JSON.parse(data));
 			$("#premium_amount").text(premium_amount);
+			$("#premiumAmountField").val(JSON.parse(data));
 		});
 	});
 
@@ -3549,6 +3550,7 @@ $(document).ready(function(){
 				  $("#save-quote-container").append(`<span class="text-right" id="save-quote-loader">Saving quote...</span>`);
 				},
 				success: function(data){
+					console.log(data);
 				  if(data == "success"){
 					$("#save-quote-loader").text("Quote saved");
 				  }

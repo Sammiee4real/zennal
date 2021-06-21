@@ -73,7 +73,14 @@ if(isset($_SESSION['user'])){
                                 </div>
                                 <div class="card-body" id="phone_alert" style="display:none;">
                                     <div class="alert alert-light-primary color-primary"><i data-feather="star"></i>Ensure that the phone number supplied is linked to BVN</div>
+                                
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="bvn">BVN</label>
+                                    <input type="number" id="bvn" class="form-control"  name="bvn" required placeholder="Enter BVN">
+                                </div>
+
                                 <div class="form-group">
                                     <label for="password">Password</label>
                                     <input type="password" id="password" class="form-control" name="password" required placeholder="Enter password">
