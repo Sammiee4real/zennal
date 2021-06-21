@@ -631,6 +631,29 @@ function save_quote($vehicle_value, $prefered_insurer, $select_plan){
   $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
   return json_encode(array("status"=>1));
 }
+function fetch_quote_list($user_id){
+
+  global $dbc;
+
+  $sql = "SELECT quote.*, user.first_name, user.last_name, user.other_names,
+  plan.plan_name, insurer.name As insurer_name
+  FROM saved_quotes AS quote
+  JOIN users AS user ON quote.user_id = user.unique_id
+  JOIN insurance_plans AS plan ON quote.plan_id = plan.unique_id
+  JOIN insurers AS insurer ON quote.insurer_id = insurer.unique_id";
+
+  $query = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
+
+  $data = [];
+
+  if(mysqli_num_rows($query) > 0){
+    while($row = mysqli_fetch_assoc($query)){
+      $data[] = $row;
+    }
+  }
+
+  return $data;
+}
 // Badmus
 function get_vehicle_value($plan_id, $vehicle_value){
   global $dbc;

@@ -13,6 +13,44 @@
     // if($count > 0){
     //     echo '<meta http-equiv="refresh" content="0; url=loan_error_page" />';
     // }
+
+    $name_of_organization = "";
+    $contact_address_of_organization = "";
+    $job_title = "";
+    $industry_type = "";
+    $monthly_salary = "";
+    $salary_payday = "";
+    $city = "";
+    $state = "";
+    $years_of_stay = "";
+    $months_of_stay = "";
+    $name_of_spouse = "";
+    $phone_of_spouse = "";
+    $no_of_kids = "";
+    $cac_number = "";
+    $company_name = "";
+    $company_address = "";
+    $monthly_income = "";
+
+    if(!empty($get_employment_details)){
+        $name_of_organization = $get_employment_details['name_of_organization'];
+        $contact_address_of_organization = $get_employment_details['contact_address_of_organization'];
+        $job_title = $get_employment_details['job_title'];
+        $industry_type = $get_employment_details['industry_type'];
+        $monthly_salary = $get_employment_details['monthly_salary'];
+        $salary_payday = $get_employment_details['salary_payday'];
+        $city = $get_employment_details['city'];
+        $state = $get_employment_details['state'];
+        $years_of_stay = $get_employment_details['years_of_stay'];
+        $months_of_stay = $get_employment_details['months_of_stay'];
+        $name_of_spouse = $get_employment_details['name_of_spouse'];
+        $phone_of_spouse = $get_employment_details['phone_of_spouse'];
+        $no_of_kids = $get_employment_details['no_of_kids'];
+        $cac_number = $get_employment_details['cac_number'];
+        $company_name = $get_employment_details['company_name'];
+        $company_address = $get_employment_details['company_address'];
+        $monthly_income = $get_employment_details['monthly_income'];
+    }
 ?>
 <div id="main">
 
@@ -179,7 +217,7 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="" for="city5">Name of Organization</span>
-                            <input type="text" class="form-control" id="name_of_organization" name="name_of_organization" placeholder="Enter the name of your Organization" value="<?= $get_employment_details['name_of_organization']?>">  
+                            <input type="text" class="form-control" id="name_of_organization" name="name_of_organization" placeholder="Enter the name of your Organization" value="<?= $name_of_organization?>">
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -189,9 +227,7 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Contact Address of Organization</span>
-                            <textarea name="contact_address_of_organization" class="form-control" rows="2"placeholder="Organization's Contact Address">
-                                <?= $get_employment_details['contact_address_of_organization']?>
-                            </textarea>
+                            <textarea name="contact_address_of_organization" class="form-control" rows="2" placeholder="Organization's Contact Address"><?= $contact_address_of_organization?></textarea>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -201,8 +237,8 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Job Title</span>
-                            <input type="text" class="form-control" id="job_title" name="job_title" placeholder="Enter your job title" value="<?= $get_employment_details['job_title']?>">
-                           <!--  value="<?= $get_employment_details['job_title']?>" -->
+                            <input type="text" class="form-control" id="job_title" name="job_title" placeholder="Enter your job title" value="<?= $job_title?>">
+                           <!--  value="<?= $job_title?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -261,8 +297,8 @@ $(document).ready(function(){
                      <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Type of Industry</span>
-                            <input type="text" class="form-control" id="industry_type" name="industry_type" placeholder="Type of Industry (Banking, Other fin. Services, Telecoms, Oil and Gas etc.)" value="<?= $get_employment_details['industry_type']?>">
-                            <!-- value="<?= $get_employment_details['industry_type']?>" -->
+                            <input type="text" class="form-control" id="industry_type" name="industry_type" placeholder="Type of Industry (Banking, Other fin. Services, Telecoms, Oil and Gas etc.)" value="<?= $industry_type?>">
+                            <!-- value="<?= $industry_type?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -272,8 +308,8 @@ $(document).ready(function(){
                       <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="span" for="name1">Current Monthly Salary (Net)</span>
-                            <input type="text" class="form-control" id="monthly_salary" name="monthly_salary" placeholder="Current Monthly Salary (Net) in naira" value="<?= $get_employment_details['monthly_salary']?>">
-                             <!-- value="<?= $get_employment_details['monthly_salary']?>" -->
+                            <input type="text" class="form-control" id="monthly_salary" name="monthly_salary" placeholder="Current Monthly Salary (Net) in naira" value="<?= $monthly_salary?>">
+                             <!-- value="<?= $monthly_salary?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -282,8 +318,8 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Payday</span>
-                            <input type="text" class="form-control" id="salary_payday" name="salary_payday" placeholder="Salary Payday (from 1st to 31st)" value="<?= $get_employment_details['salary_payday']?>">
-                            <!-- value="<?= $get_employment_details['salary_payday']?>" -->
+                            <input type="text" class="form-control" id="salary_payday" name="salary_payday" placeholder="Salary Payday (from 1st to 31st)" value="<?= $salary_payday?>">
+                            <!-- value="<?= $salary_payday?>" -->
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -334,7 +370,7 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">City</span>
-                            <input type="text" name="city" class="form-control" value="<?=$get_employment_details['city'];?>">
+                            <input type="text" name="city" class="form-control" value="<?=$city;?>">
                         </select>
                         </div>
                     </div>
@@ -342,7 +378,7 @@ $(document).ready(function(){
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">State</span>
-                            <input type="text" name="state" class="form-control" value="<?=$get_employment_details['state'];?>">
+                            <input type="text" name="state" class="form-control" value="<?=$state;?>">
                         </select>
                         </div>
                     </div>
@@ -368,11 +404,11 @@ $(document).ready(function(){
                             <div class="row">
                                 <div class="col-md-6">
                                    <span>How many years?</span> 
-                                   <input type="" name="years_of_stay" class="form-control" value="<?=$get_employment_details['years_of_stay'];?>">
+                                   <input type="" name="years_of_stay" class="form-control" value="<?=$years_of_stay;?>">
                                 </div>
                                 <div class="col-md-6">
                                     <span>How many months?</span> 
-                                   <input type="number" name="months_of_stay" class="form-control" value="<?=$get_employment_details['months_of_stay'];?>">
+                                   <input type="number" name="months_of_stay" class="form-control" value="<?=$months_of_stay;?>">
                                 </div>
                             </div>
                         </div>
@@ -392,21 +428,21 @@ $(document).ready(function(){
                               <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Name of Spouse</span>
-                            <input type="text" name="name_of_spouse" placeholder="Name of Spouse" class="form-control"value="<?=$get_employment_details['name_of_spouse'];?>">
+                            <input type="text" name="name_of_spouse" placeholder="Name of Spouse" class="form-control"value="<?=$name_of_spouse;?>">
                         </div>
                     </div>
 
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Phone number of Spouse</span>
-                            <input type="text" name="phone_of_spouse" placeholder="Phone number of Spouse" class="form-control" value="<?=$get_employment_details['phone_of_spouse'];?>">
+                            <input type="text" name="phone_of_spouse" placeholder="Phone number of Spouse" class="form-control" value="<?=$phone_of_spouse;?>">
                         </div>
                     </div>
 
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <span class="p" for="name1">Number of Kids</span>
-                            <input type="number" name="no_of_kids" placeholder="Phone number of Spouse" class="form-control" value="<?=$get_employment_details['no_of_kids'];?>">
+                            <input type="number" name="no_of_kids" placeholder="Phone number of Spouse" class="form-control" value="<?=$no_of_kids;?>">
                         </div>
                     </div>
              </div>
@@ -459,23 +495,23 @@ $(document).ready(function(){
                 <div class="green box">
                       <div class="form-group">
                             <span class="" for="name">CAC number</span>
-                            <input type="text" name="cac_number" class="form-control" value="<?= $get_employment_details['cac_number'];?>">
+                            <input type="text" name="cac_number" class="form-control" value="<?= $cac_number;?>">
                         </div>
 
                         <div class="form-group">
                             <span class="" for="name">Company Name</span>
-                            <input type="text" name="company_name" value="" class="form-control" placeholder="Company Name" value="<?= $get_employment_details['company_name'];?>">
+                            <input type="text" name="company_name" value="" class="form-control" placeholder="Company Name" value="<?= $company_name;?>">
                         </div>    
 
                         <div class="form-group">
                             <span class="" for="name">Company address</span>
-                            <input type="text" name="company_address" value="" class="form-control" placeholder="Company address" value="<?= $get_employment_details['company_address'];?>">
+                            <input type="text" name="company_address" value="" class="form-control" placeholder="Company address" value="<?= $company_address;?>">
                         </div>  
                 </div>
 
                         <div class="form-group">
                             <span class="" for="name">Estimated Monthly income</span>
-                            <input type="text" name="monthly_income" class="form-control" placeholder="Monthly income" value="<?= $get_employment_details['monthly_income'];?>">
+                            <input type="text" name="monthly_income" class="form-control" placeholder="Monthly income" value="<?= $monthly_income;?>">
                         </div>
 
                         <div class="mt-3 mb-3">

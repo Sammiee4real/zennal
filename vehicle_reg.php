@@ -138,7 +138,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <input type="text" id="name" class="form-control" placeholder="Name to register with vehicle" name="name_on_vehicle">
+                                            <input type="text" id="name" class="form-control" placeholder="Name to register vehicle with" name="name_on_vehicle">
                                         </div>
                                         <div class="form-group">
                                             <input type="number" id="phone" class="form-control" placeholder="Phone number" name="phone">

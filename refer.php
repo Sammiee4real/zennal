@@ -38,7 +38,7 @@
 
                                 <h6>Your approved bonus must be up to <span class="font-weight-bold">&#8358;<?php echo number_format(7000)?></span> to withdraw</h6>
                                 <?php
-                                    if($get_wallet_balance['balance'] >= 5000){
+                                    if($get_wallet_balance['balance'] >= 7000){
                                 
                                 ?>
                                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">WITHDRAW</button>
