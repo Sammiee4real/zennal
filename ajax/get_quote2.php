@@ -1,6 +1,6 @@
 <?php
 	require_once('../config/functions.php');
-	$vehicle_type = $_POST['vehicle_type'];
+	$vehicle_type = isset($_POST['vehicle_type']) ? $_POST['vehicle_type'] : '';
 	$insurance_type = isset($_POST['insurance_type']) ? $_POST['insurance_type'] : '';
 	$insurer = isset($_POST['insurer']) ? $_POST['insurer'] : '';
 	$plan_type = isset($_POST['plan_type']) ? $_POST['plan_type'] : '';
@@ -9,10 +9,16 @@
 	$get_vehicle_type = get_one_row_from_one_table('vehicle_particulars', 'vehicle_id', $vehicle_type);
 	$get_insurance_rate = get_one_row_from_one_table('insurance_plans', 'unique_id', $plan_type);
 	$total = 0;
+
+	if(empty($vehicle_value)){
+		$vehicle_value = 0;
+	}
 	
 	if($insurance_type != ''){
 		if($insurance_type == 'third_party'){
-			$total += $get_vehicle_type['third_party_amount'];
+			if(!empty($get_vehicle_type)){
+				$total += $get_vehicle_type['third_party_amount'];
+			}
 		}
 		else if($insurance_type == 'no_insurance' || $insurance_type == ''){
 			$total += 0;
