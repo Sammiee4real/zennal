@@ -1,18 +1,20 @@
 
 <?php 
-  include("includes/sidebar.php");
-  $get_vehicles = get_rows_from_one_table('vehicles', 'date_created');
-  $get_vehicle_brands = get_rows_from_one_table('vehicle_brands', 'datetime');
-  $get_vehicle_models = get_rows_from_one_table('vehicle_models', 'datetime');
-  $get_insurer = get_rows_from_one_table('insurers', 'datetime');
-  $get_other_papers = get_rows_from_one_table('services', 'date_created');
+    include("includes/sidebar.php");
+    $get_vehicles = get_rows_from_one_table('vehicles', 'date_created');
+    $get_vehicle_brands = get_rows_from_one_table('vehicle_brands', 'datetime');
+    $get_vehicle_models = get_rows_from_one_table('vehicle_models', 'datetime');
+    $get_insurer = get_rows_from_one_table('insurers', 'datetime');
+    $get_other_papers = get_rows_from_one_table('services', 'date_created');
+    $get_insurers = get_rows_from_table('insurers');
+
 ?>
 <div id="main">
 
 <?php include("includes/header.php");?>
-<style type="text/css">
-#bar {display:none;}
-#veh {display:none;}
+    <style type="text/css">
+    #bar {display:none;}
+    #veh {display:none;}
 
 </style>  
 
@@ -22,12 +24,19 @@
 //     elem1.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
 //     }
 
-    function show(el, txt){
-    var elem1 = document.getElementById('bar');
-    var elem2 = document.getElementById('veh');
+    // function show(el, txt){
+    //   var elem1 = document.getElementById(el);
+    //   var elem2 = document.getElementById('veh');
 
-    elem1.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
-    elem2.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
+    //   elem1.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
+    //   elem2.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
+    // }
+
+    function show(el, txt){
+      var elem = document.getElementById(el);
+
+      elem.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
+      // elem2.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
     }
 </script>                
 <div class="main-content container-fluid" id="appWrapper">
@@ -37,22 +46,327 @@
     </div>
 
     <section class="section mt-5">
-       <div class="col-lg-12 col-xl-6 mx-auto">
+        <div class="col-lg-12 col-xl-6 mx-auto">
     
-      <div class="card collapse-icon accordion-icon-rotate">
-        <div id="headingCollapse11" class="card-header">
-          <a data-toggle="collapse" href="#collapse11" aria-expanded="false" aria-controls="collapse11" class="card-title lead collapsed">Renew Vehicle Particulars <i data-feather="plus" width="20" ></i> </a> <span > </span>
+            <div class="card collapse-icon accordion-icon-rotate">
+                <div id="headingCollapse11" class="card-header">
+                    <a data-toggle="collapse" href="#collapse11" aria-expanded="false" aria-controls="collapse11" class="card-title lead collapsed">
+                        Renew Vehicle Particulars <i data-feather="plus" width="20" ></i>
+                    </a> <span > </span>
+                </div>
+                <div id="collapse11" role="tabpanel" aria-labelledby="headingCollapse11" class="collapse" style="">
+                    <div class="card-body">
+                        <div class="card-block">
+                            <div class="col-md-12">
+                                <div class="alert alert-light-info color-black">Select the type of Vehicle, then check the options you require to see the price. </div>
+                                <form id="renew_vehicle_form" method="POST">
+                                    <fieldset class="form-group">
+                                    <select class="form-select" id="vehicle_type" name="vehicle_type" onchange="get_quote1()"
+                                    v-model="vehicleType">
+                                        <option value="">Select vehicle type</option>
+                                        <?php
+                                            foreach ($get_vehicles as $vehicle) {
+                                            ?>
+                                            <option value="<?= $vehicle['unique_id']?>"><?= $vehicle['vehicle_type']?></option>
+                                        <?php }
+                                        ?>
+                                    </select>
+                                    </fieldset>
+
+                                    <div class="form-group">
+                                        <select class="form-select" id="" name="vehicle_make"
+                                        v-model="vehicleMake">
+                                            <option value="">Select vehicle make</option>
+                                            <?php
+                                                foreach ($get_vehicle_brands as $brand) {
+                                                ?>
+                                                <option value="<?= $brand['brand_name']?>" >
+                                                    <?= $brand['brand_name']?>
+                                                </option>
+                                            <?php }
+                                            ?>
+                                            <option value="others">Others</option>
+                                        </select>
+                                        <div id="other_vehicle_make" class="mt-3 d-none">
+                                            <input type="text" name="other_vehicle_make" class="form-control" placeholder="Please Specify">
+                                        </div>
+                                    </div>
+                                
+                                    <center v-if="stillFetchingModels">
+                                        <div id="spinner_class">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </center>
+                                    <div class="form-group">
+                                            <select class="form-select" id="vehicle_model"
+                                            name="vehicle_model" v-model="vehicleMakeModel">
+                                                <option value="">Select vehicle model</option>
+                                                <option v-for="(model, index) in vehicleMakeModels"
+                                                :key="index" :value="model.Model">
+                                                    {{model.Model}}
+                                                </option>
+                                                <option value="others" v-if="finishedFetchingModels">Others</option>
+                                            </select>
+                                            <div id="other_vehicle_model" class="mt-3 d-none">
+                                                <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify">
+                                            </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <select class="form-select" id="year_of_make" name="year_of_make"
+                                        v-model="year">
+                                            <option value="">Select year</option>
+                                            <?php
+                                                for ($year=1990; $year <= 2099; $year++) { 
+                                                ?>
+                                                <option value="<?=$year?>"><?=$year;?></option>
+                                                <?php
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <select name="insurance_type" id="insurance_type" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" v-model="insuranceType">
+                                            <option value="">Insurance type</option>
+                                            <option value="third_party_insurance">3rd Party Insurance</option>
+                                            <option value="comprehensive_insurance">Comprehensive Insurance</option>
+                                            <option value="no_insurance">(No Insurance)</option>
+                                        </select>
+                                    </div>
+                                    <div id="bar">
+                                        <div class="row">
+                                            <div class="col-md-12 col-12">
+                                                <div class="form-group">
+                                                    <span for="first-name-column">Vehicle Value (Without a comma)*</span>
+                                                    <input type="text" id="vehicle_value" name="vehicle_value" class="form-control" placeholder="Enter Vehicle Value" name="Vehicle-column" v-model="vehicleValue">
+                                                    <span id="help-text"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <span for="last-name-column">Preferred Insurer * </span>
+                                                    <select class="form-select" name="prefered_insurer" id="prefered_insurer" v-model="preferredInsurer">
+                                                        <option value="">Select Preferred Insurer</option>
+                                                        <?php
+                                                            foreach($get_insurers as $insurer){
+                                                            echo "<option value='".$insurer['unique_id']."'>".$insurer['name']."</option>";
+                                                            }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <span for="last-name-column">Plan *</span>
+                                                    <select class="form-select" name="select_plan" id="select_plan" v-model="plan">
+                                                        <option value="">Select package plan</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="premium_amount" id="premiumAmountField">
+                                        </div>
+                                    </div>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-inline-block mr-2 mb-1">
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="form-check-input form-check-primary"  name="road_worthiness" id="paper1" onclick="get_quote1()" value="1" v-model="roadWorthiness">
+                                                    <label class="form-check-label" for="customColorCheck1">Road Worthiness</label>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="d-inline-block mr-2 mb-1">
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="form-check-input form-check-success"  name="hackney_permit" id="paper2" onclick="get_quote1()" value="1" v-model="hackneyPermit">
+                                                    <label class="form-check-label" for="customColorCheck3">Hackney Permit</label>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="d-inline-block mr-2 mb-1">
+                                            <div class="form-check">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="form-check-input form-check-danger"  name="license" id="paper3" onclick="get_quote1()" value="1" v-model="vehicleLicense">
+                                                    <label class="form-check-label" for="customColorCheck4">Vehicle License</label>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </form>
+
+                                <center>
+                                    <div id="spinner_class" class="d-none">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </center>
+            
+                            </div>
+                            <div class="row">
+                                <h4>Total Amount - &#8358; <span id="total" class="quote-amount">0.00</span></h4>
+
+                                <div class="col-md-12 mt-2">
+                                    <button class="btn btn-primary btn-block" @click="goToParticulars">Click to buy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REGISTER NEW VEHICLE STARTS -->
+            <div class="card collapse-icon accordion-icon-rotate">
+                <div id="headingCollapse12" class="card-header">
+                    <a data-toggle="collapse" href="#collapse12" aria-expanded="false" aria-controls="collapse12" class="card-title lead collapsed">Register a New Vehicle <i data-feather="plus" width="20" ></i> </a>
+                </div>
+                <div id="collapse12" role="tabpanel" aria-labelledby="headingCollapse12" class="collapse" aria-expanded="false" style="">
+                    <div class="card-body">
+                        <div class="card-block">
+                            <div class="col-md-12">
+                                <div class="alert alert-light-info color-black">Select the type of Vehicle, then select all the options you require to see the accurate price. </div>
+                                    <form method="post" id="register_vehicle_form">
+                                        <fieldset class="form-group">
+                                            <select class="form-select" id="vehicle_type1" name="vehicle_type" onchange="get_quote2()" v-model="vehicleTypeNewVehicle">
+                                                <option>Select vehicle type</option>
+                                                <?php
+                                                    foreach ($get_vehicles as $vehicle) {
+                                                    ?>
+                                                    <option value="<?= $vehicle['unique_id']?>"><?= $vehicle['vehicle_type']?></option>
+                                                <?php }
+                                                ?>
+                                            </select>
+                                        </fieldset>
+
+                                        <div class="form-group">
+                                            <select class="form-select" id="" name="vehicle_make"
+                                            v-model="vehicleMakeNewVehicle">
+                                                <option value="">Select vehicle make</option>
+                                                <?php
+                                                    foreach ($get_vehicle_brands as $brand) {
+                                                    ?>
+                                                        <option value="<?= $brand['brand_name']?>" >
+                                                            <?= $brand['brand_name']?>
+                                                        </option>
+                                                    <?php }
+                                                    ?>
+                                                    <option value="others">Others</option>
+                                            </select>
+                                            <div id="other_vehicle_make" class="mt-3 d-none">
+                                                <input type="text" name="other_vehicle_make" class="form-control" placeholder="Please Specify">
+                                            </div>
+                                        </div>
+                                        
+                                        <center v-if="stillFetchingModelsNewVehicle">
+                                            <div id="spinner_class">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </center>
+                                        <div class="form-group">
+                                            <select class="form-select" id="vehicle_model"
+                                            name="vehicle_model" v-model="vehicleMakeModelNewVehicle">
+                                                <option value="">Select vehicle model</option>
+                                                <option v-for="(model, index) in vehicleMakeModelsNewVehicle"
+                                                :key="index" :value="model.Model">
+                                                    {{model.Model}}
+                                                </option>
+                                                <option value="others" v-if="finishedFetchingModelsNewVehicle">Others</option>
+                                            </select>
+                                            <div id="other_vehicle_model" class="mt-3 d-none">
+                                                <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <select class="form-select" id="year_of_make" name="year_of_make"
+                                            v-model="yearNewVehicle">
+                                                <option value="">Select year</option>
+                                                <?php
+                                                    for ($year=1990; $year <= 2099; $year++) { 
+                                                    ?>
+                                                    <option value="<?=$year?>"><?=$year;?></option>
+                                                    <?php
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <select name="insurance_type" id="insurance_type1" class="form-select" onChange="show('veh', this.options[this.selectedIndex].firstChild.nodeValue)" v-model="insuranceTypeNewVehicle">
+                                                <option>Insurance type</option>
+                                                <option value="third_party">3rd Party Insurance</option>
+                                                <option value="comprehensive">Comprehensive Insurance</option>
+                                                <option value="no_insurance">(No Insurance)</option>
+                                            </select>
+                                        </div>
+                                        <div id="veh">
+                                            <div class="form-group">
+                                                <select class="form-select" name="insurer" id="insurer" v-model="preferredInsurerNewVehicle">
+                                                    <option>Select Insurer</option>
+                                                    <?php
+                                                        foreach ($get_insurer as $insurer) {
+                                                    ?>
+                                                        <option value="<?= $insurer['unique_id']?>"><?= $insurer['name']?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <select class="form-select" name="plan_type" id="plan_type" onchange="get_quote2()">
+                                                <option>Select Plan</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="number" name="vehicle_value" id="vehicle_value" class="form-control" placeholder="Value of Vehicle (in naira)">
+                                            </div>
+                                        </div>
+
+                                        <fieldset class="form-group">
+                                            <select name="plate_number_type" id="plate_number_type" class="form-select" onchange="get_quote2()" v-model="numberPlateTypeNewVehicle">
+                                                <option>Type of number plate</option>
+                                                <option value="private"> Private number plate</option>
+                                                <option value="commercial"> Commercial number plate</option>
+                                                <option value="personalized_number">Custom number plate</option>
+                                            </select>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                                <center>
+                                    <div id="spinner_class1" class="d-none">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </center>
+
+                                <div class="row">
+                                    <h4>Total Amount - &#8358;<span id="total1">0.00</span></h4>
+                                <div class="col-md-12 mt-2">
+                                <a href="vehicle_reg.php"> <button class="btn btn-primary btn-block ">Click to buy</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- REGISTER NEW VEHICLE ENDS -->
         </div>
-        <div id="collapse11" role="tabpanel" aria-labelledby="headingCollapse11" class="collapse" style="">
+
+    <div class="card collapse-icon accordion-icon-rotate">
+      <div id="headingCollapse13" class="card-header">
+          <a data-toggle="collapse" href="#collapse13" aria-expanded="false" aria-controls="collapse13" class="card-title lead collapsed" @click="unsetVehiclDetails">
+            Change of Ownership <i data-feather="plus" width="20" ></i>
+          </a>
+        </div>
+        <div id="collapse13" role="tabpanel" aria-labelledby="headingCollapse12" class="collapse" aria-expanded="false" style="">
           <div class="card-body">
             <div class="card-block">
-               <div class="col-md-12">
-          <div class="alert alert-light-info color-black">Select the type of Vehicle, then check the options you require to see the price. </div>
-          <form id="renew_vehicle_form" method="POST">
+            <div class="col-md-12">
+          <div class="alert alert-light-info color-black">Select the type of Vehicle, then select all the options you require, to see the acccurate price.</div>
+          <form id="change_ownership_quote_form">
+
             <fieldset class="form-group">
-              <select class="form-select" id="vehicle_type" name="vehicle_type" onchange="get_quote1()"
-              v-model="vehicleType">
-                <option value="">Select vehicle type</option>
+              <select class="form-select" id="vehicle_type2" name="vehicle_type" onchange="get_quote3()">
+                <option>Select vehicle type</option>
                 <?php
                     foreach ($get_vehicles as $vehicle) {
                     ?>
@@ -64,7 +378,7 @@
 
             <div class="form-group">
               <select class="form-select" id="" name="vehicle_make"
-              v-model="vehicleMake">
+              v-model="vehicleMakeOwnership">
                   <option value="">Select vehicle make</option>
                   <?php
                       foreach ($get_vehicle_brands as $brand) {
@@ -81,216 +395,41 @@
               </div>
             </div>
           
-          <center v-if="stillFetchingModels">
-              <div id="spinner_class">
-                  <div class="spinner-border text-primary" role="status">
-                      <span class="sr-only">Loading...</span>
-                  </div>
-              </div>
-          </center>
-          <div class="form-group">
-              <select class="form-select" id="vehicle_model"
-              name="vehicle_model" v-model="vehicleMakeModel">
-                  <option value="">Select vehicle model</option>
-                  <option v-for="(model, index) in vehicleMakeModels"
-                  :key="index" :value="model.Model">
-                      {{model.Model}}
-                  </option>
-                  <option value="others" v-if="finishedFetchingModels">Others</option>
-              </select>
-              <div id="other_vehicle_model" class="mt-3 d-none">
-                  <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify">
-              </div>
-          </div>
-
-          <div class="form-group">
-              <select class="form-select" id="year_of_make" name="year_of_make"
-              v-model="year">
-                  <option value="">Select year</option>
-                  <?php
-                      for ($year=1990; $year <= 2099; $year++) { 
-                      ?>
-                      <option value="<?=$year?>"><?=$year;?></option>
-                      <?php
-                      }
-                  ?>
-              </select>
-          </div>
+            <center v-if="stillFetchingModelsOwnership">
+                <div id="spinner_class">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </center>
+            <div class="form-group">
+                <select class="form-select" id="vehicle_model"
+                name="vehicle_model" v-model="vehicleMakeModelOwnership">
+                    <option value="">Select vehicle model</option>
+                    <option v-for="(model, index) in vehicleMakeModelsOwnership"
+                    :key="index" :value="model.Model">
+                        {{model.Model}}
+                    </option>
+                    <option value="others" v-if="finishedFetchingModelsOwnership">Others</option>
+                </select>
+                <div id="other_vehicle_model" class="mt-3 d-none">
+                    <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify">
+                </div>
+            </div>
 
             <div class="form-group">
-              <select name="insurance_type" id="insurance_type" class="form-select" onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)">
-                <option>Insurance type</option>
-                <option value="third_party">3rd Party Insurance</option>
-                <option value="comprehensive">Comprehensive Insurance</option>
-                <option value="no_insurance">(No Insurance)</option>
-              </select>
-            </div>
-            <div id="bar">
-              <div class="form-group">
-                <select class="form-select">
-                  <option>Select Plan</option>
-                  <option> Bronze</option>
-                  <option> Silver</option>
-                </select>
-              </div>
-            </div>
-            <ul class="list-unstyled mb-0">
-              <li class="d-inline-block mr-2 mb-1">
-                  <div class="form-check">
-                      <div class="custom-control custom-checkbox">
-                          <input type="checkbox" class="form-check-input form-check-primary"  name="road_worthiness" id="paper1" onclick="get_quote1()">
-                          <label class="form-check-label" for="customColorCheck1">Road Worthiness</label>
-                      </div>
-                  </div>
-              </li>
-              <li class="d-inline-block mr-2 mb-1">
-                  <div class="form-check">
-                      <div class="custom-control custom-checkbox">
-                          <input type="checkbox" class="form-check-input form-check-success"  name="hackney_permit" id="paper2" onclick="get_quote1()">
-                          <label class="form-check-label" for="customColorCheck3">Hackney Permit</label>
-                      </div>
-                  </div>
-              </li>
-              <li class="d-inline-block mr-2 mb-1">
-                  <div class="form-check">
-                      <div class="custom-control custom-checkbox">
-                          <input type="checkbox" class="form-check-input form-check-danger"  name="license" id="paper3" onclick="get_quote1()">
-                          <label class="form-check-label" for="customColorCheck4">Vehicle License</label>
-                      </div>
-                  </div>
-              </li>
-          </ul>
-          </form>
-
-          <center>
-            <div id="spinner_class" class="d-none">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
-          </center>
-        
-   </div>
-      <div class="row">
-       <h4>Total Amount - &#8358; <span id="total">0.00</span></h4>
-
-       <div class="col-md-12 mt-2">
-        <button class="btn btn-primary btn-block" @click="goToParticulars">Click to buy</button>
-       </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-     <div class="card collapse-icon accordion-icon-rotate">
-      <div id="headingCollapse12" class="card-header">
-          <a data-toggle="collapse" href="#collapse12" aria-expanded="false" aria-controls="collapse12" class="card-title lead collapsed">Register a New Vehicle <i data-feather="plus" width="20" ></i> </a>
-        </div>
-        <div id="collapse12" role="tabpanel" aria-labelledby="headingCollapse12" class="collapse" aria-expanded="false" style="">
-          <div class="card-body">
-            <div class="card-block">
-          <div class="col-md-12">
-          <div class="alert alert-light-info color-black">Select the type of Vehicle, then select all the options you require to see the accurate price. </div>
-         <form method="post" id="register_vehicle_form">
-            <fieldset class="form-group">
-              <select class="form-select" id="vehicle_type1" name="vehicle_type" onchange="get_quote2()">
-                <option>Select vehicle type</option>
-                <?php
-                    foreach ($get_vehicles as $vehicle) {
-                    ?>
-                    <option value="<?= $vehicle['unique_id']?>"><?= $vehicle['vehicle_type']?></option>
-                <?php }
-                ?>
-              </select>
-            </fieldset>
-
-            <!-- <fieldset class="form-group">
-              <select class="form-select" id="basicSelect">
-                  <option>Registration Type</option>
-                  <option></option>
-                  <option></option>
-              </select>
-            </fieldset> -->
-               <div class="form-group">
-                  <select name="insurance_type" id="insurance_type1" class="form-select" onChange="show('veh', this.options[this.selectedIndex].firstChild.nodeValue)">
-                      <option>Insurance type</option>
-                      <option value="third_party">3rd Party Insurance</option>
-                      <option value="comprehensive">Comprehensive Insurance</option>
-                      <option value="no_insurance">(No Insurance)</option>
-                  </select>
-                </div>
-                <div id="veh">
-                  <div class="form-group">
-                   <select class="form-select" name="insurer" id="insurer">
-                        <option>Select Insurer</option>
-                        <?php
-                            foreach ($get_insurer as $insurer) {
+                <select class="form-select" id="year_of_make" name="year_of_make"
+                v-model="yearOwnership">
+                    <option value="">Select year</option>
+                    <?php
+                        for ($year=1990; $year <= 2099; $year++) { 
                         ?>
-                            <option value="<?= $insurer['unique_id']?>"><?= $insurer['name']?></option>
-                        <?php } ?>
-                    </select>
-                  </div>
-                   <div class="form-group">
-                     <select class="form-select" name="plan_type" id="plan_type" onchange="get_quote2()">
-                        <option>Select Plan</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                    <input type="number" name="vehicle_value" id="vehicle_value" class="form-control" placeholder="Value of Vehicle (in naira)">
-                  </div>
-                </div>
-
-            <fieldset class="form-group">
-              <select name="plate_number_type" id="plate_number_type" class="form-select" onchange="get_quote2()">
-                <option>Type of number plate</option>
-                <option value="private"> Private number plate</option>
-                <option value="commercial"> Commercial number plate</option>
-                <option value="personalized_number">Custom number plate</option>
-              </select>
-            </fieldset>
-         </form>
-        </div>
-        <center>
-          <div id="spinner_class1" class="d-none">
-              <div class="spinner-border text-primary" role="status">
-                  <span class="sr-only">Loading...</span>
-              </div>
-          </div>
-        </center>
-
-        <div class="row">
-            <h4>Total Amount - &#8358;<span id="total1">0.00</span></h4>
-          <div class="col-md-12 mt-2">
-           <a href="vehicle_reg.php"> <button class="btn btn-primary btn-block ">Click to buy</button></a>
-           </div>
-        </div>
-            </div>
-          </div>
-        </div>
-    </div>
-
-    <div class="card collapse-icon accordion-icon-rotate">
-      <div id="headingCollapse13" class="card-header">
-          <a data-toggle="collapse" href="#collapse13" aria-expanded="false" aria-controls="collapse13" class="card-title lead collapsed">Change of Ownership <i data-feather="plus" width="20" ></i> </a>
-        </div>
-        <div id="collapse13" role="tabpanel" aria-labelledby="headingCollapse12" class="collapse" aria-expanded="false" style="">
-          <div class="card-body">
-            <div class="card-block">
-            <div class="col-md-12">
-          <div class="alert alert-light-info color-black">Select the type of Vehicle, then select all the options you require, to see the acccurate price.</div>
-          <form id="change_ownership_quote_form">
-            <fieldset class="form-group">
-              <select class="form-select" id="vehicle_type2" name="vehicle_type" onchange="get_quote3()">
-                <option>Select vehicle type</option>
-                <?php
-                    foreach ($get_vehicles as $vehicle) {
+                        <option value="<?=$year?>"><?=$year;?></option>
+                        <?php
+                        }
                     ?>
-                    <option value="<?= $vehicle['unique_id']?>"><?= $vehicle['vehicle_type']?></option>
-                <?php }
-                ?>
-              </select>
-            </fieldset>
+                </select>
+            </div>
 
             <fieldset class="form-group">
               <select class="form-select" onchange="get_quote3()">
@@ -348,7 +487,9 @@
 
     <div class="card collapse-icon accordion-icon-rotate">
       <div id="headingCollapse14" class="card-header">
-          <a data-toggle="collapse" href="#collapse14" aria-expanded="false" aria-controls="collapse14" class="card-title lead collapsed">Other Vehicle Papers <i data-feather="plus" width="20" ></i> </a>
+          <a data-toggle="collapse" href="#collapse14" aria-expanded="false" aria-controls="collapse14" class="card-title lead collapsed" @click="unsetVehiclDetails">
+            Other Vehicle Papers <i data-feather="plus" width="20" ></i>
+          </a>
         </div>
         <div id="collapse14" role="tabpanel" aria-labelledby="headingCollapse12" class="collapse" aria-expanded="false" style="">
           <div class="card-body">
@@ -488,7 +629,8 @@
       //var vehicle_type = $(this).children("option:selected").val();
       var insurance_type = $(this).children("option:selected").val();
       var total = $("#total").html();
-      if(insurance_type == 'third_party' || insurance_type == 'no_insurance'){
+      $("#total").html(formatNumber(0));
+      if(insurance_type == 'third_party_insurance' || insurance_type == 'no_insurance'){
         $.ajax({
           url: "ajax/get_quote",
           method: "POST",
@@ -509,7 +651,9 @@
       //var vehicle_type = $(this).children("option:selected").val();
       var insurance_type = $(this).children("option:selected").val();
       var total = $("#total").html();
-      if(insurance_type == 'third_party' || insurance_type == 'no_insurance'){
+      $("#total1").html(formatNumber(0));
+      console.log("Got here");
+      if(insurance_type == 'third_party_insurance' || insurance_type == 'no_insurance'){
         $.ajax({
           url: "ajax/get_quote2",
           method: "POST",
@@ -524,7 +668,7 @@
           }
         })
       }
-      else if(insurance_type == 'comprehensive'){
+      else if(insurance_type == 'comprehensive_insurance'){
         $("#veh").show();
       }
     })

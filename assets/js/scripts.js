@@ -3880,7 +3880,7 @@ $(document).ready(function(){
 				const data = JSON.parse(res);
 				data.map(plan => {
 					plans.append(`
-					<option value="${plan.unique_id}">${plan.plan_name}</option>
+					<option value="${plan.unique_id}">${plan.plan_name} - ${plan.plan_percentage}%</option>
 					`);
 				});
 			}
@@ -3915,7 +3915,7 @@ $(document).ready(function(){
 		$.get("admin/ajax_admin/get_vehicle_quote.php", {planId, vehicleValue}, function(data, error){
 			console.log(data)
 			let premium_amount = formatNumber(JSON.parse(data));
-			$("#premium_amount").text(premium_amount);
+			$("#premium_amount, .quote-amount").text(premium_amount);
 			$("#premiumAmountField").val(JSON.parse(data));
 		});
 	});
@@ -4249,7 +4249,7 @@ $(document).ready(function(){
 				const data = JSON.parse(res);
 				data.map(plan => {
 					plans.append(`
-					<option value="${plan.unique_id}">${plan.plan_name}</option>
+					<option value="${plan.unique_id}">${plan.plan_name} - ${plan.plan_percentage}%</option>
 					`);
 				});
 			}

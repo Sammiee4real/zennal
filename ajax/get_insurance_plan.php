@@ -5,7 +5,7 @@
 	echo '<option value="">Select Plan </option>';
 	foreach ($get_insurance_plan as $insurance_plan) {
 ?>
-<option value="<?= $insurance_plan['unique_id'];?>"><?= $insurance_plan['plan_name'];?></option>
+<option value="<?= $insurance_plan['unique_id'];?>"><?= $insurance_plan['plan_name'];?> - <?= $insurance_plan['plan_percentage'];?>%</option>
 
 <?php
 	}

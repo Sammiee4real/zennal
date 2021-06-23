@@ -91,7 +91,7 @@ function show(el, txt){
                                         </div>
 
                                         <div class="form-group">
-                                        <select class="form-select" class="make_of_vehicle" name="make_of_vehicle" id="make_of_vehicle" required>
+                                            <select class="form-select" class="make_of_vehicle" name="make_of_vehicle" id="make_of_vehicle" required>
                                                 <option value="">Vehicle make</option>
                                                 <?php
                                                     foreach($get_vehicle_brands as $vehicle_brand){

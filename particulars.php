@@ -6,21 +6,39 @@
     $get_vehicle_brands = get_rows_from_table('vehicle_brands');
     $get_permit_types = get_rows_from_table('services');
     $get_insurer = get_rows_from_one_table('insurers', 'datetime');
+    $get_insurers = get_rows_from_table('insurers');
+
+    $insurance_plans = [];
+    if(isset($_GET['pi'])){
+        $insurer_id = $_GET['pi'];
+        $insurance_plans = get_rows_from_table_with_one_params("insurance_plans", 'insurer_id', $insurer_id);
+    }
+    
 ?> 
 
 <div id="main">
 
 <style type="text/css">
-#bar, #cus {display:none;}
+/* #bar, #cus {
+    display:none;
+} */
+#cus {
+    display:none;
+}
 </style>
 <script>
-// function show(el, txt){
-    // var elem1 = document.getElementById('bar');
-    // var elem2 = document.getElementById('cus');
+    // function show(el, txt){
+    //     var elem1 = document.getElementById('bar');
+    //     var elem2 = document.getElementById('cus');
 
-    // elem1.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
-    // elem2.style.display = (txt == 'Custom number plate') ? 'block' : 'none';
+    //     elem1.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
+    //     elem2.style.display = (txt == 'Custom number plate') ? 'block' : 'none';
     // }
+    function show(el, txt){
+        var elem = document.getElementById(el);
+
+        elem.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
+    }
 </script>           
 <div class="main-content container-fluid" id="appWrapper">
     <div class="page-title">
@@ -29,7 +47,7 @@
     </div>
 
 
-<section class="section mt-5" id="multiple-column-form ">
+    <section class="section mt-5" id="multiple-column-form ">
         <div class="row match-height">
             <div class="col-6 mx-auto">
                 <div class="card">
@@ -46,14 +64,6 @@
                                             <select class="form-select" name="vehicle_type"
                                             v-model="vehicleType" required>
                                                 <option value="">Select vehicle type</option>
-                                                <!-- <option>Motorcycle/Tricycle</option>
-                                                <option>Saloon Car - Med (1.4-1.9L) e.g. Picanto, Corolla, Almera</option>
-                                                <option>Saloon Car - Maxi (1.4-1.9L) e.g. Camry, Benz, Accord</option>
-                                                <option>SUV/Jeep/Bus/Pick-up</option>
-                                                <option>Coaster Bus</option>
-                                                <option>Mini Trucks/ Trucks 15 Tons (Tippers)</option>
-                                                <option>Trucks 20 Tons (6-10 Tyres)</option>
-                                                <option>Trucks 30 Tons (10+ Tyres)</option> -->
                                                 <?php
                                                     foreach($get_vehicle_types as $vehicle){
                                                 ?>
@@ -130,110 +140,125 @@
                                         <div class="form-group">
                                             <input type="text" id="chasis" class="form-control" placeholder="Enter Chasis number" name="chassis_no" required>
                                         </div>
-                                         <div class="form-group">
+                                        <div class="form-group">
                                             <input type="text" id="chasis" class="form-control" placeholder="Name on Vehicle License" name="vehicle_license" required>
                                         </div>
 
-                                        <!-- <div class="form-group">
-                                    <input type="number" id="Phone" class="form-control" placeholder="Phone number" name="">
-                                </div> -->
-
-                                <div class="form-group">
-                                    <select class="form-select" name="vehicle_color" required>
-                                        <option value="">Select color</option>
-                                        <option value="arsh">Arsh</option>
-                                        <option value="blue">Blue</option>
-                                        <option value="green">Green</option>
-                                        <option value="yellow">Yello</option>
-                                        <option value="black">Black</option>
-                                        <option value="red">Red</option>
-                                        <option value="white">White</option>
-                                    </select>
-                                </div>
-                           <ul class="list-unstyled mb-0">
-                            <h6>Check all that applies</h6>
-                                <li class="d-inline-block mr-2 mb-1">
-                                    <div class="form-check">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="form-check-input form-check-primary" name="road_worthiness" id="customColorCheck1">
-                                            <label class="form-check-label" for="customColorCheck1">Road Worthiness</label>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="d-inline-block mr-2 mb-1">
-                                    <div class="form-check">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="form-check-input form-check-success" name="hackey_permit" id="customColorCheck3" >
-                                            <label class="form-check-label" for="customColorCheck3">Hackney Permit</label>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="d-inline-block mr-2 mb-1">
-                                    <div class="form-check">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="form-check-input form-check-danger"  name="vehicle_license" id="customColorCheck4">
-                                            <label class="form-check-label" for="customColorCheck4">Vehicle License</label>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="form-group">
-                                <!-- class="choices form-select multiple-remove" multiple="multiple" -->
-                                <select class="form-select" name="permit_type" required> 
-                                    <option value="">Select type of permit</option>
-                                    <?php
-                                        foreach($get_permit_types as $permit_type){
-                                    ?>
-                                        <option value="<?php echo $permit_type["unique_id"] ?>" ><?php echo $permit_type["service"]?></option>
-                                    <?php    
-                                        }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <select name="insurance_type" class="form-select" id="insurance_type" required> <!--  onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" -->
-                                    <option value="">Insurance type</option>
-                                    <option value="third_party_insurance">3rd Party Insurance</option>
-                                    <option value="comprehensive_insurance">Comprehensive Insurance</option>
-                                    <option value="no_insurance">(No Insurance)</option>
-                                </select>
-                            </div>
-                            <!-- <div id="bar">
-                                 <div class="form-group">
-                                   <select class="form-select">
-                                                <option>Select Plan</option>
-                                                <option> Bronze</option>
-                                                <option> Silver</option>
-                                            </select>
-                                </div>
-                            </div> -->
-                                        <!-- <div class="form-group">
-                                            <select name="thename" class="form-select" onChange="show('cus', this.options[this.selectedIndex].firstChild.nodeValue)">
-                                                <option>Type of number plate</option>
-                                                <option> Private number plate</option>
-                                                <option> Commercial number plate</option>
-                                                <option>Custom number plate</option>
+                                        <div class="form-group">
+                                            <select class="form-select" name="vehicle_color" required>
+                                                <option value="">Select color</option>
+                                                <option value="arsh">Arsh</option>
+                                                <option value="blue">Blue</option>
+                                                <option value="green">Green</option>
+                                                <option value="yellow">Yello</option>
+                                                <option value="black">Black</option>
+                                                <option value="red">Red</option>
+                                                <option value="white">White</option>
                                             </select>
                                         </div>
-                                <div id="cus">
-                                    <div class="form-group">
-                                        <span>Preferrred Number Plate</span>
-                                        <input type="text" name="plate" class="form-control" placeholder="e.g (KET-123A)">
+                                        <ul class="list-unstyled mb-0">
+                                            <h6>Check all that applies</h6>
+                                            <li class="d-inline-block mr-2 mb-1">
+                                                <div class="form-check">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="form-check-input form-check-primary" name="road_worthiness" id="customColorCheck1"
+                                                        v-model="roadWorthiness" value="1">
+                                                        <label class="form-check-label" for="customColorCheck1">Road Worthiness</label>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li class="d-inline-block mr-2 mb-1">
+                                                <div class="form-check">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="form-check-input form-check-success" name="hackey_permit" id="customColorCheck3"
+                                                        v-model="hackneyPermit" value="1">
+                                                        <label class="form-check-label" for="customColorCheck3">Hackney Permit</label>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="d-inline-block mr-2 mb-1">
+                                                <div class="form-check">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="form-check-input form-check-danger"  name="vehicle_license" id="customColorCheck4"
+                                                        v-model="vehicleLicense" value="1">
+                                                        <label class="form-check-label" for="customColorCheck4">Vehicle License</label>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="form-group">
+                                            <!-- class="choices form-select multiple-remove" multiple="multiple" -->
+                                            <select class="form-select" name="permit_type" required> 
+                                                <option value="">Select type of permit</option>
+                                                <?php
+                                                    foreach($get_permit_types as $permit_type){
+                                                ?>
+                                                    <option value="<?php echo $permit_type["unique_id"] ?>" ><?php echo $permit_type["service"]?></option>
+                                                <?php    
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select name="insurance_type" class="form-select" id="insurance_type"
+                                            v-model="insuranceType" required onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" v-model="insuranceType"> <!--  onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" -->
+                                                <option value="">Insurance type</option>
+                                                <option value="third_party_insurance">3rd Party Insurance</option>
+                                                <option value="comprehensive_insurance">Comprehensive Insurance</option>
+                                                <option value="no_insurance">(No Insurance)</option>
+                                            </select>
+                                        </div>
+                                        <div id="bar" v-show="insuranceType == 'comprehensive_insurance'">
+                                            <div class="row">
+                                                <div class="col-md-12 col-12">
+                                                    <div class="form-group">
+                                                        <span for="first-name-column">Vehicle Value (Without a comma)*</span>
+                                                        <input type="text" id="vehicle_value" name="vehicle_value" class="form-control" placeholder="Enter Vehicle Value" name="Vehicle-column" v-model="vehicleValue">
+                                                        <span id="help-text"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <span for="last-name-column">Preferred Insurer * </span>
+                                                        <select class="form-select" name="prefered_insurer" id="prefered_insurer" v-model="preferredInsurer">
+                                                            <option value="">Select Preferred Insurer</option>
+                                                            <?php
+                                                                foreach($get_insurers as $insurer){
+                                                                echo "<option value='".$insurer['unique_id']."'>".$insurer['name']."</option>";
+                                                                }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <span for="last-name-column">Plan *</span>
+                                                        <select class="form-select" name="select_plan" id="select_plan" v-model="plan">
+                                                            <option value="">Select package plan</option>
+                                                            <?php
+                                                                if(!empty($insurance_plans)){
+                                                                    foreach($insurance_plans as $insurance_plan){
+                                                                        $plan_id = $insurance_plan['unique_id'];
+                                                                        $plan_name = $insurance_plan['plan_name'];
+                                                                        echo "<option value='$plan_id'>$plan_name</option>";
+                                                                    }
+                                                                }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="premium_amount" id="premiumAmountField">
+                                            </div>
+                                        </div>
                                     </div>
-                                </div> -->
-                 </div>
-           </div>
-                                    <div class="col-12 d-flex justify-content-end">
-                                        <button id="submit-particular-btn" type="submit" class="btn btn-primary mr-1 mb-1">Proceed</button>
-                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button id="submit-particular-btn" type="submit" class="btn btn-primary mr-1 mb-1">Proceed</button>
+                                </div>
                                     
-                                    </form>
-                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 
  
