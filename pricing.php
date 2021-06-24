@@ -227,7 +227,7 @@
                                     <form method="post" id="register_vehicle_form">
                                         <fieldset class="form-group">
                                             <select class="form-select" id="vehicle_type1" name="vehicle_type" onchange="get_quote2()" v-model="vehicleTypeNewVehicle">
-                                                <option>Select vehicle type</option>
+                                                <option value="">Select vehicle type</option>
                                                 <?php
                                                     foreach ($get_vehicles as $vehicle) {
                                                     ?>
@@ -294,16 +294,20 @@
                                         
                                         <div class="form-group">
                                             <select name="insurance_type" id="insurance_type1" class="form-select" onChange="show('veh', this.options[this.selectedIndex].firstChild.nodeValue)" v-model="insuranceTypeNewVehicle">
-                                                <option>Insurance type</option>
-                                                <option value="third_party">3rd Party Insurance</option>
-                                                <option value="comprehensive">Comprehensive Insurance</option>
-                                                <option value="no_insurance">(No Insurance)</option>
+                                                <option value="">Insurance type</option>
+                                                <option value="third_party_insurance">3rd Party Insurance</option>
+                                                <option value="comprehensive_insurance">Comprehensive Insurance</option>
+                                                <option value="no_insurance_insurance">(No Insurance)</option>
                                             </select>
                                         </div>
                                         <div id="veh">
                                             <div class="form-group">
+                                                <input type="number" name="vehicle_value" id="vehicle_value" class="form-control" placeholder="Value of Vehicle (in naira)"
+                                                v-model="vehicleValueNewVehicle">
+                                            </div>
+                                            <div class="form-group">
                                                 <select class="form-select" name="insurer" id="insurer" v-model="preferredInsurerNewVehicle">
-                                                    <option>Select Insurer</option>
+                                                    <option value="">Select Insurer</option>
                                                     <?php
                                                         foreach ($get_insurer as $insurer) {
                                                     ?>
@@ -312,18 +316,15 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <select class="form-select" name="plan_type" id="plan_type" onchange="get_quote2()">
-                                                <option>Select Plan</option>
+                                                <select class="form-select" name="plan_type" id="plan_type" onchange="get_quote2()" v-model="planNewVehicle">
+                                                <option value="">Select Plan</option>
                                                 </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="number" name="vehicle_value" id="vehicle_value" class="form-control" placeholder="Value of Vehicle (in naira)">
                                             </div>
                                         </div>
 
                                         <fieldset class="form-group">
                                             <select name="plate_number_type" id="plate_number_type" class="form-select" onchange="get_quote2()" v-model="numberPlateTypeNewVehicle">
-                                                <option>Type of number plate</option>
+                                                <option value="">Type of number plate</option>
                                                 <option value="private"> Private number plate</option>
                                                 <option value="commercial"> Commercial number plate</option>
                                                 <option value="personalized_number">Custom number plate</option>
@@ -340,9 +341,16 @@
                                 </center>
 
                                 <div class="row">
-                                    <h4>Total Amount - &#8358;<span id="total1">0.00</span></h4>
+                                    <h4>
+                                        Total Amount - &#8358;<span id="total1" class="quote-amount-new-vehicle">
+                                        0.00</span>
+                                    </h4>
                                 <div class="col-md-12 mt-2">
-                                <a href="vehicle_reg.php"> <button class="btn btn-primary btn-block ">Click to buy</button></a>
+                                <button type="button" class="btn btn-primary btn-block"
+                                @click="goToVehicleReg">
+                                    Click to buy
+                                </button>
+                                <!-- <a href="vehicle_reg.php"> <button class="btn btn-primary btn-block ">Click to buy</button></a> -->
                             </div>
                         </div>
                     </div>

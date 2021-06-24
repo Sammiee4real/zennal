@@ -3915,7 +3915,7 @@ $(document).ready(function(){
 		$.get("admin/ajax_admin/get_vehicle_quote.php", {planId, vehicleValue}, function(data, error){
 			console.log(data)
 			let premium_amount = formatNumber(JSON.parse(data));
-			$("#premium_amount, .quote-amount").text(premium_amount);
+			$("#premium_amount, .quote-amount-paricular, .quote-amount-new-vehicle").text(premium_amount);
 			$("#premiumAmountField").val(JSON.parse(data));
 		});
 	});

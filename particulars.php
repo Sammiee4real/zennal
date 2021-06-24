@@ -237,7 +237,8 @@
                                                                     foreach($insurance_plans as $insurance_plan){
                                                                         $plan_id = $insurance_plan['unique_id'];
                                                                         $plan_name = $insurance_plan['plan_name'];
-                                                                        echo "<option value='$plan_id'>$plan_name</option>";
+                                                                        $plan_percentage = $insurance_plan['plan_percentage'];
+                                                                        echo "<option value='$plan_id'>$plan_name - $plan_percentage%</option>";
                                                                     }
                                                                 }
                                                             ?>

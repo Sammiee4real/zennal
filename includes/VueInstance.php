@@ -26,7 +26,7 @@
             vehicleMakeNewVehicle: '',
             vehicleMakeModelNewVehicle: '',
             insuranceTypeNewVehicle: '',
-            vehicleValue: '',
+            vehicleValueNewVehicle: '',
             preferredInsurerNewVehicle: '',
             planNewVehicle: '',
             numberPlateTypeNewVehicle: '',
@@ -176,7 +176,7 @@
                 window.location.href=`particulars?vt=${this.vehicleType}&vm=${this.vehicleMake}&vmm=${this.vehicleMakeModel}&y=${this.year}&it=${this.insuranceType}&vv=${this.vehicleValue}&pi=${this.preferredInsurer}&p=${this.plan}&rw=${this.roadWorthiness}&hp=${this.hackneyPermit}&vl=${this.vehicleLicence}`;
             },
             goToVehicleReg(){
-                window.location.href=`vehicle_reg?vt=${this.vehicleTypeNewVehicle}&vm=${this.vehicleMakeNewVehicle}&vmm=${this.vehicleMakeModelNewVehicle}&y=${this.yearNewVehicle}&it=${this.insuranceTypeNewVehicle}&vv=${this.vehicleValue}&pi=${this.preferredInsurerNewVehicle}&p=${this.planNewVehicle}&npt=${this.numberPlateTypeNewVehicle}`;
+                window.location.href=`vehicle_reg?vt=${this.vehicleTypeNewVehicle}&vm=${this.vehicleMakeNewVehicle}&vmm=${this.vehicleMakeModelNewVehicle}&y=${this.yearNewVehicle}&it=${this.insuranceTypeNewVehicle}&vv=${this.vehicleValueNewVehicle}&pi=${this.preferredInsurerNewVehicle}&p=${this.planNewVehicle}&npt=${this.numberPlateTypeNewVehicle}`;
             },
             setVehicleDetailsFromURL(){
 
@@ -301,7 +301,7 @@
         },
         created(){
 
-            if(window.location.pathname.includes("particulars")){
+            if(window.location.pathname.includes("particulars") || window.location.pathname.includes("vehicle_reg")){
                 this.setVehicleDetailsFromURL();
             }
 
