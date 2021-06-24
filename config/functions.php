@@ -2165,7 +2165,7 @@ function calculate_renew_vehicle_particulars($particulars_id){
   elseif ($insurance_type == 'no_insurance') {
     $insurance_cost = 0;
   }
-  elseif ($insurance_type == 'comprehensive_insurance') {
+  elseif ($insurance_type == 'comprehensive_insurance' ||  $insurance_type == 'comprehensive') {
     $insurance_cost = 0;
   }
 
@@ -4272,7 +4272,7 @@ function calculate_vehicle_registration($reg_id){
   else if($get_registration_details['insurance_type'] == 'no_third_party_insurance'){
     $insurance_charge = 0;
   }
-  else if($get_registration_details['insurance_type'] == 'comprehensive'){
+  else if($get_registration_details['insurance_type'] == 'comprehensive' ||  $get_registration_details['insurance_type'] == 'comprehensive_insurance'){
     $insurance_charge = ($get_insurance_rate['plan_percentage'] / 100) * $get_registration_details['vehicle_value'];
   }
 
@@ -4281,7 +4281,7 @@ function calculate_vehicle_registration($reg_id){
     if($get_registration_details['insurance_type'] == 'third_party_insurance'){
       $number_plate_charge = $get_number_plate['third_party_amount'];
     }
-    else if($get_registration_details['insurance_type'] == 'no_third_party_insurance' || $get_registration_details['insurance_type'] == 'comprehensive'){
+    else if($get_registration_details['insurance_type'] == 'no_third_party_insurance' || $get_registration_details['insurance_type'] == 'comprehensive' ||  $get_registration_details['insurance_type'] == 'comprehensive_insurance'){
       $number_plate_charge = $get_number_plate['no_third_party_amount'];
     }
   }
@@ -4290,7 +4290,7 @@ function calculate_vehicle_registration($reg_id){
     if($get_registration_details['insurance_type'] == 'third_party_insurance'){
       $number_plate_charge = $get_number_plate['third_party_amount'];
     }
-    else if($get_registration_details['insurance_type'] == 'no_third_party_insurance' || $get_registration_details['insurance_type'] == 'comprehensive'){
+    else if($get_registration_details['insurance_type'] == 'no_third_party_insurance' || $get_registration_details['insurance_type'] == 'comprehensive' || $get_registration_details['insurance_type'] == 'comprehensive_insurance'){
       $number_plate_charge = $get_number_plate['no_third_party_amount'];
     }
   }

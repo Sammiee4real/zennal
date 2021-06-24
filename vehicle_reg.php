@@ -4,12 +4,19 @@
     $get_vehicle_brands = get_rows_from_one_table('vehicle_brands', 'brand_name', "ASC");
     $get_vehicle_models = get_rows_from_one_table('vehicle_models', 'datetime');
     $get_insurer = get_rows_from_one_table('insurers', 'datetime');
+
+    $insurance_plans = [];
+    if(isset($_GET['pi'])){
+        $insurer_id = $_GET['pi'];
+        $insurance_plans = get_rows_from_table_with_one_params("insurance_plans", 'insurer_id', $insurer_id);
+    }
+
 ?>
 <div id="main">
 
     <?php include("includes/header.php");?> 
     <style type="text/css">
-        #bar, #cus {display:none;}
+        #cus {display:none;}
     </style>
 
     <div class="main-content container-fluid" id="appWrapper">
@@ -34,8 +41,10 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <select class="form-select" id="vehicle_type" name="vehicle_type">
-                                                    <option>Select vehicle type</option>
+                                                <label for="vehicle_type">Vehicle Type</label>
+                                                <select class="form-select" id="vehicle_type" name="vehicle_type"
+                                                v-model="vehicleType">
+                                                    <option value="">Select vehicle type</option>
                                                     <?php
                                                         foreach ($get_vehicles as $vehicle) {
                                                         ?>
@@ -46,7 +55,8 @@
                                             </div>
                                             
                                             <div class="form-group">
-                                                <select class="form-select" id="" name="vehicle_make"
+                                                <label for="vehicleMake">Vehicle Make</label>
+                                                <select class="form-select" id="vehicleMake" name="vehicle_make"
                                                 v-model="vehicleMake">
                                                     <option value="">Select vehicle make</option>
                                                     <?php
@@ -59,7 +69,7 @@
                                                     ?>
                                                     <option value="others">Others</option>
                                                 </select>
-                                                <div id="other_vehicle_make" class="mt-3 d-none">
+                                                <div id="other_vehicle_make" class="mt-3" v-show="vehicleMake == 'others'">
                                                     <input type="text" name="other_vehicle_make" class="form-control" placeholder="Please Specify">
                                                 </div>
                                             </div>
@@ -72,6 +82,7 @@
                                                 </div>
                                             </center>
                                             <div class="form-group">
+                                                <label for="vehicle_model">Vehicle Model</label>
                                                 <select class="form-select" id="vehicle_model"
                                                 name="vehicle_model" v-model="vehicleMakeModel">
                                                     <option value="">Select vehicle model</option>
@@ -87,6 +98,7 @@
                                             </div>
 
                                             <div class="form-group">
+                                                <label for="year_of_make">Vehicle Year</label>
                                                 <select class="form-select" id="year_of_make" name="year_of_make"
                                                 v-model="year">
                                                     <option value="">Select year</option>
@@ -101,12 +113,15 @@
                                             </div>
 
                                             <div class="form-group">
+                                                <label for="engine_number">Engine Number</label>
                                                 <input type="text" class="form-control" placeholder="Enter Engine number" name="engine_number" id="engine_number">
                                             </div>
                                             <div class="form-group">
+                                                <label for="chasis_number">Chasis Number</label>
                                                 <input type="text" id="chasis_number" class="form-control" placeholder="Enter Chasis number" name="chasis_number">
                                             </div>
                                             <div class="form-group">
+                                                <label for="vehicle_color">Vehicle Color</label>
                                                 <select class="form-select" id="vehicle_color" name="vehicle_color">
                                                     <option>Select color</option>
                                                     <option value="Blue">Blue</option>
@@ -124,17 +139,19 @@
                                             </div>
 
                                             <div class="mt-5">
-                                            <h4 class="card-title">Personal Information & Documents</h4>
+                                                <h4 class="card-title">Personal Information & Documents</h4>
                                             </div>
 
                                             <div class="form-group">
+                                                <label for="occupation">Occupation</label>
                                                 <input type="text" id="occupation" class="form-control" placeholder="Occupation" name="occupation">
                                             </div>
                                             <div class="form-group">
-                                                <span>Date of birth</span>
+                                                <label for="date_of_birth">Date of birth</label>
                                                 <input type="date" id="date_of_birth" class="form-control" placeholder="Date of birth" name="date_of_birth">
                                             </div>
                                             <div class="form-group">
+                                                <label for="contact_address">Contact address</label>
                                                 <input type="text" id="contact_address" class="form-control" placeholder="Contact address" name="contact_address">
                                             </div>
 
@@ -153,23 +170,29 @@
                                             </div>
 
                                             <div class="form-group">
+                                                <label for="name">Vehicle Registration Name</label>
                                                 <input type="text" id="name" class="form-control" placeholder="Name to register vehicle with" name="name_on_vehicle">
                                             </div>
                                             <div class="form-group">
+                                                <label for="phone">Phone</label>
                                                 <input type="number" id="phone" class="form-control" placeholder="Phone number" name="phone">
                                             </div>
                                             <div class="form-group">
-                                                <select name="insurance_type" id="insurance_type" class="form-select">
-                                                    <option>Insurance type</option>
+                                                <label for="insurance_type">Inurance Type</label>
+                                                <select name="insurance_type" id="insurance_type"
+                                                class="form-select" v-model="insuranceType">
+                                                    <option value="">Insurance type</option>
                                                     <option value="third_party_insurance">3rd Party Insurance</option>
-                                                    <option value="comprehensive">Comprehensive Insurance</option>
+                                                    <option value="comprehensive_insurance">Comprehensive Insurance</option>
                                                     <option value="no_third_party_insurance">(No Insurance)</option>
                                                 </select>
                                             </div>
-                                            <div id="bar">
+                                            <div id="bar" v-show="insuranceType == 'comprehensive_insurance'">
                                                 <div class="form-group">
-                                                <select class="form-select" name="insurer" id="insurer">
-                                                        <option>Select Insurer</option>
+                                                    <label for="insurer">Insurer</label>
+                                                    <select class="form-select" name="insurer" id="insurer"
+                                                    v-model="preferredInsurer">
+                                                        <option value="">Select Insurer</option>
                                                         <?php
                                                             foreach ($get_insurer as $insurer) {
                                                         ?>
@@ -185,18 +208,32 @@
                                                     </div>
                                                 </center>
                                                 <div class="form-group">
-                                                <select class="form-select" name="plan_type" id="plan_type">
-                                                        <option>Select Plan</option>
-                                                    
+                                                    <label for="plan_type">Plan</label>
+                                                    <select class="form-select" name="plan_type" id="plan_type"
+                                                    v-model="plan">
+                                                        <option value="">Select Plan</option>
+                                                        <?php
+                                                            if(!empty($insurance_plans)){
+                                                                foreach($insurance_plans as $insurance_plan){
+                                                                    $plan_id = $insurance_plan['unique_id'];
+                                                                    $plan_name = $insurance_plan['plan_name'];
+                                                                    $plan_percentage = $insurance_plan['plan_percentage'];
+                                                                    echo "<option value='$plan_id'>$plan_name - $plan_percentage%</option>";
+                                                                }
+                                                            }
+                                                        ?>                                                     
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="number" name="vehicle_value" id="vehicle_value" class="form-control" placeholder="Value of Vehicle (in naira)">
+                                                    <label for="vehicle_value">Vehicle Value</label>
+                                                    <input type="number" name="vehicle_value" id="vehicle_value" class="form-control" placeholder="Value of Vehicle (in naira)"
+                                                    v-model="vehicleValue">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <select name="plate_number_type" id="plate_number_type" class="form-select">
-                                                    <option>Type of number plate</option>
+                                                <label for="plate_number_type">Number Plate Type</label>
+                                                <select name="plate_number_type" id="plate_number_type" class="form-select" v-model="numberPlateType">
+                                                    <option value="">Type of number plate</option>
                                                     <option value="private"> Private number plate</option>
                                                     <option value="commercial"> Commercial number plate</option>
                                                     <option value="personalized_number">Custom number plate</option>
@@ -204,12 +241,13 @@
                                             </div>
                                             <div id="cus">
                                                 <div class="form-group">
-                                                    <span>Preferrred Number Plate</span>
+                                                    <label for="number_plate">Preferrred Number Plate</label>
                                                     <input type="text" name="number_plate" id="number_plate" class="form-control" placeholder="e.g (KET-123A)">
                                                 </div>
                                             </div>
 
-                                    <div class="form-group">
+                                            <div class="form-group">
+                                                <label for="state">State of Registration</label>
                                                 <select name="state" class="form-select" id="state">
                                                     <option>Preferred State of Registration</option>
                                                     <option value="lagos">Lagos</option><!-- 
@@ -219,6 +257,7 @@
                                             </div>
                                     <div class="state box">
                                         <div class="form-group">
+                                            <label for="first_lg">1st Preferrred Local Government of Registration</label>
                                             <select name="first_lg" class="form-select" id="first_lg">
                                                     <option> 1st Preferrred local government</option>
                                                     <option value="Somolu">Somolu</option>
@@ -244,6 +283,7 @@
                                                 </select>
                                         </div>
                                         <div class="form-group">
+                                            <label for="second_lg">2nd Preferrred Local Government of Registration</label>
                                             <select name="second_lg" class="form-select" id="second_lg">
                                                 <option>2nd Preferrred local government</option>
                                                 <option value="Somolu">Somolu</option>
@@ -269,6 +309,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
+                                            <label for="third_lg">3rd Preferrred Local Government of Registration</label>
                                             <select name="third_lg" class="form-select" id="third_lg">
                                                 <option>3rd Preferrred local government</option>
                                                 <option value="Somolu">Somolu</option>
@@ -295,14 +336,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <span>Do you want to obtain a Tinted permit?</span>
-                                                <select class="form-select" id="tinted_permit" name="tinted_permit">
-                                                    <option>Select</option>
-                                                    <option value="yes">Yes</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="tinted_permit">Do you want to obtain a Tinted permit?</label>
+                                            <select class="form-select" id="tinted_permit" name="tinted_permit">
+                                                <option>Select</option>
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
 
                                         </div>
 
@@ -345,7 +386,7 @@
         $("#insurance_type").change(function(){
             var selected_option = $(this).children("option:selected").val();
             $("#bar").hide();
-            if(selected_option == 'comprehensive'){
+            if(selected_option == 'comprehensive_insurance'){
                 $("#bar").show();
             }
         });
