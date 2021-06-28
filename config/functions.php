@@ -966,6 +966,17 @@ function save_vehicle_particulars($post_data){
   $permit_type = $post_data['permit_type'];
   $insurance_type = $post_data['insurance_type'];
 
+  if(isset($post_data['other_vehicle_make'])){
+    if(!empty($post_data['other_vehicle_make'])){
+      $make_of_vehicle = $post_data['other_vehicle_make'];
+    }
+  }
+  if(isset($post_data['other_vehicle_model'])){
+    if(!empty($post_data['other_vehicle_model'])){
+      $vehicle_model = $post_data['other_vehicle_model'];
+    }
+  }
+
   $user_id = $_SESSION['user']['unique_id'];
   $unique_id = unique_id_generator($engine_no);
  	 	 	 	 	 	 	 	 	 	 	 	 	 	 	

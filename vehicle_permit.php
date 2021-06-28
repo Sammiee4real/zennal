@@ -1,11 +1,12 @@
   
-
+{IIQ-^n?6;)B
 <?php include("includes/sidebar.php");?>
 <div id="main">
 <?php
 $get_vehicle_types = get_rows_from_table('vehicles');
 $get_vehicle_brands = get_rows_from_table('vehicle_brands');
 $get_permit_types = get_rows_from_table('services');
+var_dump($_GET['vehicle_permit']);
 ?>
 <?php include("includes/header.php");?>
 <style type="text/css">
@@ -18,7 +19,7 @@ function show(el, txt){
 
     elem1.style.display = (txt == 'Comprehensive Insurance') ? 'block' : 'none';
     elem2.style.display = (txt == 'Custom number plate') ? 'block' : 'none';
-    }
+}
 </script>               
 <div class="main-content container-fluid">
     <div class="page-title">
@@ -49,6 +50,18 @@ function show(el, txt){
                                                 <option value="<?php echo $permit_type["unique_id"] ?>" ><?php echo $permit_type["service"]?></option>
                                             <?php    
                                                 }
+                                            ?>
+                                        </select>
+
+                                        <select class="form-select select2 permits" id="vehicle_permit"
+                                        name="permit_type[]" onchange="get_quote4()" style="width:100%"
+                                        multiple data-placeholder="Chose number" :value="['3ca5055a8a3adca6eac5b8183f7a70f1', '3ce0c6934c05622f9d9008a9a97d605d']">
+                                            <option></option>
+                                            <?php
+                                                foreach ($get_permit_types as $permit) {
+                                                ?>
+                                                <option value="<?= $permit['unique_id']?>"><?= $permit['service']?></option>
+                                            <?php }
                                             ?>
                                         </select>
                                     </div>
@@ -190,3 +203,4 @@ function show(el, txt){
     </section>
 </div>
 <?php include("includes/footer.php");?>
+<?php include("includes/VueInstance.php");?>
