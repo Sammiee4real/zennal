@@ -9,6 +9,8 @@
             vehicleType: '',
             vehicleMake: '',
             vehicleMakeModel: '',
+            otherVehicleMake: '',
+            otherVehicleMakeModel: '',
             insuranceType: '',
             roadWorthiness: '',
             hackneyPermit: '',
@@ -17,6 +19,9 @@
             preferredInsurer: '',
             plan: '',
             numberPlateType: '',
+            vehicleLicenseExpiry: '',
+            registrationType: '',
+            permits: '',
             vehicleMakeModels: [],
             finishedFetchingModels: false,
             stillFetchingModels: false,
@@ -25,6 +30,8 @@
             vehicleTypeNewVehicle: '',
             vehicleMakeNewVehicle: '',
             vehicleMakeModelNewVehicle: '',
+            otherVehicleMakeNewVehicle: '',
+            otherVehicleMakeModelNewVehicle: '',
             insuranceTypeNewVehicle: '',
             vehicleValueNewVehicle: '',
             preferredInsurerNewVehicle: '',
@@ -38,9 +45,16 @@
             vehicleTypeOwnership: '',
             vehicleMakeOwnership: '',
             vehicleMakeModelOwnership: '',
+            otherVehicleMakeOwnership: '',
+            otherVehicleMakeModelOwnership: '',
+            vehicleLicenseExpiryOwnership: '',
+            registrationTypeOwnership: '',
+            numberPlateTypeOwnership: '',
             vehicleMakeModelsOwnership: [],
             finishedFetchingModelsOwnership: false,
             stillFetchingModelsOwnership: false,
+
+            permitsOtherVehicle: [],
 
             setFromURL: false,
         },
@@ -172,11 +186,24 @@
 
             },
             goToParticulars(){
-
-                window.location.href=`particulars?vt=${this.vehicleType}&vm=${this.vehicleMake}&vmm=${this.vehicleMakeModel}&y=${this.year}&it=${this.insuranceType}&vv=${this.vehicleValue}&pi=${this.preferredInsurer}&p=${this.plan}&rw=${this.roadWorthiness}&hp=${this.hackneyPermit}&vl=${this.vehicleLicence}`;
+                window.open(`particulars?vt=${this.vehicleType}&vm=${this.vehicleMake}&vmm=${this.vehicleMakeModel}&y=${this.year}&it=${this.insuranceType}&vv=${this.vehicleValue}&pi=${this.preferredInsurer}&p=${this.plan}&rw=${this.roadWorthiness}&hp=${this.hackneyPermit}&vl=${this.vehicleLicense}&ovm=${this.otherVehicleMake}&ovmm=${this.otherVehicleMakeModel}`, '_blank');
+                
+                // window.location.href = `particulars?vt=${this.vehicleType}&vm=${this.vehicleMake}&vmm=${this.vehicleMakeModel}&y=${this.year}&it=${this.insuranceType}&vv=${this.vehicleValue}&pi=${this.preferredInsurer}&p=${this.plan}&rw=${this.roadWorthiness}&hp=${this.hackneyPermit}&vl=${this.vehicleLicense}&ovm=${this.otherVehicleMake}&ovmm=${this.otherVehicleMakeModel}`;
             },
             goToVehicleReg(){
-                window.location.href=`vehicle_reg?vt=${this.vehicleTypeNewVehicle}&vm=${this.vehicleMakeNewVehicle}&vmm=${this.vehicleMakeModelNewVehicle}&y=${this.yearNewVehicle}&it=${this.insuranceTypeNewVehicle}&vv=${this.vehicleValueNewVehicle}&pi=${this.preferredInsurerNewVehicle}&p=${this.planNewVehicle}&npt=${this.numberPlateTypeNewVehicle}`;
+                window.location.href=`vehicle_reg?vt=${this.vehicleTypeNewVehicle}&vm=${this.vehicleMakeNewVehicle}&vmm=${this.vehicleMakeModelNewVehicle}&y=${this.yearNewVehicle}&it=${this.insuranceTypeNewVehicle}&vv=${this.vehicleValueNewVehicle}&pi=${this.preferredInsurerNewVehicle}&p=${this.planNewVehicle}&npt=${this.numberPlateTypeNewVehicle}&ovm=${this.otherVehicleMakeNewVehicle}&ovmm=${this.otherVehicleMakeModelNewVehicle}`;
+            },
+            goToChangeOwnership(){
+
+                window.open(`change_ownership?vt=${this.vehicleTypeOwnership}&vm=${this.vehicleMakeOwnership}&vmm=${this.vehicleMakeModelOwnership}&y=${this.yearOwnership}&vle=${this.vehicleLicenseExpiryOwnership}&rt=${this.registrationTypeOwnership}&npt=${this.numberPlateTypeOwnership}`, '_blank')
+
+                // window.location.href=`change_ownership?vt=${this.vehicleTypeOwnership}&vm=${this.vehicleMakeOwnership}&vmm=${this.vehicleMakeModelOwnership}&y=${this.yearOwnership}&vle=${this.vehicleLicenseExpiryOwnership}&rt=${this.registrationTypeOwnership}&npt=${this.numberPlateTypeOwnership}`;
+            },
+            goToVehiclePermit(){
+
+                window.open(`vehicle_permit?vp=${this.permitsOtherVehicle}`, '_blank')
+
+                // window.location.href=`change_ownership?vt=${this.vehicleTypeOwnership}&vm=${this.vehicleMakeOwnership}&vmm=${this.vehicleMakeModelOwnership}&y=${this.yearOwnership}&vle=${this.vehicleLicenseExpiryOwnership}&rt=${this.registrationTypeOwnership}&npt=${this.numberPlateTypeOwnership}`;
             },
             setVehicleDetailsFromURL(){
 
@@ -194,8 +221,13 @@
                 let plan = "";
                 let roadWorthiness = "";
                 let hackneyPermit = "";
-                let vehicleLicence = "";
+                let vehicleLicense = "";
                 let numberPlateType = "";
+                let otherVehicleMake = "";
+                let otherVehicleMakeModel = "";
+                let vehicleLicenseExpiry = '';
+                let registrationType = '';
+                let vehiclePermits = '';
 
                 if(urlParams.has('vt')){
                     vehicleType = urlParams.get('vt');
@@ -228,10 +260,25 @@
                     hackneyPermit = urlParams.get('hp');
                 }
                 if(urlParams.has('vl')){
-                    vehicleLicence = urlParams.get('vl');
+                    vehicleLicense = urlParams.get('vl');
                 }
                 if(urlParams.has('npt')){
                     numberPlateType = urlParams.get('npt');
+                }
+                if(urlParams.has('ovm')){
+                    otherVehicleMake = urlParams.get('ovm');
+                }
+                if(urlParams.has('ovmm')){
+                    otherVehicleMakeModel = urlParams.get('ovmm');
+                }
+                if(urlParams.has('vle')){
+                    vehicleLicenseExpiry = urlParams.get('vle');
+                }
+                if(urlParams.has('rt')){
+                    registrationType = urlParams.get('rt');
+                }
+                if(urlParams.has('vp')){
+                    vehiclePermits = urlParams.get('vp');
                 }
 
                 this.vehicleType = vehicleType;
@@ -244,8 +291,15 @@
                 this.plan = plan;
                 this.roadWorthiness = roadWorthiness;
                 this.hackneyPermit = hackneyPermit;
-                this.vehicleLicence = vehicleLicence;
+                this.vehicleLicense = vehicleLicense;
                 this.numberPlateType = numberPlateType;
+                this.otherVehicleMake = otherVehicleMake;
+                this.otherVehicleMakeModel = otherVehicleMakeModel;
+                this.vehicleLicenseExpiry = vehicleLicenseExpiry;
+                this.registrationType = registrationType;
+                this.permits = vehiclePermits;
+
+                console.log(this.permits);
 
             },
             unsetVehiclDetails(){
@@ -253,7 +307,7 @@
                 this.vehicleMake = "";
                 this.vehicleMakeModel = "";
                 this.year = "";
-            }
+            },
         },
         watch: {
             vehicleMake() {
@@ -299,9 +353,12 @@
             //     this.fetchModel();
             // }
         },
-        created(){
+        mounted(){
 
-            if(window.location.pathname.includes("particulars") || window.location.pathname.includes("vehicle_reg")){
+            if(window.location.pathname.includes("particulars")
+                || window.location.pathname.includes("vehicle_reg")
+                || window.location.pathname.includes("change_ownership")
+                || window.location.pathname.includes("vehicle_permit")){
                 this.setVehicleDetailsFromURL();
             }
 
@@ -311,6 +368,18 @@
 
             //     })
             // }
+            
+            var app = this;
+            jQuery(".select2").select2({
+                placeholder: function(){
+                    $(this).data('placeholder');
+                }
+            })
+            
+            $(".permits").on('change', function(e){
+                app.permitsOtherVehicle = $(this).val()
+                console.log(app.permits);
+            });
 
             
 
@@ -318,3 +387,4 @@
         }
     })
 </script>
+

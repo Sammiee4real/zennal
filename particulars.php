@@ -61,7 +61,8 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <select class="form-select" name="vehicle_type"
+                                            <label for="vehicleType">Vehicle Type</label>
+                                            <select class="form-select" id="vehicleType" name="vehicle_type"
                                             v-model="vehicleType" required>
                                                 <option value="">Select vehicle type</option>
                                                 <?php
@@ -76,7 +77,8 @@
 
 
                                         <div class="form-group">
-                                            <select class="form-select" id="" name="make_of_vehicle" required
+                                            <label for="vehicleMake">Vehicle Make</label>
+                                            <select class="form-select" id="vehicleMake" name="make_of_vehicle" required
                                             v-model="vehicleMake">
                                                 <option value="">Select vehicle make</option>
                                                 <?php
@@ -89,8 +91,10 @@
                                                 ?>
                                                 <option value="others">Others</option>
                                             </select>
-                                            <div id="other_vehicle_make" class="mt-3 d-none">
-                                                <input type="text" name="other_vehicle_make" class="form-control" placeholder="Please Specify">
+                                            <div id="other_vehicle_make" class="mt-3" v-if="vehicleMake == 'others'">
+                                                <label for="otherVehicleMake">Specify Vehicle Model</label>
+                                                <input type="text" name="other_vehicle_make" class="form-control" placeholder="Please Specify" id="otherVehicleMake"
+                                                v-model="otherVehicleMake">
                                             </div>
                                         </div>
           
@@ -102,6 +106,7 @@
                                             </div>
                                         </center>
                                         <div class="form-group">
+                                            <label for="vehicle_model">Vehicle Model</label>
                                             <select class="form-select" id="vehicle_model"
                                             name="vehicle_model" v-model="vehicleMakeModel">
                                                 <option value="">Select vehicle model</option>
@@ -111,14 +116,17 @@
                                                 </option>
                                                 <option value="others" v-if="finishedFetchingModels">Others</option>
                                             </select>
-                                            <div id="other_vehicle_model" class="mt-3 d-none">
-                                                <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify">
+                                            <div id="other_vehicle_model" class="mt-3" v-if="vehicleMakeModel == 'others'">
+                                                <label for="otherVehicleMakeModel">Specify Vehicle Model</label>
+                                                <input type="text" name="other_vehicle_model" class="form-control" placeholder="Please Specify" id="otherVehicleMakeModel"
+                                                v-model="otherVehicleMakeModel">
                                             </div>
                                         </div>
 
 
 
                                         <div class="form-group">
+                                            <label for="otherVehicleMakeModel">Year of Make</label>
                                             <select class="form-select" name="year_of_make"
                                             v-model="year" required>
                                                 <option value="">Select year of make</option>
@@ -132,20 +140,25 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Registration number/Plate number" name="plate_no" required>
+                                            <label for="plateNumber">Registration Number or Plate Number</label>
+                                            <input type="text" id="plateNumber" class="form-control" placeholder="Enter Registration number/Plate number" name="plate_no" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" id="Vehicle" class="form-control" placeholder="Enter Engine number (optional)" name="engine_no" required>
+                                            <label for="engineNumber">Engine Number</label>
+                                            <input type="text" id="engineNumber" class="form-control" placeholder="Enter Engine number (optional)" name="engine_no" required>
                                         </div>
                                         <div class="form-group">
+                                            <label for="chasis">Chasis Number</label>
                                             <input type="text" id="chasis" class="form-control" placeholder="Enter Chasis number" name="chassis_no" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" id="chasis" class="form-control" placeholder="Name on Vehicle License" name="vehicle_license" required>
+                                            <label for="vehicleLicense">Vehicle License</label>
+                                            <input type="text" id="vehicleLicense" class="form-control" placeholder="Name on Vehicle License" name="vehicle_license" required>
                                         </div>
 
                                         <div class="form-group">
-                                            <select class="form-select" name="vehicle_color" required>
+                                            <label for="vehicleColor">Vehicle Color</label>
+                                            <select class="form-select" id="vehicleColor" name="vehicle_color" required>
                                                 <option value="">Select color</option>
                                                 <option value="arsh">Arsh</option>
                                                 <option value="blue">Blue</option>
@@ -189,7 +202,8 @@
                                         </ul>
                                         <div class="form-group">
                                             <!-- class="choices form-select multiple-remove" multiple="multiple" -->
-                                            <select class="form-select" name="permit_type" required> 
+                                            <label for="permitType">Permit Type</label>
+                                            <select class="form-select" id="permitType" name="permit_type" required> 
                                                 <option value="">Select type of permit</option>
                                                 <?php
                                                     foreach($get_permit_types as $permit_type){
@@ -201,6 +215,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
+                                            <label for="insurance_type">Insurance Type</label>
                                             <select name="insurance_type" class="form-select" id="insurance_type"
                                             v-model="insuranceType" required onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" v-model="insuranceType"> <!--  onChange="show('bar', this.options[this.selectedIndex].firstChild.nodeValue)" -->
                                                 <option value="">Insurance type</option>

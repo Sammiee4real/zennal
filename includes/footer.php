@@ -11,6 +11,7 @@
     <!-- <script type="application/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
     
     <script type="application/javascript" src="assets/js/jquery-3.4.1.min.js"></script>
+
     <script type="application/javascript" src="assets/vendors/choices.js/choices.min.js"></script>
     <script type="application/javascript" src="assets/js/feather-icons/feather.min.js"></script>
     <script type="application/javascript" src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
@@ -28,10 +29,12 @@
     <script type="application/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script type="application/javascript" src='https://cdn.okra.ng/v2/bundle.js'></script>
     <script type="application/javascript" src="assets/fontawesome/js/all.min.js"></script>
-    <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script type="application/javascript">
-        $(".select-2").select2();
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+        
+    <script>
+        $(document).ready(function(){
+            // $(".select2").select2();
+        })
     </script>
 </body>
 </html>
