@@ -37,7 +37,7 @@
                                         <div class="col-md-12 col-12">
 
                                             <div class="mt-3">
-                                            <h4 class="card-title">Vehicle Details</h4>
+                                                <h4 class="card-title">Vehicle Details</h4>
                                             </div>
 
                                             <div class="form-group">
@@ -156,8 +156,8 @@
                                             </div>
 
                                             <div class="mt-5">
-                                            <h4 class="card-title">Upload Vehicle Particulars</h4>
-                                            <span>Upload pictures of pages of the Original Custom Papers of the vehicle or original local receipt of purchase. Please use your camera flash when taking the picture</span>
+                                                <h4 class="card-title">Upload Vehicle Particulars</h4>
+                                                <span>Upload pictures of pages of the Original Custom Papers of the vehicle or original local receipt of purchase. Please use your camera flash when taking the picture</span>
                                             </div>
                                             <div class="form-group">
                                                 <input type="file" id="files" class="form-control" name="files[]" multiple>
@@ -166,7 +166,7 @@
                                             <input type="hidden" name="vehicle_particulars" id="vehicle_particulars">
 
                                             <div class="mt-5">
-                                            <h4 class="card-title">Preferences</h4>
+                                                <h4 class="card-title">Preferences</h4>
                                             </div>
 
                                             <div class="form-group">
@@ -255,106 +255,112 @@
                                                     <option value="state">Oyo</option> -->
                                                 </select>
                                             </div>
-                                    <div class="state box">
-                                        <div class="form-group">
-                                            <label for="first_lg">1st Preferrred Local Government of Registration</label>
-                                            <select name="first_lg" class="form-select" id="first_lg">
-                                                    <option> 1st Preferrred local government</option>
-                                                    <option value="Somolu">Somolu</option>
-                                                    <option value="Ojo">Ojo</option>
-                                                    <option value="Apapa">Apapa</option>
-                                                    <option value="Ikeja">Ikeja</option>
-                                                    <option value="Surulere">Surulere</option>
-                                                    <option value="Ifako Ijaye">Ifako Ijaye</option>
-                                                    <option value="Lagos Mainland">Lagos Mainland</option>
-                                                    <option value="Oshodi">Oshodi</option>
-                                                    <option value="Kosofe">Kosofe</option>
-                                                    <option value="Ibeju Lekki">Ibeju Lekki</option>
-                                                    <option value="Ajeromi">Ajeromi</option>
-                                                    <option value="Ikorodu">Ikorodu</option>
-                                                    <option value="Alimosho">Alimosho</option>
-                                                    <option value="Agege">Agege</option>
-                                                    <option value="Eti-osa">Eti-osa</option>
-                                                    <option value="Badagry">Badagry</option>
-                                                    <option value="Lagos Island">Lagos Island</option>
-                                                    <option value="Mushin">Mushin</option>
-                                                    <option value="Epe">Epe</option>
-                                                    <option value="Festac">Festac</option>
+                                            <div class="state box">
+                                                <div class="form-group">
+                                                    <label for="first_lg">1st Preferrred Local Government of Registration</label>
+                                                    <select name="first_lg" class="form-select" id="first_lg">
+                                                            <option> 1st Preferrred local government</option>
+                                                            <option value="Somolu">Somolu</option>
+                                                            <option value="Ojo">Ojo</option>
+                                                            <option value="Apapa">Apapa</option>
+                                                            <option value="Ikeja">Ikeja</option>
+                                                            <option value="Surulere">Surulere</option>
+                                                            <option value="Ifako Ijaye">Ifako Ijaye</option>
+                                                            <option value="Lagos Mainland">Lagos Mainland</option>
+                                                            <option value="Oshodi">Oshodi</option>
+                                                            <option value="Kosofe">Kosofe</option>
+                                                            <option value="Ibeju Lekki">Ibeju Lekki</option>
+                                                            <option value="Ajeromi">Ajeromi</option>
+                                                            <option value="Ikorodu">Ikorodu</option>
+                                                            <option value="Alimosho">Alimosho</option>
+                                                            <option value="Agege">Agege</option>
+                                                            <option value="Eti-osa">Eti-osa</option>
+                                                            <option value="Badagry">Badagry</option>
+                                                            <option value="Lagos Island">Lagos Island</option>
+                                                            <option value="Mushin">Mushin</option>
+                                                            <option value="Epe">Epe</option>
+                                                            <option value="Festac">Festac</option>
+                                                        </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="second_lg">2nd Preferrred Local Government of Registration</label>
+                                                    <select name="second_lg" class="form-select" id="second_lg">
+                                                        <option>2nd Preferrred local government</option>
+                                                        <option value="Somolu">Somolu</option>
+                                                        <option value="Ojo">Ojo</option>
+                                                        <option value="Apapa">Apapa</option>
+                                                        <option value="Ikeja">Ikeja</option>
+                                                        <option value="Surulere">Surulere</option>
+                                                        <option value="Ifako Ijaye">Ifako Ijaye</option>
+                                                        <option value="Lagos Mainland">Lagos Mainland</option>
+                                                        <option value="Oshodi">Oshodi</option>
+                                                        <option value="Kosofe">Kosofe</option>
+                                                        <option value="Ibeju Lekki">Ibeju Lekki</option>
+                                                        <option value="Ajeromi">Ajeromi</option>
+                                                        <option value="Ikorodu">Ikorodu</option>
+                                                        <option value="Alimosho">Alimosho</option>
+                                                        <option value="Agege">Agege</option>
+                                                        <option value="Eti-osa">Eti-osa</option>
+                                                        <option value="Badagry">Badagry</option>
+                                                        <option value="Lagos Island">Lagos Island</option>
+                                                        <option value="Mushin">Mushin</option>
+                                                        <option value="Epe">Epe</option>
+                                                        <option value="Festac">Festac</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="third_lg">3rd Preferrred Local Government of Registration</label>
+                                                    <select name="third_lg" class="form-select" id="third_lg">
+                                                        <option>3rd Preferrred local government</option>
+                                                        <option value="Somolu">Somolu</option>
+                                                        <option value="Ojo">Ojo</option>
+                                                        <option value="Apapa">Apapa</option>
+                                                        <option value="Ikeja">Ikeja</option>
+                                                        <option value="Surulere">Surulere</option>
+                                                        <option value="Ifako Ijaye">Ifako Ijaye</option>
+                                                        <option value="Lagos Mainland">Lagos Mainland</option>
+                                                        <option value="Oshodi">Oshodi</option>
+                                                        <option value="Kosofe">Kosofe</option>
+                                                        <option value="Ibeju Lekki">Ibeju Lekki</option>
+                                                        <option value="Ajeromi">Ajeromi</option>
+                                                        <option value="Ikorodu">Ikorodu</option>
+                                                        <option value="Alimosho">Alimosho</option>
+                                                        <option value="Agege">Agege</option>
+                                                        <option value="Eti-osa">Eti-osa</option>
+                                                        <option value="Badagry">Badagry</option>
+                                                        <option value="Lagos Island">Lagos Island</option>
+                                                        <option value="Mushin">Mushin</option>
+                                                        <option value="Epe">Epe</option>
+                                                        <option value="Festac">Festac</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="tinted_permit">Do you want to obtain a Tinted permit?</label>
+                                                <select class="form-select" id="tinted_permit" name="tinted_permit">
+                                                    <option>Select</option>
+                                                    <option value="yes">Yes</option>
+                                                    <option value="no">No</option>
                                                 </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="second_lg">2nd Preferrred Local Government of Registration</label>
-                                            <select name="second_lg" class="form-select" id="second_lg">
-                                                <option>2nd Preferrred local government</option>
-                                                <option value="Somolu">Somolu</option>
-                                                <option value="Ojo">Ojo</option>
-                                                <option value="Apapa">Apapa</option>
-                                                <option value="Ikeja">Ikeja</option>
-                                                <option value="Surulere">Surulere</option>
-                                                <option value="Ifako Ijaye">Ifako Ijaye</option>
-                                                <option value="Lagos Mainland">Lagos Mainland</option>
-                                                <option value="Oshodi">Oshodi</option>
-                                                <option value="Kosofe">Kosofe</option>
-                                                <option value="Ibeju Lekki">Ibeju Lekki</option>
-                                                <option value="Ajeromi">Ajeromi</option>
-                                                <option value="Ikorodu">Ikorodu</option>
-                                                <option value="Alimosho">Alimosho</option>
-                                                <option value="Agege">Agege</option>
-                                                <option value="Eti-osa">Eti-osa</option>
-                                                <option value="Badagry">Badagry</option>
-                                                <option value="Lagos Island">Lagos Island</option>
-                                                <option value="Mushin">Mushin</option>
-                                                <option value="Epe">Epe</option>
-                                                <option value="Festac">Festac</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="third_lg">3rd Preferrred Local Government of Registration</label>
-                                            <select name="third_lg" class="form-select" id="third_lg">
-                                                <option>3rd Preferrred local government</option>
-                                                <option value="Somolu">Somolu</option>
-                                                <option value="Ojo">Ojo</option>
-                                                <option value="Apapa">Apapa</option>
-                                                <option value="Ikeja">Ikeja</option>
-                                                <option value="Surulere">Surulere</option>
-                                                <option value="Ifako Ijaye">Ifako Ijaye</option>
-                                                <option value="Lagos Mainland">Lagos Mainland</option>
-                                                <option value="Oshodi">Oshodi</option>
-                                                <option value="Kosofe">Kosofe</option>
-                                                <option value="Ibeju Lekki">Ibeju Lekki</option>
-                                                <option value="Ajeromi">Ajeromi</option>
-                                                <option value="Ikorodu">Ikorodu</option>
-                                                <option value="Alimosho">Alimosho</option>
-                                                <option value="Agege">Agege</option>
-                                                <option value="Eti-osa">Eti-osa</option>
-                                                <option value="Badagry">Badagry</option>
-                                                <option value="Lagos Island">Lagos Island</option>
-                                                <option value="Mushin">Mushin</option>
-                                                <option value="Epe">Epe</option>
-                                                <option value="Festac">Festac</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                        <div class="form-group">
-                                            <label for="tinted_permit">Do you want to obtain a Tinted permit?</label>
-                                            <select class="form-select" id="tinted_permit" name="tinted_permit">
-                                                <option>Select</option>
-                                                <option value="yes">Yes</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </div>
+                                            <div class="form-group">
+                                                <label for="vehicleRegAgreement">
+                                                    I hereby admit that if any of my preferred lga is not available, the admin can pick any other lga for me
+                                                </label>
+                                                <input type="checkbox" name="agreement" id="vehicleRegAgreement"
+                                                v-model="vehicleRegAgreement">
+                                            </div>
 
                                         </div>
 
-                                        </div>
+                                        <!-- </div> -->
                                         <div class="col-12 d-flex justify-content-end">
-                                            <button type="button" id="submit_vehicle_registration" class="btn btn-primary mr-1 mb-1">Proceed</button>
+                                            <button type="button" id="submit_vehicle_registration" class="btn btn-primary mr-1 mb-1" :disabled="!vehicleRegAgreement">Proceed</button>
                                         </div>
-                                        
-                                        </form>
                                     </div>
-                                
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -366,7 +372,7 @@
 <!-- <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
 <?php include("includes/footer.php");?>
 
-<?php include("includes/VueInstance.php");?>
+<?php include("includes/vueInstanceVehicle.php");?>
 
 
 <script type="application/javascript">

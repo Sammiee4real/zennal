@@ -103,7 +103,7 @@
                                         </div>
                                     
                                         <div class="mt-5 ">
-                                        <h4 class="card-title">New Owner’s Information</h4>
+                                            <h4 class="card-title">New Owner’s Information</h4>
                                         </div>
                                         <div class="form-group">
                                             <input type="text" name="name" class="form-control" placeholder="Name">
@@ -132,7 +132,7 @@
                                         <div class="form-group">
                                             <select class="form-select" name="registration_type"
                                             v-model="registrationType">
-                                                <option>Select Registration type</option>
+                                                <option value="">Select Registration type</option>
                                                 <option value="private_with_third">Private Vehicle (with 3rd Party Insurance)</option>
                                                 <option value="private_without_third">Private Vehicle (No Insurance)</option>
                                                 <option value="commercial_with_third">Commercial Vehicle (with 3rd Party Insurance)</option>
@@ -142,7 +142,7 @@
                                         <div class="form-group mb-5">
                                             <select class="form-select" name="plate_number_type"
                                             v-model="numberPlateType">
-                                                <option>Type of number plate</option>
+                                                <option value="">Type of number plate</option>
                                                 <option value="new"> New number plate</option>
                                                 <option value="old"> Old number plate</option>
                                                 <option value="custom">Custom number plate</option>
@@ -165,7 +165,7 @@
 </div>
 
 <?php include("includes/footer.php");?>
-<?php include("includes/VueInstance.php");?>
+<?php include("includes/vueInstanceVehicle.php");?>
 
 <script>
     $(document).on('change', '#files', function(){

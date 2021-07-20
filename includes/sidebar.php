@@ -2,7 +2,7 @@
 include('config/functions.php');
 if(!isset($_SESSION['user'])){
     header('location: login');
-    end();
+    exit();
 }
 $user_id = $_SESSION['user']['unique_id'];
 $user = $_SESSION['user'];
@@ -40,11 +40,17 @@ $user = $_SESSION['user'];
     
 </head>
 <style type="text/css">
-    .sidebar-item.active{
-    /*background-color:#e8f3ff;*/
-    /*color:white;*/
-   /* display: block;*/
-}
+    /* .sidebar-item.active{
+        background-color:#e8f3ff;
+        color:white;
+        display: block;
+    } */
+    [v-cloak] {
+        display:none !important;
+    }
+    .coupon_code_help_txt{
+        color: red;
+    }
 </style>
 <body>
    

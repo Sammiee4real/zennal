@@ -17,10 +17,10 @@
 
 <?php include("includes/header.php");?>
 <style type="text/css">
-#bar, #physical {display:none;}
+#bar, #physical, .remove-coupon {display:none;}
 </style>
 
-<div class="main-content container-fluid">
+<div class="main-content container-fluid" id="appWrapper" v-cloak>
   <div class="page-title">
     <h3>Complete your Order</h3>
     <p class="text-subtitle text-muted">Select fill all the details below</p>
@@ -46,67 +46,91 @@
                     </select>
                   </div>
 
-                  <div id="bar">
+                  <div id="bar" class="order-area">
                     <div class="form-group">
                       <input type="email" name="email" class="form-control" placeholder="johndoe@gmail.com">
                     </div>
 
                     <div class="form-group">
-                      <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Enter Coupon Code">
-                      <button type="button" class="btn btn-primary mt-2" id="apply_coupon_code">Apply Code</button>
+                        <!-- coupon_code -->
+                        <input type="text" name="coupon_field" id="" class="form-control" placeholder="Coupon Code" v-model="couponCodeEmail">
+                        <p>
+                            <i class="coupon_code_help_txt">
+                                {{couponErrorMessageEmail}}
+                            </i>
+                        </p>
+                        <button type="button" class="btn btn-primary mt-2"
+                        @click="applyCouponCodeEmail('change_ownership')"
+                        v-if="showApplyCouponBtnEmail">
+                            Apply Code
+                        </button>
+
+                        <button type="button" class="btn btn-danger mt-2"
+                        @click="removeCouponCodeEmail"
+                        v-if="showRemoveCouponBtnEmail">
+                            Remove Coupon
+                        </button>
                     </div>
 
                     <h4 class="card-title mt-5">Order Summary</h4>
 
                     <div class="table-responsive">
-                      <table class="table mb-0">
-                        <tbody>
-                          <tr>
-                            <td class="text-bold-500 text-blue">Change of vehicle ownership</td>
-                            <td>1</td>
-                            <td class="text-bold-500 text-dark">&#8358;<?= number_format($change_of_ownership_fee)?></td>
-                          </tr>
-                          <tr>
-                            <td class="text-bold-500 text-blue">Vehicle Registration</td>
-                            <td>1</td>
-                            <td class="text-bold-500 text-dark">&#8358;<?= number_format($vehicle_registration_fee)?></td>
-                          </tr>
-                          <tr>
-                            <td class="text-bold-500 text-blue">Sub Total</td>
-                            <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<?= number_format($subtotal)?></td>
-                          </tr>
-                          <tr>
-                            <td class="text-bold-500 text-blue">Coupon Discount</td>
-                            <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<span id="coupon_discount">0</span></td>
-                          </tr>
-                          <tr>
-                            <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="remove_from_wallet" id="remove_from_wallet"> 
-                              Remove from my Zennal Wallet
-                            </td>
-                            <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<?= number_format($wallet_balance);?></td>
-                            <input type="hidden" name="" id="wallet_balance" value="<?= $wallet_balance;?>">
-                          </tr>
-                          <tr>
-                            <td class="text-bold-500 text-blue">Total</td>
-                            <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<span id="new_total"><?php echo number_format($subtotal)?></span></td>
-                            <input type="hidden" name="total" id="total" value="<?= $subtotal?>">
-                            <input type="hidden" name="initial_total" id="initial_total" value="<?= $subtotal?>">
-                            <input type="hidden" name="reg_id" id="reg_id" value="<?= $unique_id?>">
-                          </tr>
-                        </tbody>
-                      </table>
+                        <table class="table mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-bold-500 text-blue">Change of vehicle ownership</td>
+                                    <td>1</td>
+                                    <td class="text-bold-500 text-dark">&#8358;<?= number_format($change_of_ownership_fee)?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500 text-blue">Vehicle Registration</td>
+                                    <td>1</td>
+                                    <td class="text-bold-500 text-dark">&#8358;<?= number_format($vehicle_registration_fee)?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500 text-blue">Sub Total</td>
+                                    <td></td>
+                                    <td class="text-bold-500 text-dark">&#8358;<?= number_format($subtotal)?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500 text-blue">Coupon Discount</td>
+                                    <td></td>
+                                    <td class="text-bold-500 text-dark">
+                                        <span>
+                                            {{couponDiscountEmail | displayedCouponDiscount}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="remove_from_wallet" v-model="removeFromWalletEmail"> 
+                                    Remove from my Zennal Wallet
+                                    </td>
+                                    <td></td>
+                                    <td class="text-bold-500 text-dark">
+                                        <span>
+                                            {{remainingWalletBalanceEmail | displayNairaReadableMoney}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold-500 text-blue">Total</td>
+                                    <td></td>
+                                    <td class="text-bold-500 text-dark">
+                                        <span>
+                                            {{amountToPayEmail | displayNairaReadableMoney}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="form-group">
-                    <select  name="thename" class="form-select" >
-                    <option selected>--- Payment Option ---</option>
-                    <option value="one">One time Payment</option>
-                    <option value="green">On installment</option>
-                    </select>
+                      <select  name="thename" class="form-select" >
+                      <option selected>--- Payment Option ---</option>
+                      <option value="one">One time Payment</option>
+                      <option value="green">On installment</option>
+                      </select>
                     </div>    
 
                     <div  class="one box">      
@@ -125,7 +149,7 @@
                   <!--  -->
                   <form class="form" method="post" id="proceed_to_payment_form2">
                     <input type="hidden" name="service_type" id="service_type" value="change_of_ownership">
-                  <div id="physical">
+                  <div id="physical" class="order-area">
                     <div class="form-group">
                      <select class="form-select" id="city" name="city">
                       <option value="">Select your city</option>
@@ -163,8 +187,23 @@
                     </div>
 
                     <div class="form-group">
-                      <input type="text" name="coupon_code" id="coupon_code2" class="form-control" placeholder="Enter Coupon Code">
-                      <button type="button" class="btn btn-primary mt-2" id="apply_coupon_code2">Apply Code</button>
+                        <input type="text" name="coupon_code" id="coupon_code2" class="form-control" placeholder="Enter Coupon Code" v-model="couponCode">
+                            <p>
+                                <i class="coupon_code_help_txt">
+                                    {{couponErrorMessage}}
+                                </i>
+                            </p>
+                            <button type="button" class="btn btn-primary mt-2"
+                            @click="applyCouponCode('change_ownership')"
+                            v-if="showApplyCouponBtn">
+                                Apply Code
+                            </button>
+
+                            <button type="button" class="btn btn-danger mt-2"
+                            @click="removeCouponCode"
+                            v-if="showRemoveCouponBtn">
+                                Remove Coupon
+                            </button>
                     </div>
 
                     <h4 class="card-title mt-5">Order Summary</h4>
@@ -190,7 +229,11 @@
                           <tr>
                             <td class="text-bold-500 text-blue">Coupon Discount</td>
                             <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<span id="coupon_discount2">0</span></td>
+                            <td class="text-bold-500 text-dark">
+                                <span>
+                                    {{couponDiscount | displayedCouponDiscount}}
+                                </span>
+                            </td>
                           </tr>
                           <tr>
                             <td class="text-bold-500 text-blue">Delivery Fee</td>
@@ -198,20 +241,25 @@
                             <td class="text-bold-500 text-dark">&#8358;<?= number_format($delivery_fee)?></td>
                           </tr>
                           <tr>
-                            <td class="text-bold-500 text-blue"><input type="checkbox" class="form-check-input form-check-secondary"  name="remove_from_wallet" id="remove_from_wallet2"> 
-                              Remove from my Zennal Wallet
+                            <td class="text-bold-500 text-blue">
+                                <input type="checkbox" class="form-check-input form-check-secondary"  name="remove_from_wallet" v-model="removeFromWallet"> 
+                                Remove from my Zennal Wallet
                             </td>
                             <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<?= number_format($wallet_balance);?></td>
-                            <input type="hidden" name="" id="wallet_balance2" value="<?= $wallet_balance;?>">
+                            <td class="text-bold-500 text-dark">
+                                <span>
+                                    {{remainingWalletBalance | displayNairaReadableMoney}}
+                                </span>
+                            </td>
                           </tr>
                           <tr>
                             <td class="text-bold-500 text-blue">Total</td>
                             <td></td>
-                            <td class="text-bold-500 text-dark">&#8358;<span id="new_total2"><?php echo number_format($total)?></span></td>
-                            <input type="hidden" name="total" id="total2" value="<?= $total?>">
-                            <input type="hidden" name="initial_total" id="initial_total2" value="<?= $total?>">
-                            <input type="hidden" name="reg_id" id="reg_id2" value="<?= $unique_id?>">
+                            <td class="text-bold-500 text-dark">
+                                <span>
+                                    {{amountToPay | displayNairaReadableMoney}}
+                                </span>
+                            </td>
                           </tr>
                         </tbody>
                       </table>
@@ -248,6 +296,7 @@
   </section>
 </div>
 <?php include("includes/footer.php");?>
+<?php include("includes/VueInstanceCoupon.php");?>
 
 <script>
 function show(el, txt){
@@ -277,209 +326,214 @@ function show(el, txt){
         }
       });
     }).change();
-    $("#remove_from_wallet2").click(function(){
-      var wallet_balance = parseInt($("#wallet_balance2").val());
-      var total = $("#total2").val();
-      var initial_total = $("#initial_total2").val();
-      if($('#remove_from_wallet2').is(':checked')){
-        if(parseInt(wallet_balance) > parseInt(total)){
-          var new_total = 0;
-          $("#new_total2").html(formatNumber(0));
-          $("#total2").val(new_total);
-        }
-        else{
-          // var new_total = parseInt(total - wallet_balance);
-          new_total = parseInt(total + wallet_balance)
-          $("#new_total2").html(formatNumber(new_total));
-          $("#total2").val(new_total);
 
-        if( parseInt(wallet_balance) > parseInt(total) ){
-            var new_total = 0;
-            $("#new_total2").html(formatNumber(0));
-          }else{
-            var new_total = parseInt(total) - parseInt(wallet_balance);
+    // $("#remove_from_wallet2").click(function(){
+    //   var wallet_balance = parseInt($("#wallet_balance2").val());
+    //   var total = $("#total2").val();
+    //   var initial_total = $("#initial_total2").val();
+    //   if($('#remove_from_wallet2').is(':checked')){
+    //     if(parseInt(wallet_balance) > parseInt(total)){
+    //       var new_total = 0;
+    //       $("#new_total2").html(formatNumber(0));
+    //       $("#total2").val(new_total);
+    //     }
+    //     else{
+    //       // var new_total = parseInt(total - wallet_balance);
+    //       new_total = parseInt(total + wallet_balance)
+    //       $("#new_total2").html(formatNumber(new_total));
+    //       $("#total2").val(new_total);
+
+    //     if( parseInt(wallet_balance) > parseInt(total) ){
+    //         var new_total = 0;
+    //         $("#new_total2").html(formatNumber(0));
+    //       }else{
+    //         var new_total = parseInt(total) - parseInt(wallet_balance);
         
-            $("#new_total2").html(formatNumber(new_total));
-        }
-      }
-      else{
-        $("#new_total2").html(formatNumber(initial_total));
-        $("#total2").val(initial_total);
-        removeFromWallet = 0;
-        if(couponApplied == 1){
-          if(parseInt(currentTotal) > 0){
-            total = parseInt(currentTotal)
-          }
-          total = parseInt(total) + parseInt(wallet_balance)
-        }else{
-          console.log("Got here", total);
-          total = parseInt(total) + parseInt(wallet_balance)
-        }
-        $("#new_total2").html(formatNumber(parseInt(total)));
-        currentTotal = parseInt(total);
-        // $("#total").val(total);
-      }
-    });
+    //         $("#new_total2").html(formatNumber(new_total));
+    //     }
+    //   }
+    //   else{
+    //     $("#new_total2").html(formatNumber(initial_total));
+    //     $("#total2").val(initial_total);
+    //     removeFromWallet = 0;
+    //     if(couponApplied == 1){
+    //       if(parseInt(currentTotal) > 0){
+    //         total = parseInt(currentTotal)
+    //       }
+    //       total = parseInt(total) + parseInt(wallet_balance)
+    //     }else{
+    //       console.log("Got here", total);
+    //       total = parseInt(total) + parseInt(wallet_balance)
+    //     }
+    //     $("#new_total2").html(formatNumber(parseInt(total)));
+    //     currentTotal = parseInt(total);
+    //     // $("#total").val(total);
+    //   }
+    // });
 
-    $("#apply_coupon_code2").click(function(){
-        var coupon_code = $("#coupon_code2").val();
-        var total = $("#total2").val();
-        if(coupon_code == ''){
-          alert("Please enter coupon code");
-        }
-        else{
-        $.ajax({
-          url: "ajax/apply_coupon_code.php",
-          method: "POST",
-          data: {coupon_code, total},
-          beforeSend: function(){
-            $("#apply_coupon_code2").attr("disabled", true);
-            $("#apply_coupon_code2").text("Applying...");
-          },
-          success: function(data){
-            if(data['status'] == "success"){
-              $("#coupon_discount2").html(data['discount']);
-              $("#new_total2").html(data['total']);
-              $("#total2").val(data['total_without_format']);
-              $("#initial_total2").val(data['total_without_format']);
-              $("#apply_coupon_code2").attr("disabled", true);
-              $("#apply_coupon_code2").text("Applied");
-            } 
-            else{
-              Swal.fire({
-              title: "Error!",
-              text: data['status'],
-              icon: "error",
-              });
-              $("#apply_coupon_code2").attr("disabled", false);
-              $("#apply_coupon_code2").text("Apply");
-            }
-          }
-        })
-      }
-    });
-$("#proceed_to_payment2").click(function(e){
-    e.preventDefault();
-    $('#proceed_to_payment2').attr('disabled', true);
-    $('#proceed_to_payment2').text('Please wait...');
-    var total = $("#total2").val();
-    var reg_id = $("#reg_id2").val();
-    if(total != 0){
-      $.ajax({
-        url:"ajax/check_veh_reg_exist.php",
-        method: "POST",
-        data: {reg_id},
-        success: function(data){
-          // alert(data);
-          if(data == "false"){
-            Okra.buildWithOptions({
-              name: 'Cloudware Technologies',
-              env: 'production-sandbox',
-              key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
-              token: '5f5a2e5f140a7a088fdeb0ac', 
-              source: 'link',
-              color: '#ffaa00',
-              limit: '24',
-              // amount: 5000,
-              // currency: 'NGN',
-              garnish: true,
-              charge: {
-                type: 'one-time',
-                amount: parseInt(total*100),
-                note: '',
-                currency: 'NGN',
-                account: '5ecfd65b45006210350becce'
-              },
-              corporate: null,
-              connectMessage: 'Which account do you want to connect with?',
-              products: ["auth", "transactions", "balance"],
-              //callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
-              //callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
-              //redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
-              logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
-              filter: {
-                  banks: [],
-                  industry_type: 'all',
-              },
-              widget_success: 'Your account was successfully linked to Cloudware Technologies',
-              widget_failed: 'An unknown error occurred, please try again.',
-              currency: 'NGN',
-              exp: null,
-              success_title: 'Cloudware Technologies!',
-              success_message: 'You are doing well!',
-              onSuccess: function (data) {
-                console.log('success', data);
-                $.ajax({
-                  url:"ajax/one_time_payment.php",
-                  method: "POST",
-                  data: $("#proceed_to_payment_form").serialize(),
-                  success: function(data){
-                    //alert(data);
-                    if(data['status'] == "success"){
-                      Swal.fire({
-                        title: "Congratulations!",
-                        text: "Your payment was successful",
-                        icon: "success",
-                      }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
-                    }
-                    else{
-                      Swal.fire({
-                        title: "Error!",
-                        text: data['status'],
-                        icon: "error",
-                      });
-                    }
-                    $('#proceed_to_payment').attr('disabled', false);
-                    $('#proceed_to_payment').text('Proceed');
-                  }
-                })
-              },
-            onClose: function () {
-              console.log('closed');
-              $('#proceed_to_payment').attr('disabled', false);
-              $('#proceed_to_payment').text('Proceed');
-            }
-          })
-          }
-          else{
-            Swal.fire({
-              title: "Error!",
-              text: "Record Exists",
-              icon: "error",
-            });
-          }
-          $('#proceed_to_payment').attr('disabled', false);
-          $('#proceed_to_payment').text('Proceed');
-        }
-      })
-    }
-    else{
-      $.ajax({
-        url:"ajax/one_time_payment.php",
-        method: "POST",
-        data: $("#proceed_to_payment_form").serialize(),
-        success: function(data){
-          //alert(data);
-          if(data['status'] == "success"){
-            Swal.fire({
-                      title: "Congratulations!",
-                      text: "Your payment was successful",
-                      icon: "success",
-                  }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
-          }
-          else{
-            Swal.fire({
-                          title: "Error!",
-                          text: data['status'],
-                          icon: "error",
-                      });
-          }
-          $('#proceed_to_payment').attr('disabled', false);
-          $('#proceed_to_payment').text('Proceed');
-        }
-      })
-    }
-  })
+    // $("#apply_coupon_code2").click(function(){
+    //     var coupon_code = $("#coupon_code2").val();
+    //     var total = $("#total2").val();
+    //     if(coupon_code == ''){
+    //       alert("Please enter coupon code");
+    //     }
+    //     else{
+    //       $.ajax({
+    //         url: "ajax/apply_coupon_code.php",
+    //         method: "POST",
+    //         data: {coupon_code, total},
+    //         beforeSend: function(){
+    //           $("#apply_coupon_code2").attr("disabled", true);
+    //           $("#apply_coupon_code2").text("Applying...");
+    //         },
+    //         success: function(data){
+    //           if(data['status'] == "success"){
+
+
+    //             // $("#coupon_discount2").html(data['discount']);
+    //             // $("#couponDiscountMinusSign2").hide();
+    //             // $("#new_total2").html(data['total']);
+    //             // $("#total2").val(data['total_without_format']);
+    //             // $("#initial_total2").val(data['total_without_format']);
+    //             // $("#apply_coupon_code2").attr("disabled", true);
+    //             // $("#apply_coupon_code2").text("Applied");
+    //           } 
+    //           else{
+    //             Swal.fire({
+    //             title: "Error!",
+    //             text: data['status'],
+    //             icon: "error",
+    //             });
+    //             $("#apply_coupon_code2").attr("disabled", false);
+    //             $("#apply_coupon_code2").text("Apply");
+    //           }
+    //         }
+    //       })
+    //     }
+    // });
+
+    // $("#proceed_to_payment2").click(function(e){
+    //   e.preventDefault();
+    //   $('#proceed_to_payment2').attr('disabled', true);
+    //   $('#proceed_to_payment2').text('Please wait...');
+    //   var total = $("#total2").val();
+    //   var reg_id = $("#reg_id2").val();
+    //   if(total != 0){
+    //     $.ajax({
+    //       url:"ajax/check_veh_reg_exist.php",
+    //       method: "POST",
+    //       data: {reg_id},
+    //       success: function(data){
+    //         // alert(data);
+    //         if(data == "false"){
+    //           Okra.buildWithOptions({
+    //             name: 'Cloudware Technologies',
+    //             env: 'production-sandbox',
+    //             key: 'a804359f-0d7b-52d8-97ca-1fb902729f1a',
+    //             token: '5f5a2e5f140a7a088fdeb0ac', 
+    //             source: 'link',
+    //             color: '#ffaa00',
+    //             limit: '24',
+    //             // amount: 5000,
+    //             // currency: 'NGN',
+    //             garnish: true,
+    //             charge: {
+    //               type: 'one-time',
+    //               amount: parseInt(total*100),
+    //               note: '',
+    //               currency: 'NGN',
+    //               account: '5ecfd65b45006210350becce'
+    //             },
+    //             corporate: null,
+    //             connectMessage: 'Which account do you want to connect with?',
+    //             products: ["auth", "transactions", "balance"],
+    //             //callback_url: 'http://localhost/new_zennal/online_generation_callback?payment_id='+,
+    //             //callback_url: 'http://zennal.staging.cloudware.ng/okra_callback.php',
+    //             //redirect_url: 'http://getstarted.naicfund.ng/zennal_redirect.php',
+    //             logo: 'https://cloudware.ng/wp-content/uploads/2019/12/CloudWare-Christmas-Logo.png',
+    //             filter: {
+    //                 banks: [],
+    //                 industry_type: 'all',
+    //             },
+    //             widget_success: 'Your account was successfully linked to Cloudware Technologies',
+    //             widget_failed: 'An unknown error occurred, please try again.',
+    //             currency: 'NGN',
+    //             exp: null,
+    //             success_title: 'Cloudware Technologies!',
+    //             success_message: 'You are doing well!',
+    //             onSuccess: function (data) {
+    //               console.log('success', data);
+    //               $.ajax({
+    //                 url:"ajax/one_time_payment.php",
+    //                 method: "POST",
+    //                 data: $("#proceed_to_payment_form").serialize(),
+    //                 success: function(data){
+    //                   //alert(data);
+    //                   if(data['status'] == "success"){
+    //                     Swal.fire({
+    //                       title: "Congratulations!",
+    //                       text: "Your payment was successful",
+    //                       icon: "success",
+    //                     }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+    //                   }
+    //                   else{
+    //                     Swal.fire({
+    //                       title: "Error!",
+    //                       text: data['status'],
+    //                       icon: "error",
+    //                     });
+    //                   }
+    //                   $('#proceed_to_payment').attr('disabled', false);
+    //                   $('#proceed_to_payment').text('Proceed');
+    //                 }
+    //               })
+    //             },
+    //           onClose: function () {
+    //             console.log('closed');
+    //             $('#proceed_to_payment').attr('disabled', false);
+    //             $('#proceed_to_payment').text('Proceed');
+    //           }
+    //         })
+    //         }
+    //         else{
+    //           Swal.fire({
+    //             title: "Error!",
+    //             text: "Record Exists",
+    //             icon: "error",
+    //           });
+    //         }
+    //         $('#proceed_to_payment').attr('disabled', false);
+    //         $('#proceed_to_payment').text('Proceed');
+    //       }
+    //     })
+    //   }
+    //   else{
+    //     $.ajax({
+    //       url:"ajax/one_time_payment.php",
+    //       method: "POST",
+    //       data: $("#proceed_to_payment_form").serialize(),
+    //       success: function(data){
+    //         //alert(data);
+    //         if(data['status'] == "success"){
+    //           Swal.fire({
+    //                     title: "Congratulations!",
+    //                     text: "Your payment was successful",
+    //                     icon: "success",
+    //                 }).then(setTimeout( function(){ window.location.href = "index"}, 3000));
+    //         }
+    //         else{
+    //           Swal.fire({
+    //                         title: "Error!",
+    //                         text: data['status'],
+    //                         icon: "error",
+    //                     });
+    //         }
+    //         $('#proceed_to_payment').attr('disabled', false);
+    //         $('#proceed_to_payment').text('Proceed');
+    //       }
+    //     })
+    //   }
+    // })
 
   });
 </script>
