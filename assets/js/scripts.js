@@ -2057,6 +2057,8 @@ $(document).ready(function(){
 
 		btn.parents(".order-area").find(".coupon-btn").show();
 		btn.hide();
+		btn.parents(".order-area").find(".coupon-discount-minus-sign").hide();
+		btn.parents(".order-area").find(".coupon_code_help_txt").hide();
 	})
 
 	$(".coupon_field").keyup(function(){
@@ -2081,6 +2083,9 @@ $(document).ready(function(){
 
 		$(this).parents(".order-area").find(".coupon-btn").show();
 		$(this).parents(".order-area").find(".remove-coupon").hide();
+		$(this).parents(".order-area").find(".coupon-discount-minus-sign").hide();
+		$(this).parents(".order-area").find(".coupon_code_help_txt").hide();
+		
 	})
 
 
@@ -2089,15 +2094,20 @@ $(document).ready(function(){
 		var btn = $(this)
 		let payload;
 		const couponCode = btn.parents(".order-area").find(".coupon_field").val();
-		const particularsId = btn.attr('data-particularsId');
 		const totalAmount = btn.attr('data-total');
-		console.log(totalAmount);
+		// console.log(totalAmount);
 		if(btn.attr('data-type')){
 			const type = btn.attr('data-type')
-			payload = {couponCode, particularsId, totalAmount, type, remove_from_wallet: removeFromWallet}
+			payload = {couponCode, totalAmount, type, remove_from_wallet: removeFromWallet}
 		}else{
-			payload = {couponCode, particularsId, totalAmount, remove_from_wallet: removeFromWallet}
+			payload = {couponCode, totalAmount, remove_from_wallet: removeFromWallet}
 		}
+
+		if(typeof btn.attr('data-particularsId') != "undefined"){
+			const particularsId = btn.attr('data-particularsId');
+			payload.particularsId = particularsId;
+		}
+
 		$.ajax({
 			url:"ajax/validate_coupon_code.php",
 			method: "GET",
@@ -2105,8 +2115,8 @@ $(document).ready(function(){
 			success: function(data){
 				console.log(data);
 				if (data == '0') {
-					$(".coupon_code_help_txt").text(`Invalid coupon code`);
-					$(".coupon_code_help_txt").css('color', 'tomato');
+					btn.parents(".order-area").find(".coupon_code_help_txt").text(`Invalid coupon code`);
+					btn.parents(".order-area").find(".coupon_code_help_txt").css('color', 'tomato');
 				}else{
 
 					let resData = JSON.parse(data);
@@ -2124,6 +2134,7 @@ $(document).ready(function(){
 
 					btn.hide();
 					btn.parents(".order-area").find(".remove-coupon").show();
+					btn.parents(".order-area").find(".coupon-discount-minus-sign").show();
 
 					// $(".payment-proceed-btn").attr("data-discountamount", resData.total);
 
@@ -2455,11 +2466,11 @@ $(document).ready(function(){
 			method: "POST",
 			data: $(this).serialize(),
 			beforeSend: function(){
-				$("#vehicle_permit_btn").attr("disabled", true);
-				$("#vehicle_permit_btn").text("Please wait");
+				// $("#vehicle_permit_btn").attr("disabled", true);
+				// $("#vehicle_permit_btn").text("Please wait");
 			},
 			success: function(data){
-				//alert(data);
+				console.log(data);
 				let res = JSON.parse(data);
 				console.log(res);
 				if(res.status == 1){
@@ -2583,8 +2594,7 @@ $(document).ready(function(){
       	var total = $("#total").val();
 		if(coupon_code == ''){
 			alert("Please enter coupon code");
-		}
-      	else{
+		}else{
 			$.ajax({
 				url: "ajax/apply_coupon_code.php",
 				method: "POST",
@@ -2611,6 +2621,7 @@ $(document).ready(function(){
 
 						btn.hide();
 						btn.parents(".order-area").find(".remove-coupon").show();
+						btn.parents(".order-area").find(".coupon-discount-minus-sign").show();
 					}
 					else{
 						Swal.fire({

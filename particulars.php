@@ -1,4 +1,5 @@
 <?php
+
     include("includes/sidebar.php");
     include("includes/header.php");
 
@@ -282,7 +283,7 @@
 </div>
 <?php include("includes/footer.php");?>
 
-<?php include("includes/VueInstance.php");?>
+<?php include("includes/vueInstanceVehicle.php");?>
 
 <script>
     // $("#insurance_type").change(function(){

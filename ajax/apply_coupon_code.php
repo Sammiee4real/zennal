@@ -1,36 +1,51 @@
 <?php
 	require_once('../config/functions.php');
-	$coupon_code = $_POST['coupon_code'];
-	$my_total = $_POST['total'];
 	header('Content-Type: application/json');
-	$response_array = [];
-	$get_code = get_one_row_from_one_table('coupon_code', 'coupon_code', $coupon_code);
+	
 	$user_id = $_SESSION['user']['unique_id'];
-	$get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
- 	$wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
-	if($get_code == null){
-		$response_array = [
-			"status" => "Incorrect code, please try again"
-		];
-	}else{
-		$discount = $get_code['discount'];
-		$total = $my_total - $discount;
-		$remove_from_wallet = $_POST['remove_from_wallet'];
-		if($remove_from_wallet == 1){
-			if($wallet_balance > $total){
-				$total = 0;
-			}
-			else{
-				$total = $total - $wallet_balance;
-			}
-		}
-		$response_array = [
-			"status"=>"success",
-			"discount" => number_format($discount),
-			"discount_without_format" => $discount,
-			"total" => number_format($total),
-			"total_without_format" => $total
-		];
+	
+	$table = $_POST['query'];
+	$unique_id = $_POST['reg_id'];
+	$coupon_code = $_POST['coupon_code'];
+
+	// Get the insurance_type from table row
+	$table_row = get_one_row_from_one_table($table, 'unique_id', $unique_id);
+
+	if(empty($table_row)){
+		exit(json_encode([
+			"status" => 0,
+			"message" => "There is no record of this activity. Try again"
+		]));
 	}
-	echo json_encode($response_array);
+
+	$insurance_type = "third_party_insurance";
+	if(isset($table_row['insurance_type'])){
+		$insurance_type = $table_row['insurance_type'];
+	}
+
+	// Get from coup_code table where coupon_code, insurance_type
+	$get_code = get_one_row_from_one_table_by_two_params('coupon_code', 'coupon_code', $coupon_code, 'insurance_type', $insurance_type);
+
+	if(empty($get_code)){
+		exit(json_encode([
+			"status" => 0,
+			"message" => "Coupon code does not exists"
+		]));
+	}
+	$expiry_date = $get_code['expiry_date'];
+
+	if(strtotime($expiry_date) < strtotime(date("Y-m-d"))){
+		exit(json_encode([
+			"status" => 0,
+			"message" => "The coupon has expired"
+		]));
+	}
+
+	$discount = $get_code['discount'];
+
+	exit(json_encode([
+		"status"=> 1,
+		"discount" => $discount
+	]));
+
 ?>

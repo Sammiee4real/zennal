@@ -1062,6 +1062,7 @@ function save_insurance_details($info){
   $side_four = $vehicle_attached_info["side_four"];
   // $_SESSION["uid"] = "123456";
   $userid = $_SESSION["uid"];
+  $user_id = $userid;
   $insurance_unique_id = unique_id_generator($userid);
   $basic_info_unique_id = unique_id_generator($vehicle_brand);
   $attached_files_unique_id = unique_id_generator($chassis_no);
@@ -2103,11 +2104,18 @@ function get_coupon_discount($data){
   global $dbc;
 
   $coupon_code = $data['couponCode'];
-	$particulars_id = $data['particularsId'];
+  $particulars_id = "";
+  if(isset($data['particularsId'])){
+    $particulars_id = $data['particularsId'];
+  }
 	$amount = $data['totalAmount'];
   $remove_from_wallet = $data['remove_from_wallet'];
   $user_id = $_SESSION['user']['unique_id'];
   $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
+  $wallet_balance = 0;
+  if(!empty($get_user_wallet_balance)){
+    $wallet_balance = $get_user_wallet_balance['balance'];
+  }
   // $coupon_code, $particulars_id, $amount
 
   $get_coupon = get_rows_from_table_with_one_params('coupon_code','coupon_code',$coupon_code);
@@ -2521,7 +2529,7 @@ function save_financial_record($user_id, array $financial_details_array){
 
 function check_against_mismatch_acct($acctno,$user_id){
   global $dbc;
-   $sql = "SELECT * FROM `user_financial_details` WHERE `account_number`='$account_no' AND `user_id`!='$user_id'";
+   $sql = "SELECT * FROM `user_financial_details` WHERE `account_number`='$acctno' AND `user_id`!='$user_id'";
    $qry = mysqli_query($dbc,$sql);
    $countt = mysqli_num_rows($qry);
    if($countt >= 1){
@@ -2863,7 +2871,7 @@ function charge_user(){
           $current_repayment_month = $loan_application['current_repayment_month'] + 1;
           $update_current_repayment_month = update_by_one_param('user_loan_details','current_repayment_month',$current_repayment_month,'authorization_code', $loan_application['authorization_code']);
           $update_repayment_tbl = "UPDATE `repayment_tbl` SET `current_repayment_month`='$current_repayment_month', `amount_paid_so_far`='$amount_paid_so_far', `balance`='$balance', `date_created` = now()  WHERE `loan_id`='$loan_id'";
-          $update_repayment_tbl_query = mysqli_query($dbc, $update_repayment_tbl) or die(mysqli_error());
+          $update_repayment_tbl_query = mysqli_query($dbc, $update_repayment_tbl) or die(mysqli_error($dbc));
           if(mysqli_affected_rows($dbc)){
             echo "success";
           }else{
@@ -3289,9 +3297,8 @@ function generate_bank_statement($user_id, $amount){
       }
     }
     echo $checkout;
-  }
-  else{
-    return json_encode(["status"=> "1", "msg"=>'loan_purpose.php?message=transaction_successful&transaction_id='.$value['transaction_id']]);
+  }else{
+    return json_encode(["status"=> "1", "msg"=>'loan_purpose.php?message=transaction_successful&transaction_id=']);
   }
 
 }
@@ -3319,7 +3326,7 @@ function generate_bank_statement2($user_id, $amount, $id){
     echo $checkout;
   }
   else{
-    return json_encode(["status"=> "1", "msg"=>'asset_loan_purpose.php?id='.$id.'&message=transaction_successful&transaction_id='.$value['transaction_id']]);
+    return json_encode(["status"=> "1", "msg"=>'asset_loan_purpose.php?id='.$id.'&message=transaction_successful&transaction_id=']);
   }
 
 }
@@ -4299,10 +4306,14 @@ function calculate_vehicle_registration($reg_id){
   else if($get_registration_details['plate_number_type'] == "commercial"){
     $get_number_plate = get_one_row_from_one_table_by_two_params('number_plate', 'type','commercial','vehicle_id',$vehicle_type, 'date_created');
     if($get_registration_details['insurance_type'] == 'third_party_insurance'){
-      $number_plate_charge = $get_number_plate['third_party_amount'];
+      if(!empty($get_number_plate)){
+        $number_plate_charge = $get_number_plate['third_party_amount'];
+      }
     }
     else if($get_registration_details['insurance_type'] == 'no_third_party_insurance' || $get_registration_details['insurance_type'] == 'comprehensive' || $get_registration_details['insurance_type'] == 'comprehensive_insurance'){
-      $number_plate_charge = $get_number_plate['no_third_party_amount'];
+      if(!empty($get_number_plate)){
+        $number_plate_charge = $get_number_plate['no_third_party_amount'];
+      }
     }
   }
   else if($get_registration_details['plate_number_type'] == "personalized_number"){
@@ -4532,7 +4543,7 @@ function save_vehicle_permit($post_data){
 
   $permit_type = secure_database($post_data['permit_type']);
   $vehicle_type = secure_database($post_data['vehicle_type']);
-  $make_of_vehicle = secure_database($post_data['make_of_vehicle']);
+  $make_of_vehicle = secure_database($post_data['vehicle_make']);
   $vehicle_model = secure_database($post_data['vehicle_model']);
   $year_of_make = secure_database($post_data['year_of_make']);
   $plate_no = secure_database($post_data['plate_no']);
@@ -4555,12 +4566,12 @@ function save_vehicle_permit($post_data){
   `road_worthiness_expiry`='$road_worthiness_expiry', `hackney_permit_expiry`='$hackney_permit_expiry', `heavy_duty_permit_expiry`='$heavy_duty_permit_expiry',
   `datetime`=now()";
 
-  $exe = mysqli_query($dbc, $sql);
+  $exe = mysqli_query($dbc, $sql) or die(mysqli_error($dbc));
 
   if($exe){
     return json_encode(array('status'=>1, 'record_id'=>$unique_id));
   }else{
-    return json_encode(array('msg'=>'Error saving application.'));
+    return json_encode(array('status'=>0,'msg'=>'Error saving application.'));
   }
 }
 

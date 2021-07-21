@@ -581,7 +581,7 @@
 
 <?php include("includes/footer.php");?>
 
-<?php include("includes/VueInstance.php");?>
+<?php include("includes/vueInstanceVehicle.php");?>
 
 <script>
   function formatNumber(num) {

@@ -22,6 +22,7 @@
             vehicleLicenseExpiry: '',
             registrationType: '',
             permits: '',
+            vehicleRegAgreement: false,
             vehicleMakeModels: [],
             finishedFetchingModels: false,
             stillFetchingModels: false,
