@@ -24,11 +24,11 @@
         $type = "Insurance Policy";
         
 
-        if($interval->m == 1){
+        if($interval->m == 1){ // 1 month
             $description = "Your insurance policy will end on  $policy_end_date";
-        }elseif($interval->d == 14){
+        }elseif($interval->d == 14){ // 2 weeks
             $description = "Your insurance policy will end on  $policy_end_date";
-        }elseif($interval->d == 1){
+        }elseif($interval->d == 1){ // 1 day
             $description = "Your insurance policy will end on  $policy_end_date";
         }
 

@@ -59,7 +59,7 @@ function get_number_of_rows_two_params($table,$param1,$value1,$param2,$value2){
   $sql= "SELECT id FROM `$table` WHERE `$param1`='$value1' AND `$param2`='$value2'";
   $query = mysqli_query($dbc, $sql);
   $count = mysqli_num_rows($query);
-  return $count;     
+  return $count; 
 }
 
 function get_number_of_rows_one_param($table,$param1,$value1){
@@ -384,6 +384,12 @@ function register_user($post){
     $insert_into_wallet = insert_into_wallet($unique_id, 0);
     return json_encode(array("status"=>1, "msg"=>"success"));
   }
+}
+
+function update_activity_view_status($notification_id){
+  global $dbc;
+  $update_data_sql = "UPDATE `user_logs_tbl` SET `view_status` = '1' WHERE `unique_id` = '$notification_id'";
+    $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
 }
 
 // Badmus
@@ -2204,17 +2210,30 @@ function calculate_renew_vehicle_particulars($particulars_id){
 function calculate_vehicle_permit($particulars_record_id){
   
   global $dbc;
-  
-  $sql = "SELECT services.cost FROM `vehicle_permit`
-    JOIN `services`
-    ON vehicle_permit.permit_type = services.unique_id
-    WHERE vehicle_permit.unique_id = '$particulars_record_id'
-  ";
-  $exe = mysqli_query($dbc, $sql);
 
+  $sql = "SELECT permit_type from vehicle_permit
+  WHERE unique_id = '$particulars_record_id'";
+  $exe = mysqli_query($dbc, $sql);
   $data = mysqli_fetch_assoc($exe);
 
-  $cost = $data['cost'];
+  $cost = 0;
+
+  if(!empty($data)){
+    $permit_types = json_decode($data['permit_type'], true);
+    foreach($permit_types as $permit_type){
+      $sql = "SELECT cost FROM `services`
+        WHERE unique_id = '$permit_type'
+      ";
+      $exe = mysqli_query($dbc, $sql);
+    
+      $data = mysqli_fetch_assoc($exe);
+      $cost += $data['cost'];
+
+    }
+  }
+  
+  
+
 
   $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
   $delivery_fee = $get_delivery_fee['fee'];
@@ -2968,9 +2987,14 @@ function insert_logs($user_id, $type, $description){
 
 }
 
-function get_user_recent_activities($user_id){
+function get_user_recent_activities($user_id, $limit = ""){
   global $dbc;
-  $sql = "SELECT * FROM `user_logs_tbl` WHERE `user_id`='$user_id' ORDER BY `date_created` DESC LIMIT 5";
+  $sql = "SELECT * FROM `user_logs_tbl`
+  WHERE `user_id`='$user_id'
+  ORDER BY `view_status` ASC, `date_created` DESC";
+  if(!empty($limit)){
+    $sql .= " LIMIT $limit";
+  }
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
   if($num > 0){
@@ -4540,8 +4564,8 @@ function calculate_change_vehicle_ownership($unique_id){
 function save_vehicle_permit($post_data){
   global $dbc;
 
-
-  $permit_type = secure_database($post_data['permit_type']);
+  $permit_type = json_encode($post_data['permit_type']);
+  $permit_type = secure_database($permit_type);
   $vehicle_type = secure_database($post_data['vehicle_type']);
   $make_of_vehicle = secure_database($post_data['vehicle_make']);
   $vehicle_model = secure_database($post_data['vehicle_model']);

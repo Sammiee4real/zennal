@@ -1,7 +1,11 @@
-<?php include("includes/sidebar.php");
+<?php
+    include("includes/sidebar.php");
     $get_employment_details =  get_one_row_from_one_table_by_id('user_employment_details','user_id', $user_id, 'date_created');
     $get_user_details  =  get_one_row_from_one_table_by_id('users','unique_id', $user_id, 'registered_on');
     @$get_loan_details = get_rows_from_one_table_by_id('personal_loan_application','user_id', $user_id, 'date_created');
+
+    $employment_statuses  =  get_rows_from_one_table('employment_status');
+    
     $count = 0;
     $reg_id = isset($_GET['reg_id']) ? $_GET['reg_id'] : '';
     // foreach ($get_loan_details as $value) {
@@ -119,25 +123,24 @@ $(document).ready(function(){
 
                     <div class="col-md-4 text-center">
                         <li role="presentation" class="disabled">
-                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
-                            <a href="verify_otp.php" class="">
-                                <i data-feather="git-commit" width="100"></i>
-                                <p>Verify OTP</p>
+                            <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
+                                <a href="verify_otp.php" class="">
+                                    <i data-feather="git-commit" width="100"></i>
+                                    <p>Verify OTP</p>
+                                </a>
                             </a>
-                        </a>
-                    </li>
+                        </li>
                     </div>
 
                     <div class="col-md-4 text-center">
-                         <li role="presentation" class="disabled">
-                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
-                            <a href="financial_details.php" class="">
-                                <i data-feather="home" width="100"></i>
-                                <p>Financial Details</p>
+                        <li role="presentation" class="disabled">
+                            <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
+                                <a href="financial_details.php" class="">
+                                    <i data-feather="home" width="100"></i>
+                                    <p>Financial Details</p>
+                                </a>
                             </a>
-                        </a>
-                    </li>
-
+                        </li>
                     </div>
 
                 </ul>
@@ -162,12 +165,18 @@ $(document).ready(function(){
                 <span class="" for="city5">Employment Status</span>
                 <select name="employment_status" class="form-select" id="colorselector">
                     <option value="">Select</option>
-                    <option class="yellow" value="1">Student (Must be above 18yrs)</option>
-                    <option class="red" value="2">NYSC</option>
-                    <option class = "red" value="3">Employed</option>
-                    <option class="yellow" value="4">Self employed</option>
-                    <option class="yellow" value="5">Unemployed</option>
-                    <option class="yellow" value="6">Business Owner</option>
+                    <?php
+                        foreach ($employment_statuses as $employment_status) {
+                            # code...
+                            $status_id = $employment_status['unique_id'];
+                            $status_name = $employment_status['status_name'];
+                    ?>
+                    <option class="red" value="<?php echo $status_id;?>">
+                        <?php echo $status_name;?>
+                    </option>
+                    <?php
+                        }
+                    ?>
                 </select>
               </div>
         </div>
