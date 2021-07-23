@@ -151,8 +151,8 @@ function show(el, txt){
                                         <div class="form-group">
                                             <!-- class="choices form-select multiple-remove" multiple="multiple" -->
                                             <label for="permitType">Permit Type</label>
-                                            <select class="form-select" id="permitType" name="permit_type" required> 
-                                                <option value="">Select type of permit</option>
+                                            <select class="form-select select2" id="permitType" name="permit_type[]" multiple required
+                                            data-placeholder="Select type of permit">
                                                 <?php
                                                     foreach($get_permit_types as $permit_type){
                                                 ?>

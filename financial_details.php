@@ -9,6 +9,20 @@
     // if($get_employment_details['email_verification_status'] == 0){
     //     echo '<meta http-equiv="refresh" content="0; url=otp_error_page" />';
     // }
+
+    $account_number = "";
+    $bvn = "";
+    $monthly_repayment = "";
+    $bank_code = "";
+    $account_type = "";
+    if(!empty($get_financial_details)){
+        $account_number = $get_financial_details['account_number'];
+        $bvn = $get_financial_details['bvn'];
+        $monthly_repayment = $get_financial_details['monthly_repayment'];
+        $bank_code = $get_financial_details['bank_name'];
+        $account_type = $get_financial_details['account_type'];
+    }
+
 ?>
 <div id="main">
 
@@ -85,9 +99,22 @@
                             <span class="span" for="name1">Bank Name</span>
                             <select name="bank_name" id="bank_name2" class="form-select">
                                 <option value="">Select Bank Name</option>
-                                <?php foreach ($get_bank_name_decode['data'] as $value){ ?>
-                                <option value="<?php echo $value['code']?>"><?php echo $value['name']?></option>
-                                <?php } ?>
+                                <?php
+                                    foreach ($get_bank_name_decode['data'] as $value){
+                                        $code = $value['code'];
+                                        $selected = "";
+                                        if($code === $bank_code){
+                                            $selected = "selected";
+                                        }
+                                ?>
+                                    <option value="<?php echo $value['code']?>"
+                                    <?php echo $selected; ?>
+                                    >
+                                        <?php echo $value['name']?>
+                                    </option>
+                                <?php
+                                    }
+                                ?>
                             </select>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -107,8 +134,8 @@
                                     }
                                 ?>
                             </span>
-                            <input type="text" class="form-control" id="account_number" name="account_number" placeholder="Account Number <?= $placeholder;?>" >
-                            <!-- value="<?= $get_financial_details['account_number']?>" -->
+                            <input type="text" class="form-control" id="account_number" name="account_number" placeholder="Account Number <?= $placeholder;?>" 
+                            value="<?= $account_number?>" >
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -128,8 +155,14 @@
                             <span class="span" for="name1">Account Type</span>
                             <select name="account_type" class="form-select">
                                 <option value="">Select Account Type</option>
-                                <option value="savings">Savings</option>
-                                <option value="current">Current</option>
+                                <option value="savings"
+                                <?php if($account_type == 'savings') echo "selected";?>>
+                                    Savings
+                                </option>
+                                <option value="current"
+                                <?php if($account_type == 'current') echo "selected";?>>
+                                    Current
+                                </option>
                             </select>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
@@ -139,7 +172,7 @@
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <label class="label" for="name1">BVN</label>
-                            <input type="number" class="form-control" id="bvn" name="bvn" placeholder="BVN" value="<?= $get_financial_details['bvn']?>">
+                            <input type="number" class="form-control" id="bvn" name="bvn" placeholder="BVN" value="<?= $bvn?>">
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -182,7 +215,7 @@
                     <div class="form-group boxed" id="current_repayment_amount" style="display: none;">
                         <div class="input-wrapper">
                             <span class="span" for="name1">Current Monthly repayment on existing loan</span>
-                            <input type="text" class="form-control" id="monthly_repayment" name="monthly_repayment" placeholder="Monthly Repayment on existing loan (if applicable)" value="<?= $get_financial_details['monthly_repayment']?>">
+                            <input type="text" class="form-control" id="monthly_repayment" name="monthly_repayment" placeholder="Monthly Repayment on existing loan (if applicable)" value="<?= $monthly_repayment?>">
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -190,7 +223,6 @@
                     </div>
                     <div class="form-group boxed">
                         <div class="input-wrapper">
-<<<<<<< HEAD
                             <span class="span" for="email1">Upload a Government Issued ID</span>
                             <br />
                             <i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
@@ -206,21 +238,6 @@
                                 </label>
                                 <input type="hidden" name="image_path" id="image_url">
                             </div>
-=======
-                            <span class="span" for="email1">Upload a Government Issued ID</span><br><i style="color:tomato; font-size:small;">Note: The image on your ID must tally with your profile picture</i>
-                             <div class="custom-file-upload">
-                        <input type="file" id="file" accept=".png, .jpg, .jpeg" name="image">
-                        <label for="file">
-                            <span>
-                                <strong>
-                                    <ion-icon name="cloud-upload-outline"></ion-icon>
-                                    <i id="uploaded_image">Tap to Upload</i>
-                                </strong>
-                            </span>
-                        </label>
-                        <input type="hidden" name="image_path" id="image_url">
-                    </div>
->>>>>>> 64f896303a73356775ba1fbbd21f446b7cfad955
                         </div>
                     </div>
 
