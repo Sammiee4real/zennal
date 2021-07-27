@@ -1,8 +1,14 @@
 <?php include("includes/sidebar.php");
   $get_loan_application = get_one_row_from_one_table_by_two_params('vehicle_reg_installment', 'user_id', $user_id, 'approval_status', 1, 'date_created');
   $get_installment_details = get_rows_from_one_table_by_id('installment_payment_interest','status', 1, 'date_created');
-  $equity_contribution = (30/100) * $get_loan_application['total'];
-  $amount_to_borrow = $get_loan_application['total'] - $equity_contribution;
+
+  $equity_contribution = 0;
+  $amount_to_borrow = 0;
+
+  if(!empty($get_loan_application)){
+    $equity_contribution = (30/100) * $get_loan_application['total'];
+    $amount_to_borrow = $get_loan_application['total'] - $equity_contribution;
+  }
 ?>
 <div id="main">
 

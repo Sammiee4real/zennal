@@ -19,7 +19,7 @@
         #cus {display:none;}
     </style>
 
-    <div class="main-content container-fluid" id="appWrapper">
+    <div class="main-content container-fluid" id="appWrapper" v-cloak>
         <div class="page-title">
             <h3>New Vehicle Registration</h3>
             <p class="text-subtitle text-muted">Please fill all the fields below</p>

@@ -4018,18 +4018,18 @@ $(document).ready(function(){
 						console.log(installment);
 
 						installment.map(month => {
-							let interestPerMonth = ((((month.interest_rate / 100) * data.amount_to_balance)+data.amount_to_balance)/month.month)
+							let interestPerMonth = ((((month.interest_rate / 100) * data.amount_to_balance)+data.amount_to_balance)/month.no_of_month)
 							console.log(`${interestPerMonth} per month`);
 
 							var instalmentText = "INSTALLMENT";
-							if(month.month != 1){
+							if(month.no_of_month != 1){
 								instalmentText = "INSTALLMENTS";
 							}
 							
 							installmetalPay.append(`
 								<tr>
-									<td class="text-bold-500">${month.month} MONTH ${instalmentText}</td>
-									<td><span>₦ ${formatNumber(Math.round(interestPerMonth))}/M</span>  <button id="installmental-month" data-equityAmount="${data.equity_amount}" data-installmentalMonth="${month.month}" data-insuranceId="${data.insurance_id}" class="btn btn-primary">BUY NOW</button></td>
+									<td class="text-bold-500">${month.no_of_month} MONTH ${instalmentText}</td>
+									<td><span>₦ ${formatNumber(Math.round(interestPerMonth))}/M</span>  <button id="installmental-month" data-equityAmount="${data.equity_amount}" data-installmentalMonth="${month.no_of_month}" data-insuranceId="${data.insurance_id}" class="btn btn-primary">BUY NOW</button></td>
 								</tr>
 							`);
 						});

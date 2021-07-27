@@ -104,7 +104,7 @@
                 this.vehicleMakeModels = results;
                 
                 return data;
-                // console.log(data.results);
+                console.log(data);
                 // console.log(JSON.stringify(data, null, 2));
 
             },
@@ -312,6 +312,7 @@
         },
         watch: {
             vehicleMake() {
+                console.log("Got here");
                 this.fetchModel().
                 then((data) => {
                     
@@ -356,6 +357,9 @@
         },
         mounted(){
 
+            console.log("Got here mounted");
+
+
             if(window.location.pathname.includes("particulars")
                 || window.location.pathname.includes("vehicle_reg")
                 || window.location.pathname.includes("change_ownership")
@@ -385,6 +389,9 @@
             
 
             
+        },
+        created(){
+            console.log("Got here created");
         }
     })
 </script>

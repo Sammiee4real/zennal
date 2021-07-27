@@ -815,6 +815,8 @@ function get_insurance_quote($insurer, $package_plan, $payment_method){
     $response = json_decode(curl_exec($curl), true);
     curl_close($curl);
 
+    var_dump($response);
+
     $returned_amount = $response['Quote']['PaymentDue'];
 
     if($returned_amount == 0) return json_encode(array("status"=>0, "msg"=>"No amount returned"));
@@ -887,41 +889,45 @@ function get_insurance_quote($insurer, $package_plan, $payment_method){
 
       // $insurance_installment = get_rows_from_table('insurance_interest_rate');
 
-      $insurance_installment = [
-        0 => [
-          "interest_rate" => 10,
-          "amount_to_balance" => 50000,
-          "month" => 1
-        ],
-        1 => [
-          "interest_rate" => 25,
-          "amount_to_balance" => 31000,
-          "month" => 2
-        ],
-        2 => [
-          "interest_rate" => 13,
-          "amount_to_balance" => 72000,
-          "month" => 3
-        ],
-        3 => [
-          "interest_rate" => 27,
-          "amount_to_balance" => 32000,
-          "month" => 4
-        ],
-        4 => [
-          "interest_rate" => 16,
-          "amount_to_balance" => 84000,
-          "month" => 5
-        ],
-        5 => [
-          "interest_rate" => 9,
-          "amount_to_balance" => 95000,
-          "month" => 6
-        ],
-      ];
+    $insurance_installment  =  get_rows_from_one_table('installment_payment_interest');
 
-      $quote_array = array('status' => 1, 'insurance_id'=>$insurance_id, 'equity_amount' => $equity_amount, 'amount_to_balance' => $amount_to_balance, 'months' => $insurance_installment);
-      return json_encode($quote_array);
+    $quote_array = array('status' => 1, 'insurance_id'=>$insurance_id, 'equity_amount' => $equity_amount, 'amount_to_balance' => $amount_to_balance, 'months' => $insurance_installment);
+    return json_encode($quote_array);
+
+      // $insurance_installment = [
+      //   0 => [
+      //     "interest_rate" => 10,
+      //     "amount_to_balance" => 50000,
+      //     "month" => 1
+      //   ],
+      //   1 => [
+      //     "interest_rate" => 25,
+      //     "amount_to_balance" => 31000,
+      //     "month" => 2
+      //   ],
+      //   2 => [
+      //     "interest_rate" => 13,
+      //     "amount_to_balance" => 72000,
+      //     "month" => 3
+      //   ],
+      //   3 => [
+      //     "interest_rate" => 27,
+      //     "amount_to_balance" => 32000,
+      //     "month" => 4
+      //   ],
+      //   4 => [
+      //     "interest_rate" => 16,
+      //     "amount_to_balance" => 84000,
+      //     "month" => 5
+      //   ],
+      //   5 => [
+      //     "interest_rate" => 9,
+      //     "amount_to_balance" => 95000,
+      //     "month" => 6
+      //   ],
+      // ];
+
+      
     }
     
     
@@ -1110,7 +1116,10 @@ function save_vehicle_details($post_date, $file_arr){
   // Extract submitted data
   $usage = $post_date['usage'];
   $make_of_vehicle = $post_date['make_of_vehicle'];
-  $other_make_of_vehicle = $post_date['other_make_of_vehicle'];
+  $other_make_of_vehicle = "";
+  if(isset($post_date['other_make_of_vehicle'])){
+    $other_make_of_vehicle = $post_date['other_make_of_vehicle'];
+  }
   $vehicle_type = $post_date['vehicle_type'];
   $vehicle_reg_no = $post_date['vehicle_reg_no'];
   $vehicle_model = $post_date['vehicle_model'];
@@ -4411,14 +4420,22 @@ function insert_payment($email = null, $table, $user_id, $reg_id, $city, $delive
   }
 }
 
-function submit_vehicle_reg_installment($user_id, $reg_id, $bank_statement){
+function submit_vehicle_reg_installment($user_id, $reg_id, $bank_statement, $bank_statement_option=""){
   global $dbc;
   $user_id = secure_database($user_id);
   $reg_id = secure_database($reg_id);
   $bank_statement = secure_database($bank_statement);
   $unique_id = unique_id_generator($user_id);
   $get_registration_details = get_one_row_from_one_table_by_id('vehicle_reg_payment','reg_id', $reg_id ,'date_created');
-  $total = $get_registration_details['total'];
+
+  $total = 0;
+  if($bank_statement_option == "online_generation"){
+    if(empty($get_registration_details) && $bank_statement_option == "online_generation"){
+      return json_encode(["status"=>"0", "msg"=>"You need to make payment"]);
+    }
+    $total = $get_registration_details['total'];
+  }
+  
   if($user_id == '' || $reg_id == '' || $bank_statement == ''){
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }

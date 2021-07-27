@@ -46,7 +46,7 @@ include("includes/sidebar.php");
                                 
                             </div>
                             <div class="position-relative">
-                               <select id="bank_statement_option" class="form-select">
+                               <select id="bank_statement_option" class="form-select" name="bank_statement_option">
                                 <option value="">Select an Option</option>
                                 <option value="manual_upload">Manual Upload</option>
                                 <option value="online_generation">Generate Bank Statement</option>
