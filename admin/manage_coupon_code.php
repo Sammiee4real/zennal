@@ -113,7 +113,11 @@
                           <button type="button" class="btn btn-sm btn-primary edit_modal" 
                           id="<?php echo $value['unique_id']?>" 
                           data-coupon_code="<?php echo $value['coupon_code']?>" 
-                          data-discount="<?php echo $value['discount']?>">Edit</button>
+                          data-discount="<?php echo $value['discount']?>"
+                          data-insurance="<?php echo $value['insurance_type']?>"
+                          data-insurance_val="<?=ucwords(str_replace('_', ' ', $value['insurance_type']))?>"
+                          data-expiry="<?php echo $value['expiry_date']?>"
+                          >Edit</button>
                           <button type="button" class="btn btn-sm btn-danger delete_modal" 
                           id="<?php echo $value['unique_id']?>">Delete</button>
                         </td>
@@ -149,6 +153,18 @@
                   <div class="col-md-8 mt-3">
                     <label>Discount</label>
                     <input type="number" name="discount" class="form-control" id="discount" required>
+                  </div>
+                  <div class="col-md-8 mt-3">
+                    <label>Transaction Type</label>
+                    <select name="insurance_type" id="insurance_type" class="form-control">
+                      <option value="" id="ins_val"></option>
+                      <option value="comprehensive_insurance">Comprehensive Insurance</option>
+                      <option value="third_party_insurance">Third Party Insurance</option>
+                    </select>
+                  </div>
+                  <div class="col-md-8 mt-3">
+                    <label>Expiry Date</label>
+                    <input type="date" name="expiry_date" id="expiry_date" class="form-control" required>
                   </div>
                 </div>
                 <input type="hidden" name="unique_id"  id="unique_id" value="">
@@ -208,9 +224,15 @@
         let unique_id = $(this).attr('id');
         let coupon_code = $(this).data('coupon_code');
         let discount = $(this).data('discount');
+        let ins_val = $(this).data('insurance_val');
+        let insurance = $(this).data('insurance');
+        let expiry = $(this).data('expiry');
         $("#unique_id").val(unique_id);
         $("#coupon_code").val(coupon_code);
         $("#discount").val(discount);
+        $("#ins_val").val(insurance);
+        $("#ins_val").text(ins_val);
+        $("#expiry_date").val(expiry);
       });
       $(".delete_modal").click(function(){
         $("#modal2").modal('show');
