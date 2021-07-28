@@ -1,9 +1,10 @@
-function submit_form(formName, btnName, btnOValue, btnInput=false, url, bMsg, sMsg, redirectTo)
+function submit_form(formName, btnName, btnOValue, btnInput=false, url, bMsg, sMsg, redirectTo, reload=false)
 {
     $('#'+btnName).click(function (e) {
+		// alert('clicked');
         e.preventDefault();
         $.ajax({
-            url:"ajax/"+url+".php",
+            url:url+".php",
             method: "POST",
             data:$('#'+formName).serialize(),
             beforeSend: function(){
@@ -11,23 +12,25 @@ function submit_form(formName, btnName, btnOValue, btnInput=false, url, bMsg, sM
                 if(btnInput == false) $('#'+btnName).html(bMsg);
                 if(btnInput == true) $('#'+btnName).val(bMsg);
             },
-            success:function(data){
-                // alert(data);
-                data = JSON.parse(data);
-                if(data.status == 1){
-                    if(sMsg.trim().length == 0) toastr.success(data.msg, "Success!");
-                    if(sMsg.trim().length !== 0) toastr.success(sMsg, "Success!");
-                    setTimeout( function(){ 
-                        window.location.href = redirectTo;
-                    }, 3000);
+            success: function(data){
+				$(".modal").modal('hide');
+                if(data == "success"){
+					$("#success_message").empty();
+					$("#success_message").html("Success! "+sMsg);
+					toastbox('success_toast', 3000);
+					setTimeout( function(){ 
+					  if(reload == true) location.reload(true);
+					  if(redirectTo.trim().length !== 0) window.location.href = redirectTo;
+					}, 3000);
                 }
                 else{
-                    toastr.error(data.msg, "Caution!");
+                  $("#error_message").empty();
+                  $("#error_message").html("Error! " + data);
+                  toastbox('error_toast', 6000);
                 }
-                $('#'+btnName).attr('disabled', false);
-                if(btnInput == false) $('#'+btnName).html(btnOValue);
-                if(btnInput == true) $('#'+btnName).val(btnOValue);
-            }
+                $("#"+btnName).attr("disabled", false);
+                $("#"+btnName).text(btnOValue);
+			}
         });     
     });
 }
@@ -35,6 +38,13 @@ function submit_form(formName, btnName, btnOValue, btnInput=false, url, bMsg, sM
 
 
 $(document).ready(function(){
+	//////* NEW CODE *//////////
+
+	submit_form('add_installment_form', 'add_installment_btn', 'Submit', false, 'ajax_admin/add_installment', 'Adding Plan', 'Installment plan added successfully', '', true);
+
+
+
+	////////* END */////////////
 
     $('#myTable').DataTable();
 
@@ -3096,7 +3106,7 @@ $(document).ready(function(){
               $("#success_message").empty();
               $("#success_message").html("Success! You've successfully added coupon code");
               toastbox('success_toast', 3000);
-              setTimeout( function(){ window.location.href = "manage_coupon_code.php";}, 3000);
+              setTimeout( function(){ window.location.href = "manage_coupon_code";}, 3000);
             }
             else{
               $("#error_message").empty();
