@@ -61,6 +61,18 @@
                               <label>Discount</label>
                               <input type="number" name="discount" class="form-control" required>
                             </div>
+                            <div class="col-md-8 mt-3">
+                              <label>Transaction Type</label>
+                              <select name="insurance_type" id="insurance_type" class="form-control">
+                                <option value="">Select . . .</option>
+                                <option value="comprehensive_insurance">Comprehensive Insurance</option>
+                                <option value="third_party_insurance">Third Party Insurance</option>
+                              </select>
+                            </div>
+                            <div class="col-md-8 mt-3">
+                              <label>Expiry Date</label>
+                              <input type="date" name="expiry_date" class="form-control" required>
+                            </div>
                           </div>
                         </form>
                       </div>

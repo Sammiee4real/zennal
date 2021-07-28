@@ -1,3 +1,39 @@
+function submit_form(formName, btnName, btnOValue, btnInput=false, url, bMsg, sMsg, redirectTo)
+{
+    $('#'+btnName).click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url:"ajax/"+url+".php",
+            method: "POST",
+            data:$('#'+formName).serialize(),
+            beforeSend: function(){
+                $('#'+btnName).attr('disabled', true);
+                if(btnInput == false) $('#'+btnName).html(bMsg);
+                if(btnInput == true) $('#'+btnName).val(bMsg);
+            },
+            success:function(data){
+                // alert(data);
+                data = JSON.parse(data);
+                if(data.status == 1){
+                    if(sMsg.trim().length == 0) toastr.success(data.msg, "Success!");
+                    if(sMsg.trim().length !== 0) toastr.success(sMsg, "Success!");
+                    setTimeout( function(){ 
+                        window.location.href = redirectTo;
+                    }, 3000);
+                }
+                else{
+                    toastr.error(data.msg, "Caution!");
+                }
+                $('#'+btnName).attr('disabled', false);
+                if(btnInput == false) $('#'+btnName).html(btnOValue);
+                if(btnInput == true) $('#'+btnName).val(btnOValue);
+            }
+        });     
+    });
+}
+
+
+
 $(document).ready(function(){
 
     $('#myTable').DataTable();
