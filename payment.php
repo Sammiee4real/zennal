@@ -13,6 +13,11 @@
     // print_r($get_payment_details_decode);
     $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
     $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
+    $get_one_time_discount = get_one_row_from_one_table('one_time_discount');
+    $one_time_discount = 0;
+    if(!empty($get_one_time_discount)){
+        $one_time_discount = $get_one_time_discount['discount_rate'];
+    }
 ?>
 
 <div id="main">
@@ -168,7 +173,8 @@
                                                     <div class="card-body">
                                                         <div class="row">
                                                             <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                                                <select name="payment_option" id="payment_option" class="form-select">
+                                                                <select name="payment_option" id="payment_option" class="form-select"
+                                                                v-model="paymentOption">
                                                                     <option value="">Select Payment Option</option>
                                                                     <option value="one_time">One time Payment</option>
                                                                     <option value="installment">On Installment</option>
@@ -178,13 +184,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">    
-                                                <div id="show_payment_button" class="d-none">
+                                            <div class="col-md-12">
+
+                                                <div v-if="paymentOption == 'one_time'">
                                                     <div class="col-12 d-flex justify-content-end">
                                                     <button type="button" id="proceed_to_payment" class="btn btn-primary mr-1 mb-1">Proceed</button>
                                                     </div>
                                                 </div>
-                                                <div id="show_installemt_payment" class="d-none">
+
+                                                <div v-if="paymentOption == 'installment'">
                                                     <div class="col-12 d-flex justify-content-end">
                                                     <a href="vehicle_reg_loan?reg_id=<?= $reg_id;?>" class="btn btn-primary mr-1 mb-1">Proceed</a>
                                                     </div>
@@ -240,20 +248,20 @@
     elem2.style.display = (txt == 'On Installement') ? 'block' : 'none';
   }
   $(document).ready(function(){
-    $("#payment_option").change(function(){
-      var selected_option = $(this).children("option:selected").val();
-      $("#show_payment_button").addClass("d-none");
-      $("#show_installemt_payment").addClass("d-none");
-      if(selected_option == ''){
-        alert("Please select an option");
-      }
-      else if(selected_option == 'one_time'){
-        $("#show_payment_button").removeClass("d-none");
-      }
-      else if(selected_option == 'installment'){
-        $("#show_installemt_payment").removeClass("d-none");
-      }
-    })
+    // $("#payment_option").change(function(){
+    //   var selected_option = $(this).children("option:selected").val();
+    //   $("#show_payment_button").addClass("d-none");
+    //   $("#show_installemt_payment").addClass("d-none");
+    //   if(selected_option == ''){
+    //     alert("Please select an option");
+    //   }
+    //   else if(selected_option == 'one_time'){
+    //     $("#show_payment_button").removeClass("d-none");
+    //   }
+    //   else if(selected_option == 'installment'){
+    //     $("#show_installemt_payment").removeClass("d-none");
+    //   }
+    // })
   })
 </script>
             

@@ -17,6 +17,8 @@
             showApplyCouponBtnEmail: false,
             showRemoveCouponBtnEmail: false,
             couponErrorMessageEmail: "",
+            paymentOptionEmail: "",
+            oneTimeDiscountHasBeenDeductedEmail: false,
 
 
             amountToPay: <?php echo ($total); ?>,
@@ -30,6 +32,11 @@
             showApplyCouponBtn: false,
             showRemoveCouponBtn: false,
             couponErrorMessage: "",
+            paymentOption: "",
+            oneTimeDiscountHasBeenDeducted: false,
+
+
+            oneTimeDiscount: <?php echo $one_time_discount;?>,
 
         },
         methods: {
@@ -128,6 +135,17 @@
             },
         },
         watch: {
+            paymentOptionEmail(val){
+                if(val == 'one_time'){
+                    this.oneTimeDiscountHasBeenDeductedEmail = true;
+                    this.amountToPayEmail = this.amountToPayEmail - this.oneTimeDiscount
+                }else{
+                    if(this.oneTimeDiscountHasBeenDeductedEmail){
+                        this.amountToPayEmail = this.amountToPayEmail + this.oneTimeDiscount
+                    }
+                    this.oneTimeDiscountHasBeenDeductedEmail = false;
+                }
+            },
             removeFromWalletEmail(val){
                 // If remove from wallet is checked
                 if(val){
@@ -166,9 +184,20 @@
                     this.couponDiscountEmail = 0;
                 }
             },
+            
 
-
-
+            paymentOption(val){
+                console.log("Got here");
+                if(val == 'one_time'){
+                    this.oneTimeDiscountHasBeenDeducted = true;
+                    this.amountToPay = this.amountToPay - this.oneTimeDiscount
+                }else{
+                    if(this.oneTimeDiscountHasBeenDeducted){
+                        this.amountToPay = this.amountToPay + this.oneTimeDiscount
+                    }
+                    this.oneTimeDiscountHasBeenDeducted = false;
+                }
+            },
             removeFromWallet(val){
                 // If remove from wallet is checked
                 if(val){

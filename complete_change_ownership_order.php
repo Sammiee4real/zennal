@@ -12,6 +12,14 @@
   $total = $subtotal + $delivery_fee;
   $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
   $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
+
+  $get_one_time_discount = get_one_row_from_one_table('one_time_discount');
+
+  $one_time_discount = 0;
+  if(!empty($get_one_time_discount)){
+      $one_time_discount = $get_one_time_discount['discount_rate'];
+  }
+
 ?>
 <div id="main">
 
@@ -126,23 +134,25 @@
                     </div>
 
                     <div class="form-group">
-                      <select  name="thename" class="form-select" >
-                      <option selected>--- Payment Option ---</option>
-                      <option value="one">One time Payment</option>
-                      <option value="green">On installment</option>
+                      <select  name="thename" class="form-select" v-model="paymentOptionEmail">
+                        <option value="">--- Payment Option ---</option>
+                        <option value="one_time">One time Payment</option>
+                        <option value="installment">On installment</option>
                       </select>
                     </div>    
 
-                    <div  class="one box">      
+                    <div  class="" v-if="paymentOptionEmail == 'one_time'">      
                       <div class="col-12 d-flex justify-content-end">
                         <button type="button" id="proceed_to_payment" class="btn btn-primary mr-1 mb-1">Proceed</button>
                       </div>
                     </div>
-                    <div  class="green box">      
+
+                    <div  class="" v-if="paymentOptionEmail == 'installment'">      
                       <div class="col-12 mt-3 d-flex justify-content-end">
                         <a href="vehicle_reg_loan?reg_id=<?= $unique_id;?>" class="btn btn-primary mr-1 mb-1">Proceed</a>
                       </div>
                     </div>
+
                   </div>
                 </form>
 
@@ -266,19 +276,19 @@
                     </div>
 
                     <div class="form-group">
-                      <select  name="thename" class="form-select" >
-                        <option selected>--- Payment Option ---</option>
-                        <option value="one">One time Payment</option>
-                        <option value="green">On installment</option>
+                      <select  name="thename" class="form-select" v-model="paymentOption">
+                        <option value="">--- Payment Option ---</option>
+                        <option value="one_time">One time Payment</option>
+                        <option value="installment">On installment</option>
                       </select>
                     </div>                                    
 
-                    <div  class="one box">      
+                    <div class=""  v-if="paymentOption == 'one_time'">      
                       <div class="col-12 mt-3 d-flex justify-content-end">
                          <button type="button" id="proceed_to_payment2" class="btn btn-primary mr-1 mb-1">Proceed</button>
                       </div>
                     </div>
-                    <div  class="green box">      
+                    <div  class="" v-if="paymentOption == 'installment'">      
                       <div class="col-12 mt-3 d-flex justify-content-end">
                         <a href="vehicle_reg_loan?reg_id=<?= $unique_id;?>" class="btn btn-primary mr-1 mb-1">Proceed</a>
                       </div>

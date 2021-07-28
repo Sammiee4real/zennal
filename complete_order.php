@@ -3,35 +3,42 @@
 <div id="main">
 
 <?php 
-  include("includes/header.php");
-  if(!isset($_GET['rec_id'])){
-    echo "
-    <script>window.location = `particulars`</script>";
-  }
-  $particulars_record_id = $_GET['rec_id'];
+    include("includes/header.php");
+    if(!isset($_GET['rec_id'])){
+        echo "
+        <script>window.location = `particulars`</script>";
+    }
+    $particulars_record_id = $_GET['rec_id'];
 
-  $is_vehicle_permit = (isset($_GET['type']) && $_GET['type'] == 'vehicle_permit');
-  if($is_vehicle_permit){
-    $get_payment_details = calculate_vehicle_permit($particulars_record_id);
-    $get_payment_details_decode = json_decode($get_payment_details, true);
-  }else{
-    $get_payment_details = calculate_renew_vehicle_particulars($particulars_record_id);
-    $get_payment_details_decode = json_decode($get_payment_details, true);
-    // $vehicle_registration_charge = $get_payment_details_decode['service_charge'] + $get_payment_details_decode['number_plate_charge'];
-    // $insurance_charge = $get_payment_details_decode['insurance_charge'];
-    // $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
-    // $delivery_fee = $get_delivery_fee['fee'];
-    // $subtotal = $vehicle_registration_charge + $insurance_charge;
-    // $total = $subtotal + $delivery_fee;
-    // $get_installment_details = get_rows_from_one_table('installment_payment_interest','date_created');
-    // print_r($get_payment_details_decode);
+    $is_vehicle_permit = (isset($_GET['type']) && $_GET['type'] == 'vehicle_permit');
+    if($is_vehicle_permit){
+        $get_payment_details = calculate_vehicle_permit($particulars_record_id);
+        $get_payment_details_decode = json_decode($get_payment_details, true);
+    }else{
+        $get_payment_details = calculate_renew_vehicle_particulars($particulars_record_id);
+        $get_payment_details_decode = json_decode($get_payment_details, true);
+        // $vehicle_registration_charge = $get_payment_details_decode['service_charge'] + $get_payment_details_decode['number_plate_charge'];
+        // $insurance_charge = $get_payment_details_decode['insurance_charge'];
+        // $get_delivery_fee = get_one_row_from_one_table('delivery_fee', 'delivery_for', 'vehicle_registration');
+        // $delivery_fee = $get_delivery_fee['fee'];
+        // $subtotal = $vehicle_registration_charge + $insurance_charge;
+        // $total = $subtotal + $delivery_fee;
+        // $get_installment_details = get_rows_from_one_table('installment_payment_interest','date_created');
+        // print_r($get_payment_details_decode);
+        
+    }
+
+    $total = $get_payment_details_decode['total'];
     
-  }
+    $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
+    $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
+    
+    $get_one_time_discount = get_one_row_from_one_table('one_time_discount');
 
-  $total = $get_payment_details_decode['total'];
-  
-  $get_user_wallet_balance = get_one_row_from_one_table('wallet', 'user_id', $user_id);
-  $wallet_balance = ($get_user_wallet_balance != null) ? $get_user_wallet_balance['balance'] : 0;
+    $one_time_discount = 0;
+    if(!empty($get_one_time_discount)){
+        $one_time_discount = $get_one_time_discount['discount_rate'];
+    }
 ?>
 <style type="text/css">
 #bar, #physical, .remove-coupon {display:none;}
@@ -188,7 +195,7 @@ $(document).ready(function(){
                                         </div>
 
                                         <div class="form-group">
-                                            <select name="thename" class="form-select payment-option" id="paymentOptionEmail" >
+                                            <select name="thename" class="form-select payment-option" id="paymentOptionEmail" v-model="paymentOptionEmail">
                                                 <option value="">--- Payment Option --</option>
                                                 <option value="one_time">One time Payment</option>
                                                 <option value="installment">On installment</option>
@@ -345,7 +352,7 @@ $(document).ready(function(){
                                         </div>
 
                                         <div class="form-group">
-                                            <select name="thename" class="form-select payment-option" id="paymentOptionPhysical">
+                                            <select name="thename" class="form-select payment-option" v-model="paymentOption">
                                                 <option value="">--- Payment Option --</option>
                                                 <option value="one_time">One time Payment</option>
                                                 <option value="installment">On installment</option>

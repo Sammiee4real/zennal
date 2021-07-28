@@ -3837,13 +3837,17 @@ function add_referral($referrer_id, $referred_id, $referral_for, $amount_paid, $
   }
 }
 
-function get_one_row_from_one_table($table,$param,$value){
+function get_one_row_from_one_table($table, $param="", $value=""){
   global $dbc;
 
   $table = secure_database($table);
   $param = secure_database($param);
   $value = secure_database($value);
-  $sql = "SELECT * FROM `$table` WHERE `$param` = '$value'";
+  $sql = "SELECT * FROM `$table`";
+  if(!empty($param)){
+    $sql .= " WHERE `$param` = '$value'";
+  }
+  
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
  if($num > 0){
