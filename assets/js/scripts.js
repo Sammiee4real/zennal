@@ -632,6 +632,34 @@ $(document).ready(function(){
           });
       });
 
+	$("#add_package_btn").click(function(){
+		$.ajax({
+			url: "ajax_admin/add_package.php",
+			method: "POST",
+			data:$("#add_package_form").serialize(),
+			beforeSend:function(){
+			  $("#add_package_btn").attr("disabled", true);
+			  $("#add_package_btn").text("Adding...");
+			},
+			success: function(data){
+				$("#add_pkg_modal").modal('hide');
+			  if(data == "success"){
+				$("#success_message").empty();
+				$("#success_message").html("Success! Package has been added successfully");
+				toastbox('success_toast', 3000);
+				setTimeout( function(){ window.location.href = "view_loan_packages.php";}, 3000);
+			  }
+			  else{
+				$("#error_message").empty();
+				$("#error_message").html("Error! " + data);
+				toastbox('error_toast', 6000);
+			  }
+			  $("#add_package_btn").attr("disabled", false);
+			  $("#add_package_btn").text("Add");
+			}
+		});
+	});
+
 
 	$("#edit_vendor_btn").click(function(){
           $.ajax({

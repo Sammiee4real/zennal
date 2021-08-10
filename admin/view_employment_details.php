@@ -34,6 +34,11 @@ $get_users_employment = get_one_row_from_one_table_by_id('user_employment_detail
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Employment Details</h6>
+              <span class="float-right">
+                <a href="view_personal_details" role="button" class="btn btn-sm btn-primary">
+                  <i class="fa fa-arrow-left"></i> Go Back
+                </a>
+              </span>
             </div>
             <div class="card-body">
               <div class="table-responsive">

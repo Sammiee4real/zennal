@@ -50,35 +50,6 @@ $get_loan_applications = get_rows_from_one_table_by_id('personal_loan_applicatio
                       <th scope="col">Date of Application</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <?php
-
-                     foreach($get_loan_applications as $value){
-                      $get_user = get_one_row_from_one_table_by_id('users','unique_id', $value['user_id'], 'registered_on');
-                       ?>
-                       <tr>
-                          <td><?php echo $get_user['first_name'].' '.$get_user['last_name'];?></td>
-                          <td>
-                              <?php echo $value['loan_purpose'];?>
-                          </td>
-                          <td>
-                              <?php echo $value['loan_interest'].'%';?>
-                          </td>
-                          <td>
-                              &#8358;<?php echo number_format($value['user_approved_amount'], 2);?>
-                          </td>
-                          <td>
-                              &#8358;<?php echo number_format($value['amount_to_repay'], 2);?>
-                          </td>
-                          <td>
-                            <?php echo $value['date_created'];?>
-                          </td>
-                        </tr>
-                      <?php
-                       } 
-                      } 
-                   ?>
-                  </tbody>
                 </table>
               </div>
             </div>
