@@ -27,7 +27,7 @@ $get_insurance = get_rows_from_one_table('insurance','datetime');
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Insurance Bought</h1>
+          <h1 class="h3 mb-2 text-gray-800">Insurance Purchased</h1>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -46,7 +46,7 @@ $get_insurance = get_rows_from_one_table('insurance','datetime');
                     <th scope="col">Fullname</th>
                     <th scope="col">Insurance Package</th>
                     <th scope="col">Insurance Pricing Plan</th>
-                    <th scope="col">Insurance Payment Plan</th>
+                    <!-- <th scope="col">Insurance Payment Plan</th> -->
                     <th scope="col">Date of Application</th>
 
                   </tr>
@@ -67,9 +67,9 @@ $get_insurance = get_rows_from_one_table('insurance','datetime');
                         <td>
                             <?php echo $get_insurance_pricing['pricing_type'];?>
                         </td>
-                        <td>
-                          <?php echo $value['insurance_payment_plan']." Months";?>
-                        </td>
+                        <!-- <td>
+                          <?php //echo $value['insurance_payment_plan']." Months";?>
+                        </td> -->
                         <td>
                           <?php echo $value['datetime'];?>
                         </td>

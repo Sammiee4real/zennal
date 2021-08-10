@@ -118,8 +118,8 @@
                           data-insurance_val="<?=ucwords(str_replace('_', ' ', $value['insurance_type']))?>"
                           data-expiry="<?php echo $value['expiry_date']?>"
                           >Edit</button>
-                          <button type="button" class="btn btn-sm btn-danger delete_modal" 
-                          id="<?php echo $value['unique_id']?>">Delete</button>
+                          <!-- <button type="button" class="btn btn-sm btn-danger delete_modal" 
+                          id="<?php //echo $value['unique_id']?>">Delete</button> -->
                         </td>
                       </tr>
                     <?php } } ?>

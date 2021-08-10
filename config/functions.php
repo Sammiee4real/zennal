@@ -3226,13 +3226,21 @@ function update_loan_packages($no_of_month, $loan_category, $interest_per_month,
     return json_encode(["status"=>"0", "msg"=>"Empty field(s) Found"]);
   }
   else{
-    $update_data_sql = "UPDATE `loan_packages` SET `no_of_month` = '$no_of_month',  `loan_category`='$loan_category', `interest_per_month`='$interest_per_month', `date_created` = now() WHERE `unique_id` = '$unique_id'";
-    $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
-    if(mysqli_affected_rows($dbc)){
-      return json_encode(["status"=>"1", "msg"=>"success"]);
-    }else{
-      return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
-    }
+    $isExist = mysqli_num_rows(
+      mysqli_query($dbc, "SELECT * from loan_packages where no_of_month = '$no_of_month' and `loan_category`= '$loan_category' and `unique_id` != '$unique_id'")
+    );
+
+    if($isExist == 0) :
+      $update_data_sql = "UPDATE `loan_packages` SET `no_of_month` = '$no_of_month',  `loan_category`='$loan_category', `interest_per_month`='$interest_per_month', `date_created` = now() WHERE `unique_id` = '$unique_id'";
+      $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
+      if(mysqli_affected_rows($dbc)){
+        return json_encode(["status"=>"1", "msg"=>"success"]);
+      }else{
+        return json_encode(["status"=>"0", "msg"=>"Some Error occured"]);
+      }
+    else : 
+      return json_encode(["status"=>"0", "msg"=>"Data Already Exist"]);
+    endif;
   }
 }
 
@@ -4639,6 +4647,20 @@ function calculate_repayment_details($amount_to_borrow, $installment_id){
 }
 /////// MOST IMPORTANT FUNCTIONS END HERE
 
+
+
+/////New functions /////
+function _changeStatus($tbl, $ref, $val, $ref2, $val2)
+{
+  global $dbc;
+
+  $sql = "UPDATE ".$tbl." set ".$ref." = '".$val."' where ".$ref2." = '".$val2."'";
+
+  $query = mysqli_query($dbc, $sql);
+
+  if($query) return json_encode(['success' => true]);
+  else return json_encode(['error' => 'Unable to change status']);
+}
 
 
 //////////////////////////////not needed for now

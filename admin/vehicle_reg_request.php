@@ -27,7 +27,7 @@ $get_vehicle_reg_request = get_rows_from_one_table_by_id('vehicle_reg_installmen
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Vehicle Registration Installment Applications</h1>
+          <h1 class="h3 mb-2 text-gray-800">Vehicle Registration Requests</h1>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
