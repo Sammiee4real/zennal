@@ -34,6 +34,11 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <!-- <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6> -->
+              <span class="float-right">
+                <a role="button" class='btn btn-sm btn-primary' data-toggle="modal" data-target="#add_pkg_modal">
+                  Add Loan Package
+                </a>
+              </span>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -129,6 +134,54 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-primary" id="edit_package_btn">Edit</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- Add Loan packages -->
+          <div class="modal" tabindex="-1" role="dialog" id="add_pkg_modal">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Add New Package</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form method="post" id="add_package_form">
+                    <div class="row justify-content-center">
+                      <div class="col-md-10">
+                        <label>Package Category</label>
+                        <select name="loan_category" class="form-control">
+                          <option value="">Select a package category</option>
+                          <?php
+                            foreach ($get_loan_categories as $value) {
+                              if($value['type'] != 3){
+                          ?>
+                          <option value="<?php echo $value['unique_id'];?>"><?php echo $value['name'];?></option>
+                              <?php }
+                            }
+                          ?>
+                        </select>
+                      </div>
+                      <div class="col-md-10 mt-3">
+                        <label>Number of Repayment Month</label>
+                        <input type="number" name="no_of_month" id="no_of_month" class="form-control">
+                      </div>
+                      <div class="col-md-10 mt-3">
+                        <label>Interest per Month (in percentage)</label>
+                        <input type="number" name="interest_per_month" id="interest_per_month" class="form-control">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" id="add_package_btn">Add</button>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
               </div>
