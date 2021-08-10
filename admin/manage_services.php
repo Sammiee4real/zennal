@@ -69,10 +69,10 @@ $get_services = get_rows_from_one_table('services','date_created');
                         >
                           Edit
                         </button>
-                        <button type="button" class="btn btn-sm btn-danger delete_modal"
-                        id="<?php echo $value['unique_id']?>">
+                        <!-- <button type="button" class="btn btn-sm btn-danger delete_modal"
+                        id="<?php //echo $value['unique_id']?>">
                           Delete
-                        </button>
+                        </button> -->
                       </td>
                     </tr>
                     <?php } } ?>

@@ -48,7 +48,7 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
                     <th scope="col">Plan Price</th>
                     <th scope="col">Description</th>
                     <th>Date Created</th>
-                    <th colspan="2">Action</th>
+                    <th>Action</th>
 
                   </tr>
                 </thead>
@@ -67,9 +67,9 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
                         <td>
                           <button class="btn btn-primary btn-sm edit_insurance_princing_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['pricing_type'];?>" data-price="<?php echo $value['plan_price'];?>" data-desc="<?php echo $value['plan_description'];?>">Edit</button>
                         </td>
-                        <td>
-                          <button class="btn btn-danger btn-sm delete_insurance_princing_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['pricing_type'];?>">Delete</button>
-                        </td>
+                        <!-- <td>
+                          <button class="btn btn-danger btn-sm delete_insurance_princing_plan" type="button" id="<?php //echo $value['unique_id'];?>" data-name="<?php echo $value['pricing_type'];?>">Delete</button>
+                        </td> -->
                       </tr>
                     <?php } } ?>
                 </tbody>

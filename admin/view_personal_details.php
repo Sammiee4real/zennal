@@ -4,7 +4,6 @@ include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-$get_users = get_rows_from_one_table('users','registered_on');
 ?>
 
 <body id="page-top">
@@ -36,11 +35,12 @@ $get_users = get_rows_from_one_table('users','registered_on');
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="myTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="users_info_tbl" width="100%" cellspacing="0">
                   <thead>
                     <tr>
+                      <th>#</th>
+                      <th>User ID</th>
                       <th>Fullname</th>
-                      <th>Address</th>
                       <th>Date of Birth</th>
                       <th>Email Address</th>
                       <th>Phone Number</th>
@@ -52,44 +52,6 @@ $get_users = get_rows_from_one_table('users','registered_on');
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <?php
-                      if($get_users == null){
-                        echo "No user available";
-                      }else{
-                        foreach ($get_users as $value) {
-                    ?>
-                    <tr>
-                      <td><?php echo $value['first_name'].' '.$value['last_name'].' '.$value['other_names'];?></td>
-                      <td class="text-capitalize"><?php echo $value['address'];?></td>
-                      <td class="text-capitalize"><?php echo $value['dob'];?></td>
-                      <td><?php echo $value['email'];?></td>
-                      <td class="text-capitalize"><?php echo $value['phone'];?></td>
-                      <td class="text-capitalize"><?php echo $value['gender'];?></td>
-                      <td class="text-capitalize"><?php echo $value['marital_status'];?></td>
-                      <td class="text-capitalize"><?php echo $value['employment_status'];?></td>
-                      <td class="text-capitalize"><?php echo $value['registered_on'];?></td>
-                      <td>
-                        <div class="dropdown">
-                          <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-eye"></i> View Details
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="view_employment_details.php?user_id=<?php echo $value['unique_id']?>">Employment Details</a>
-                            <a class="dropdown-item" href="view_financial_details.php?user_id=<?php echo $value['unique_id']?>">Financial Details</a>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <?php if($value['status'] == 1){?>
-                        <button class="btn btn-danger btn-sm disable_user_modal" type="button" id="<?php echo $value['unique_id'];?>">Disable</button>
-                      <?php } else if($value['status'] == 0){?>
-                        <button class="btn btn-primary btn-sm enable_user_modal" type="button" id="<?php echo $value['unique_id'];?>">Enable</button>
-                      <?php }?>
-                      </td>
-                    </tr>
-                  <?php } }?>
-                  </tbody>
                 </table>
               </div>
             </div>
@@ -166,13 +128,13 @@ $get_users = get_rows_from_one_table('users','registered_on');
   <?php include("inc/scripts.php");?>
   <script>
     $(document).ready(function(){
-      $(".disable_user_modal").click(function(){
+      $(document).on('click', ".disable_user_modal", function(){
         $("#modal").modal('show');
         let user_id = $(this).attr('id');
         //console.log(id);
         $("#user_id").val(user_id);
       });
-      $(".enable_user_modal").click(function(){
+      $(document).on('click', ".enable_user_modal", function(){
         $("#modal2").modal('show');
         let user_id = $(this).attr('id');
         //console.log(id);

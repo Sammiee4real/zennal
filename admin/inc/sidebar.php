@@ -95,7 +95,7 @@
             <!-- <h6 class="collapse-header">View</h6> -->
            <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
             <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
-            <a class="collapse-item" href="view_insurance">Insurance Bought</a>
+            <a class="collapse-item" href="view_insurance">Insurance Purchased</a>
             
             <a class="collapse-item" href="view_insurance_plans">Insurance Plans</a>
          
@@ -228,7 +228,7 @@
         <div id="auths" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="change_password">Change Password</a>
-            <a class="collapse-item" href="logout">Logout</a>
+            <a class="collapse-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
           </div>
       </li>
 

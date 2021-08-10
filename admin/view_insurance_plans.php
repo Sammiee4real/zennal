@@ -46,7 +46,7 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                     
                     <th scope="col">Package Name</th>
                     <th scope="col">Date Created</th>
-                    <th colspan = 2>Action</th>
+                    <th>Action</th>
 
                   </tr>
                 </thead>
@@ -65,9 +65,9 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                           
                         </td>
 
-                        <td>
-                          <button class="btn btn-danger btn-sm delete_insurance_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['package_name'];?>">Delete</button>
-                        </td>
+                        <!-- <td>
+                          <button class="btn btn-danger btn-sm delete_insurance_plan" type="button" id="<?php //echo $value['unique_id'];?>" data-name="<?php echo $value['package_name'];?>">Delete</button>
+                        </td> -->
                       </tr>
                     <?php } } ?>
                 </tbody>

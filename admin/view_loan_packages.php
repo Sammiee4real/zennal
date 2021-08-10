@@ -47,6 +47,7 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                     <th scope="col">Loan Category</th>
                     <th scope="col">Number of Repayment Month</th>
                     <th scope="col">Interest per Month</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Date Created</th>
                     <th>Action</th>
 
@@ -67,10 +68,18 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                             <?php echo $value['interest_per_month'].' %';?>
                         </td>
                         <td>
+                          <?php echo $value['is_active'] == '1'?'<span class="badge btn-success" id="status_badge'.$value['unique_id'].'">Visible</span>':'<span class="badge btn-danger" id="status_badge'.$value['unique_id'].'">Hidden</span>';?>
+                        </td>
+                        <td>
                           <?php echo $value['date_created'];?>
                         </td>
                         <td>
-                          <button class="btn btn-primary btn-sm edit_package" type="button" id="<?php echo $value['unique_id'];?>" data-month="<?php echo $value['no_of_month'];?>" data-interest="<?php echo $value['interest_per_month'];?>">Edit</button>
+                          <button class="btn btn-primary btn-sm edit_package" type="button" id="<?php echo $value['unique_id'];?>" data-month="<?php echo $value['no_of_month'];?>" data-package_cat="<?php echo $get_loan_category['name'];?>" data-package_cat_id="<?php echo $get_loan_category['unique_id'];?>" data-interest="<?php echo $value['interest_per_month'];?>">Edit</button>
+                          <?php if($value['is_active'] == '1') : ?>
+                            <button class="btn btn-danger btn-sm package_status" id="package_status<?php echo $value['unique_id'];?>" type="button" data-val="0" data-id="<?php echo $value['unique_id'];?>">Hide</button>
+                          <?php else : ?>
+                            <button class="btn btn-success btn-sm package_status" id="package_status<?php echo $value['unique_id'];?>" type="button" data-val="1" data-id="<?php echo $value['unique_id'];?>">Show</button>
+                          <?php endif; ?>
                         </td>
                       </tr>
                     <?php } } ?>
@@ -95,7 +104,7 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                       <div class="col-md-10">
                         <label>Package Category</label>
                         <select name="loan_category" class="form-control">
-                          <option value="">Select a package category</option>
+                          <option value="" id="package_cat">Select a package category</option>
                           <?php
                             foreach ($get_loan_categories as $value) {
                               if($value['type'] != 3){
@@ -148,16 +157,24 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
   <?php include("inc/scripts.php");?>
   <script>
     $(document).ready(function(){
+
+      
       $(".edit_package").click(function(){
         $("#modal").modal('show');
         let package_id = $(this).attr('id');
         let package_month = $(this).data('month');
         let package_interest = $(this).data('interest');
+        let package_cat = $(this).data('package_cat');
+        let package_cat_id = $(this).data('package_cat_id');
+
+        $('#package_cat').val(package_cat_id);
+        $('#package_cat').html(package_cat);
         //console.log(id);
         $("#package_id").val(package_id);
         $("#no_of_month").val(package_month);
         $("#interest_per_month").val(package_interest);
       });
+
       $(".enable_user_modal").click(function(){
         $("#modal2").modal('show');
         let package_id = $(this).attr('id');
