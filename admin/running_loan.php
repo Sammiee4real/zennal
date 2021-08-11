@@ -35,12 +35,8 @@ $get_loan_applications = get_rows_from_one_table_by_id('personal_loan_applicatio
               <h6 class="m-0 font-weight-bold text-primary">Users Running Loan</h6>
             </div>
             <div class="card-body">
-                <table class='table table-striped' id="myTable">
+                <table class='table table-striped' id="running_loans_tbl">
                   <thead class="thead-light">
-                   <?php 
-                      if($get_loan_applications == null){
-                          echo "<tr><td>No record found...</td></tr>";
-                      } else{ ?>
                     <tr>
                       <th scope="col">Fullname</th>
                       <th scope="col">Loan Purpose</th>
