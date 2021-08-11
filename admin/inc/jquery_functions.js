@@ -38,6 +38,8 @@ $(document).on('click', '.package_status', function(){
 
 load_server_datatable_buttons('users_info_tbl', 'users/info_view');
 load_server_datatable_buttons('running_loans_tbl', 'loans/running');
+load_server_datatable_buttons('running_inst_loans_tbl', 'loans/running_inst');
+
 
 
 /**

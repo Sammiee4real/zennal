@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////
 // Service Workers
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('service worker registered'))
-        .catch(err => console.log('service worker not registered - there is an error.', err));
-}
+// if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.register('service-worker.js')
+//         .then(reg => console.log('service worker registered'))
+//         .catch(err => console.log('service worker not registered - there is an error.', err));
+// }
 ///////////////////////////////////////////////////////////////////////////
 
 
@@ -160,71 +160,71 @@ $("body").on("click", ".stepper-down", function () {
 
 ///////////////////////////////////////////////////////////////////////////
 // Owl Carousel
-$('.carousel-full').owlCarousel({
-    loop: true,
-    margin: 0,
-    nav: false,
-    items: 1,
-    dots: false,
-});
-$('.carousel-single').owlCarousel({
-    stagePadding: 30,
-    loop: true,
-    margin: 16,
-    nav: false,
-    dots: false,
-    responsiveClass: true,
-    responsive: {
-        0: {
-            items: 1,
-        },
-        768: {
-            items: 3,
-        }
-    }
+// $('.carousel-full').owlCarousel({
+//     loop: true,
+//     margin: 0,
+//     nav: false,
+//     items: 1,
+//     dots: false,
+// });
+// $('.carousel-single').owlCarousel({
+//     stagePadding: 30,
+//     loop: true,
+//     margin: 16,
+//     nav: false,
+//     dots: false,
+//     responsiveClass: true,
+//     responsive: {
+//         0: {
+//             items: 1,
+//         },
+//         768: {
+//             items: 3,
+//         }
+//     }
 
-});
-$('.carousel-multiple').owlCarousel({
-    stagePadding: 32,
-    loop: true,
-    margin: 16,
-    nav: false,
-    items: 2,
-    dots: false,
-    responsiveClass: true,
-    responsive: {
-        0: {
-            items: 2,
-        },
-        768: {
-            items: 4,
-        }
-    }
-});
-$('.carousel-small').owlCarousel({
-    stagePadding: 32,
-    loop: true,
-    margin: 16,
-    nav: false,
-    items: 5,
-    dots: false,
-    responsiveClass: true,
-    responsive: {
-        0: {
-            items: 5,
-        },
-        768: {
-            items: 8,
-        }
-    }
-});
-$('.carousel-slider').owlCarousel({
-    loop: true,
-    margin: 8,
-    nav: false,
-    items: 1,
-    dots: true,
-});
+// });
+// $('.carousel-multiple').owlCarousel({
+//     stagePadding: 32,
+//     loop: true,
+//     margin: 16,
+//     nav: false,
+//     items: 2,
+//     dots: false,
+//     responsiveClass: true,
+//     responsive: {
+//         0: {
+//             items: 2,
+//         },
+//         768: {
+//             items: 4,
+//         }
+//     }
+// });
+// $('.carousel-small').owlCarousel({
+//     stagePadding: 32,
+//     loop: true,
+//     margin: 16,
+//     nav: false,
+//     items: 5,
+//     dots: false,
+//     responsiveClass: true,
+//     responsive: {
+//         0: {
+//             items: 5,
+//         },
+//         768: {
+//             items: 8,
+//         }
+//     }
+// });
+// $('.carousel-slider').owlCarousel({
+//     loop: true,
+//     margin: 8,
+//     nav: false,
+//     items: 1,
+//     dots: true,
+// });
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -4,7 +4,6 @@ include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-$get_loan_applications = get_rows_from_one_table_by_id('vehicle_reg_installment','approval_status', 3 , 'date_created');
 ?>
 
 <body id="page-top">
@@ -35,13 +34,11 @@ $get_loan_applications = get_rows_from_one_table_by_id('vehicle_reg_installment'
               <h6 class="m-0 font-weight-bold text-primary">Users Running Installment Payment</h6>
             </div>
             <div class="card-body">
-                <table class='table table-striped' id="myTable">
+              <div class="table-responsive">
+                <table class='table table-striped' id="running_inst_loans_tbl">
                   <thead class="thead-light">
-                   <?php 
-                      if($get_loan_applications == null){
-                          echo "<tr><td>No record found...</td></tr>";
-                      } else{ ?>
                     <tr>
+                      <th scope="col">S/N</th>
                       <th scope="col">Fullname</th>
                       <th>Type</th>
                       <th scope="col">Loan Amount</th>
@@ -53,51 +50,8 @@ $get_loan_applications = get_rows_from_one_table_by_id('vehicle_reg_installment'
                       <th scope="col">Date of Application</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <?php
-                     foreach($get_loan_applications as $value){
-                      $get_user = get_one_row_from_one_table_by_id('users','unique_id', $value['user_id'], 'registered_on');
-                      $get_interest_rate = get_one_row_from_one_table('installment_payment_interest', 'unique_id', $value['installment_id']);
-                      $equity_contribution = (30/100) * $value['total'];
-                      $interest_per_month = $value['interest_per_month'];
-                      $total_amount_to_repay = $value['amount_to_repay'];
-                      $amount_deducted_per_month = $value['amount_deducted_per_month'];
-                      $amount_to_borrow = $value['total'] - $equity_contribution;
-                      $no_of_repayment = $get_interest_rate['no_of_month'];
-                       ?>
-                       <tr>
-                          <td><?php echo $get_user['first_name'].' '.$get_user['last_name'];?></td>
-                          <td>
-                              <?php echo 'Vehicle Registration';?>
-                          </td>
-                          <td>
-                              &#8358;<?php echo number_format($amount_to_borrow, 2);?>
-                          </td>
-                          <td>
-                              &#8358;<?php echo number_format($interest_per_month, 2);?>
-                          </td>
-                          <td>
-                            <?php echo $no_of_repayment;?>
-                          </td>
-                          <td>
-                            <?php echo $value['current_repayment_month'];?>
-                          </td>
-                          <td>
-                            &#8358;<?php echo number_format($total_amount_to_repay, 2);?>
-                          </td>
-                          <td>
-                            &#8358;<?php echo number_format($amount_deducted_per_month, 2);?>
-                          </td>
-                          <td>
-                            <?php echo $value['date_created'];?>
-                          </td>
-                        </tr>
-                      <?php
-                       } 
-                      } 
-                   ?>
-                  </tbody>
                 </table>
+              </div>
               </div>
             </div>
         </div>
