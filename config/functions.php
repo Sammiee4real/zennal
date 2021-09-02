@@ -82,6 +82,91 @@ function get_number_of_rows($table){
   return $count;     
 }
 
+function get_total(String $table, String $params, Array $values, String $ops = 'like', String $type='count', String $ref = '')
+{
+  global $dbc;
+  $params = explode(', ', $params);
+
+  $table = secure_database($table);
+
+  $sql = "SELECT ";
+
+  if($type == 'count'){
+    $sql .= 'id ';
+  }else{
+    $sql .= 'sum('.$ref.') as the_sum ';
+  }
+
+  $sql .= "from `$table` ";
+
+  $ops = explode(', ', $ops);
+
+  if(!empty($params[0]) and !empty($values[0])){
+    $sql .= 'where ';
+    if(empty($ops) || count($ops) == 1){
+      if($ops[0] == 'like'){
+        for($i = 0; $i<count($params); $i++){
+          if($i == 0){
+            $sql .= $params[$i] . ' LIKE "%' . $values[$i] . '%"';
+          }else{
+            $sql .= ' or '.$params[$i] . ' LIKE "%' . $values[$i] . '%"';
+          }
+        }
+      }else{
+        for($i = 0; $i<count($params); $i++){
+          if(empty($ops[0])){
+            if($i == 0){
+              $sql .= $params[$i] . ' = ' . $values[$i];
+            }else{
+              $sql .= ' and '.$params[$i] . ' = ' . $values[$i];
+            }
+          }else{
+            if($i == 0){
+              $sql .= $params[$i] . ' '.$ops[0].' ' . $values[$i];
+            }else{
+              $sql .= ' and '.$params[$i] . ' '.$ops[$i].' ' . $values[$i];
+            }
+          }
+        }
+      }
+    }else{
+      for($i = 0; $i<count($params); $i++){
+        if($ops[$i] == 'like'){
+          if($i == 0){
+            $sql .= $params[$i] . ' LIKE "%' . $values[$i] . '%"';
+          }else{
+            $sql .= ' or '.$params[$i] . ' LIKE "%' . $values[$i] . '%"';
+          }
+        }else{
+          if($i == 0){
+            $sql .= $params[$i] . ' '.$ops[$i].' ' . $values[$i];
+          }else{
+            $sql .= ' and '.$params[$i] . ' '.$ops[$i].' ' . $values[$i];
+          }
+        }
+      }
+    }
+  }
+
+  // echo($sql);
+  $res = '';
+
+  if($type == 'count'){
+    $res = mysqli_num_rows(
+      mysqli_query($dbc, $sql)
+    );
+  }else{
+    $res = mysqli_fetch_array(
+      mysqli_query($dbc, $sql)
+    )['the_sum'];
+  }
+
+  return $res;
+}
+
+
+
+
 function get_rows_from_table($table){
   global $dbc;
   $table = secure_database($table);

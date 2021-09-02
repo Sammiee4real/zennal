@@ -125,3 +125,7 @@ function load_server_datatable(tblName='', url=''){
 
 
 
+// $('#dataTable').dataTable();
+
+
+
