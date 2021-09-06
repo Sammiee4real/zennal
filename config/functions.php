@@ -3301,7 +3301,7 @@ function update_data($table, $data,$conditional_param,$conditional_value){
   }
 }
 
-function update_loan_packages($no_of_month, $loan_category, $interest_per_month, $unique_id){
+function update_loan_packages($no_of_month, $loan_category, $interest_per_month, $equity_contribution, $unique_id){
   global $dbc;
   $no_of_month = secure_database($no_of_month);
   $loan_category = secure_database($loan_category);
@@ -3312,11 +3312,11 @@ function update_loan_packages($no_of_month, $loan_category, $interest_per_month,
   }
   else{
     $isExist = mysqli_num_rows(
-      mysqli_query($dbc, "SELECT * from loan_packages where no_of_month = '$no_of_month' and `loan_category`= '$loan_category' and `unique_id` != '$unique_id'")
+      mysqli_query($dbc, "SELECT * from loan_packages where no_of_month = '$no_of_month' and `loan_category` = '$loan_category' and `unique_id` != '$unique_id'")
     );
 
     if($isExist == 0) :
-      $update_data_sql = "UPDATE `loan_packages` SET `no_of_month` = '$no_of_month',  `loan_category`='$loan_category', `interest_per_month`='$interest_per_month', `date_created` = now() WHERE `unique_id` = '$unique_id'";
+      $update_data_sql = "UPDATE `loan_packages` SET `no_of_month` = '$no_of_month',  `loan_category`='$loan_category', `interest_per_month`='$interest_per_month', `equity_contribution`='$equity_contribution', `date_created` = now() WHERE `unique_id` = '$unique_id'";
       $update_data_query = mysqli_query($dbc, $update_data_sql) or die(mysqli_error($dbc));
       if(mysqli_affected_rows($dbc)){
         return json_encode(["status"=>"1", "msg"=>"success"]);
@@ -4748,12 +4748,13 @@ function _changeStatus($tbl, $ref, $val, $ref2, $val2)
 }
 
 
-function add_loan_packages($no_of_month, $loan_category, $interest_per_month)
+function add_loan_packages($no_of_month, $loan_category, $interest_per_month, $equity_contribution)
 {
   global $dbc;
 
   $no_of_month = secure_database($no_of_month);
   $loan_category = secure_database($loan_category);
+  $equity_contribution = secure_database($equity_contribution);
   $interest_per_month = secure_database($interest_per_month);
 
   if($no_of_month == '' || $loan_category == '' || $interest_per_month == ''){
@@ -4765,7 +4766,7 @@ function add_loan_packages($no_of_month, $loan_category, $interest_per_month)
     );
 
     if($isExist == 0) :
-      $insert_data_sql = "INSERT into `loan_packages` SET `unique_id`='".hexdec(uniqid())."', `no_of_month` = '$no_of_month',  `loan_category`='$loan_category', `interest_per_month`='$interest_per_month', `date_created` = now()";
+      $insert_data_sql = "INSERT into `loan_packages` SET `unique_id`='".hexdec(uniqid())."', `no_of_month` = '$no_of_month',  `loan_category`='$loan_category', `interest_per_month`='$interest_per_month', `equity_contribution`= '$equity_contribution', `date_created` = now()";
       $insert_data_query = mysqli_query($dbc, $insert_data_sql) or die(mysqli_error($dbc));
       if(mysqli_affected_rows($dbc)){
         return json_encode(["status"=>"1", "msg"=>"success"]);

@@ -75,7 +75,7 @@
             <a class="collapse-item" href="view_loan_packages">Loan Packages</a>
            
             <a class="collapse-item" href="running_loan">Running Loans</a>
-            <a class="collapse-item" href="running_installment">Running Installment Loans</a>
+            <!-- <a class="collapse-item" href="running_installment">Running Installment Loans</a> -->
            
             <a class="collapse-item" href="personal_loan_application_requests">Personal Loan Requests</a>
 

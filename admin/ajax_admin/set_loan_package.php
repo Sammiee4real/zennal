@@ -3,7 +3,8 @@
 	$no_of_month = $_POST['no_of_month'];
 	$loan_category = $_POST['loan_category'];
 	$interest_per_month = $_POST['interest_per_month'];
-	$equity_contribution = '';
+	$equity_contribution = $_POST['equity_contribution'];
+	exit($create_package_decode[$equity_contribution]);
 	$created_by = $_SESSION['admin_id'];
 	$create_package = set_loan_packages($no_of_month, $loan_category, $interest_per_month, $equity_contribution, $created_by);
 	$create_package_decode = json_decode($create_package, true);

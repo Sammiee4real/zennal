@@ -50,7 +50,7 @@
         
         $sub_array[] = $sn++;
 
-        $sub_array[] = $row['unique_id'];
+        $sub_array[] = $row['zen_user_id'];
         $sub_array[] = $row['first_name'].' '.$row['last_name'].' '.$row['other_names'];
         $sub_array[] = $row['dob'];
         $sub_array[] = $row['email'];

@@ -52,6 +52,7 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                     <th scope="col">Loan Category</th>
                     <th scope="col">Number of Repayment Month</th>
                     <th scope="col">Interest per Month</th>
+                    <th scope="col">Equity Contribution</th>
                     <th scope="col">Status</th>
                     <th scope="col">Date Created</th>
                     <th>Action</th>
@@ -73,13 +74,24 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                             <?php echo $value['interest_per_month'].' %';?>
                         </td>
                         <td>
+                            <?php echo $value['equity_contribution'].' %';?>
+                        </td>
+                        <td>
                           <?php echo $value['is_active'] == '1'?'<span class="badge btn-success" id="status_badge'.$value['unique_id'].'">Visible</span>':'<span class="badge btn-danger" id="status_badge'.$value['unique_id'].'">Hidden</span>';?>
                         </td>
                         <td>
                           <?php echo $value['date_created'];?>
                         </td>
                         <td>
-                          <button class="btn btn-primary btn-sm edit_package" type="button" id="<?php echo $value['unique_id'];?>" data-month="<?php echo $value['no_of_month'];?>" data-package_cat="<?php echo $get_loan_category['name'];?>" data-package_cat_id="<?php echo $get_loan_category['unique_id'];?>" data-interest="<?php echo $value['interest_per_month'];?>">Edit</button>
+                          <button 
+                            class="btn btn-primary btn-sm edit_package" 
+                            type="button" id="<?php echo $value['unique_id'];?>" 
+                            data-month="<?php echo $value['no_of_month'];?>" 
+                            data-package_cat="<?php echo $get_loan_category['name'];?>" 
+                            data-package_cat_id="<?php echo $get_loan_category['unique_id'];?>" 
+                            data-interest="<?php echo $value['interest_per_month'];?>"
+                            data-equity_contribution="<?php echo $value['equity_contribution'];?>"
+                          >Edit</button>
                           <?php if($value['is_active'] == '1') : ?>
                             <button class="btn btn-danger btn-sm package_status" id="package_status<?php echo $value['unique_id'];?>" type="button" data-val="0" data-id="<?php echo $value['unique_id'];?>">Hide</button>
                           <?php else : ?>
@@ -127,6 +139,10 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                       <div class="col-md-10 mt-3">
                         <label>Interest per Month (in percentage)</label>
                         <input type="number" name="interest_per_month" id="interest_per_month" class="form-control">
+                      </div>
+                      <div class="col-md-10 mt-3">
+                        <label>Equity Contribution (in percentage)</label>
+                        <input type="number" name="equity_contribution" id="equity_contribution" class="form-control">
                       </div>
                     </div>
                     <input type="hidden" name="package_id"  id="package_id" value="">
@@ -177,6 +193,10 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
                         <label>Interest per Month (in percentage)</label>
                         <input type="number" name="interest_per_month" id="interest_per_month" class="form-control">
                       </div>
+                      <div class="col-md-10 mt-3">
+                        <label>Equity Contribution (in percentage)</label>
+                        <input type="number" name="equity_contribution" id="equity_contribution" class="form-control">
+                      </div>
                     </div>
                   </form>
                 </div>
@@ -219,6 +239,7 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
         let package_interest = $(this).data('interest');
         let package_cat = $(this).data('package_cat');
         let package_cat_id = $(this).data('package_cat_id');
+        let equity_contribution = $(this).data('equity_contribution');
 
         $('#package_cat').val(package_cat_id);
         $('#package_cat').html(package_cat);
@@ -226,6 +247,7 @@ $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
         $("#package_id").val(package_id);
         $("#no_of_month").val(package_month);
         $("#interest_per_month").val(package_interest);
+        $("#equity_contribution").val(equity_contribution);
       });
 
       $(".enable_user_modal").click(function(){
