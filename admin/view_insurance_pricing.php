@@ -215,7 +215,11 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
         $('#modal .modal-title').text('Add Insurance Pricing Plan');
         $('#action').val('add');
         $('#edit_insurance_pricing_plan_btn').text('Add');
+        
         $('#plan_id').val('');
+        $("#pricing_type").val('');
+        $("#plan_price").val('');
+        $("#plan_description").val('');
 
         $('#modal').modal('show');
       })
