@@ -63,11 +63,25 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                         <td>
                           <button class="btn btn-primary btn-sm edit_insurance_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['package_name'];?>">Edit</button>
                           
-                        </td>
+                        <?php
+                          if($value['is_active'] == 1){
+                            $status = 'inactive';
+                            $text = 'Hide';
+                          }else{
+                            $status = 'active';
+                            $text = 'Show';
+                          }
+                        ?>
 
-                        <!-- <td>
-                          <button class="btn btn-danger btn-sm delete_insurance_plan" type="button" id="<?php //echo $value['unique_id'];?>" data-name="<?php echo $value['package_name'];?>">Delete</button>
-                        </td> -->
+                          <button 
+                            class="btn <?=$status=='inactive'?'btn-danger':'btn-success';?> btn-sm change_status" 
+                            type="button" 
+                            id="insurace_status<?=$value['unique_id']?>"
+                            data-id="<?php echo $value['unique_id'];?>"
+                            data-status = "<?=$status?>"
+                            data-ref = "insurance_packages"
+                          ><?=$text?></button>
+                        </td>
                       </tr>
                     <?php } } ?>
                 </tbody>

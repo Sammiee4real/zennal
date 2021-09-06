@@ -1697,8 +1697,19 @@ $(document).ready(function(){
 
 
 	 $("#edit_insurance_pricing_plan_btn").click(function(){
+		var text = '';
+		var url = '';
+		var action = $('#action').val();
+		if(action == 'add'){
+			text = 'added';
+			url = 'set_pricing_plan.php';
+		}
+		if(action == 'update'){ 
+			url = 'edit_insurance_pricing_plan.php';
+			text = 'edited';
+		}
 		$.ajax({
-			url: "ajax_admin/edit_insurance_pricing_plan.php",
+			url: "ajax_admin/"+url,
 			method: "POST",
 			data:$("#edit_insurance_pricing_plan_form").serialize(),
 			beforeSend:function(){
@@ -1709,7 +1720,7 @@ $(document).ready(function(){
 				$("#modal").modal('hide');
 			  if(data == "success"){
 				$("#success_message").empty();
-				$("#success_message").html("Success! Package has been edited successfully");
+				$("#success_message").html(`Success! Package has been ${text} successfully`);
 				toastbox('success_toast');
 				setTimeout( function(){ window.location.href = "view_insurance_pricing.php";}, 3000);
 			  }

@@ -124,6 +124,50 @@ function load_server_datatable(tblName='', url=''){
 }
 
 
+$('.change_status').on('click', function(e){
+    e.preventDefault();
+
+    var btnref = $(this).attr('id');
+    var id = $(this).attr('data-id');
+    var status = $(this).attr('data-status');
+    var ref = $(this).attr('data-ref');
+
+    $.ajax({
+        url: 'ajax_admin/statuses.php',
+        data: {page:'statuses', status: status, ref:ref, id:id},
+        dataType:'json',
+        method: 'post',
+        success:function(data){
+            var data = JSON.parse(data);
+
+            if(data.success){
+                $("#success_message").empty();
+                $("#success_message").html("Success! Status changed successfully");
+                toastbox('success_toast', 1500);
+
+                if(status == 'inactive')
+                {
+                    $('#'+btnref).removeClass('btn-danger');
+                    $('#'+btnref).addClass('btn-success');
+                    $('#'+btnref).attr('data-status', 'active');
+                    $('#'+btnref).text('Show');
+                }else{
+                    $('#'+btnref).removeClass('btn-success');
+                    $('#'+btnref).addClass('btn-danger');
+                    $('#'+btnref).attr('data-status', 'inactive');
+                    $('#'+btnref).text('Hide');
+                }
+
+            }else{
+                $("#error_message").empty();
+                $("#error_message").html("Error! "+data.message);
+                toastbox('error_toast', 1500);
+            }
+        }
+    })
+})
+
+
 
 // $('#dataTable').dataTable();
 

@@ -33,7 +33,9 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <!-- <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6> -->
+              <span class="float-right">
+                <button class="btn btn-primary btn-sm" id="add_insurance_pricing_plan">Add Insurance Pricing Plan</button>
+              </span>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -59,17 +61,34 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
                      ?>
                      <tr>
                         <td><?php echo $value['pricing_type'];?></td>
-                        <td>&#8358;<?php echo number_format($value['plan_price']);?></td>
+                        <td><?=$value['plan_price'];?>%</td>
                         <td><?php echo $value['plan_description'];?></td>
                         <td>
                           <?php echo $value['date_created'];?>
                         </td>
                         <td>
                           <button class="btn btn-primary btn-sm edit_insurance_princing_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['pricing_type'];?>" data-price="<?php echo $value['plan_price'];?>" data-desc="<?php echo $value['plan_description'];?>">Edit</button>
+
+                          <?php
+                          if($value['is_active'] == 1){
+                            $status = 'inactive';
+                            $text = 'Hide';
+                          }else{
+                            $status = 'active';
+                            $text = 'Show';
+                          }
+                        ?>
+
+                          <button 
+                            class="btn <?=$status=='inactive'?'btn-danger':'btn-success';?> btn-sm change_status" 
+                            type="button" 
+                            id="insurace_status<?=$value['unique_id']?>"
+                            data-id="<?php echo $value['unique_id'];?>"
+                            data-status = "<?=$status?>"
+                            data-ref = "insurance_pricing_plans"
+                          ><?=$text?></button>
                         </td>
-                        <!-- <td>
-                          <button class="btn btn-danger btn-sm delete_insurance_princing_plan" type="button" id="<?php //echo $value['unique_id'];?>" data-name="<?php echo $value['pricing_type'];?>">Delete</button>
-                        </td> -->
+
                       </tr>
                     <?php } } ?>
                 </tbody>
@@ -82,7 +101,7 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Edit Insurance</h5>
+                  <h5 class="modal-title">Edit Insurance Pricing Plan</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -91,7 +110,7 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
                   <form method="post" id="edit_insurance_pricing_plan_form">
                     <div class="row justify-content-center">
                       <div class="col-md-10 mt-3">
-                        <label>Plan Plan</label>
+                        <label>Plan Type</label>
                         <input type="text" name="pricing_type" id="pricing_type" class="form-control">
                       </div>
                     </div>
@@ -108,6 +127,7 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
                       </div>
                     </div>
                     <input type="hidden" name="plan_id"  id="plan_id" value="">
+                    <input type="hidden" name="action"  id="action" value="update">
                   </form>
                 </div>
                 <div class="modal-footer">
@@ -164,6 +184,11 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
   <script>
     $(document).ready(function(){
       $(".edit_insurance_princing_plan").click(function(){
+
+        $('#modal .modal-title').text('Edit Insurance Pricing Plan');
+        $('#action').val('update');
+        $('#edit_insurance_pricing_plan_btn').text('Edit');
+
         $("#modal").modal('show');
         let plan_id = $(this).attr('id');
         let plan_name = $(this).data('name');
@@ -184,6 +209,16 @@ $get_insurance_pricing_plans = get_rows_from_one_table('insurance_pricing_plans'
         $(".pricing-plan").html(`Delete ${plan_name} plan?`);
         $("#delete-dialog").modal("show");
       });
+
+
+      $('#add_insurance_pricing_plan').click(function(){
+        $('#modal .modal-title').text('Add Insurance Pricing Plan');
+        $('#action').val('add');
+        $('#edit_insurance_pricing_plan_btn').text('Add');
+        $('#plan_id').val('');
+
+        $('#modal').modal('show');
+      })
     });
   </script>
 </body>

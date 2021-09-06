@@ -166,6 +166,22 @@ function get_total(String $table, String $params, Array $values, String $ops = '
 
 
 
+function checkExists(String $ref, String $val, String $tbl, String $typeCheckVal)
+{
+  global $dbc;
+  $sql = "SELECT id from $tbl where $ref = '$val'";
+  if(!empty($typeCheckVal)) $sql .= "and unique_id != '$typeCheckVal'";
+  $query = mysqli_query($dbc, $sql);
+  if(mysqli_num_rows($query) > 0)
+  {
+    return true;
+  }else{
+    return false;
+  }
+}
+
+
+
 
 function get_rows_from_table($table){
   global $dbc;

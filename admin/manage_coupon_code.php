@@ -118,8 +118,26 @@
                           data-insurance_val="<?=ucwords(str_replace('_', ' ', $value['insurance_type']))?>"
                           data-expiry="<?php echo $value['expiry_date']?>"
                           >Edit</button>
-                          <!-- <button type="button" class="btn btn-sm btn-danger delete_modal" 
-                          id="<?php //echo $value['unique_id']?>">Delete</button> -->
+
+                          <?php
+                          if($value['is_active'] == 1){
+                            $status = 'inactive';
+                            $text = 'Hide';
+                          }else{
+                            $status = 'active';
+                            $text = 'Show';
+                          }
+                        ?>
+
+                          <button 
+                            class="btn <?=$status=='inactive'?'btn-danger':'btn-success';?> btn-sm change_status" 
+                            type="button" 
+                            id="insurace_status<?=$value['unique_id']?>"
+                            data-id="<?php echo $value['unique_id'];?>"
+                            data-status = "<?=$status?>"
+                            data-ref = "coupon_code"
+                          ><?=$text?></button>
+
                         </td>
                       </tr>
                     <?php } } ?>
