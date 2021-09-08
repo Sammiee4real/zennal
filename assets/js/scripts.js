@@ -1667,14 +1667,18 @@ $(document).ready(function(){
 	// -----------------------------------------NEW-------------------------------------------------------------
 
 
-	$("#edit_insurance_plan_btn").click(function(){
+	$("#edit_insurance_package_btn").click(function(){
+		var action = $('#action').val();
+		var $url = '';
+		if(action == 'add') $url = 'set_insurance_package.php';
+		else $url = 'edit_insurance_package.php';
       $.ajax({
-          url: "ajax_admin/edit_insurance_plan.php",
+          url: "ajax_admin/"+$url,
           method: "POST",
-          data:$("#edit_insurance_plan_form").serialize(),
+          data:$("#edit_insurance_package_form").serialize(),
           beforeSend:function(){
-            $("#edit_insurance_plan_btn").attr("disabled", true);
-            $("#edit_insurance_plan_btn").text("Editing...");
+            $("#edit_insurance_package_btn").attr("disabled", true);
+            $("#edit_insurance_package_btn").text("Editing...");
           },
           success: function(data){
           	$("#modal").modal('hide');
@@ -1689,11 +1693,78 @@ $(document).ready(function(){
               $("#error_message").html("Error! " + data);
               toastbox('error_toast', 6000);
             }
-            $("#edit_insurance_plan_btn").attr("disabled", false);
-            $("#edit_insurance_plan_btn").text("Edit");
+            $("#edit_insurance_package_btn").attr("disabled", false);
+            $("#edit_insurance_package_btn").text("Edit");
           }
       });
   	});
+
+	$("#edit_insurance_plan_btn").click(function(){
+		var action = $('#action').val();
+		var $url = '';
+		if(action == 'add') $url = 'set_insurance_plan.php';
+		else $url = 'edit_insurance_plan.php';
+		
+		$.ajax({
+		  url: "ajax_admin/"+$url,
+		  method: "POST",
+		  data:$("#edit_insurance_plan_form").serialize(),
+		  beforeSend:function(){
+			$("#edit_insurance_plan_btn").attr("disabled", true);
+			$("#edit_insurance_plan_btn").text("Editing...");
+		  },
+		  success: function(data){
+			  $("#modal").modal('hide');
+			if(data == "success"){
+			  $("#success_message").empty();
+			  $("#success_message").html("Success! plan has been edited successfully");
+			  toastbox('success_toast');
+			  setTimeout( function(){ window.location.href = "view_insurance_plans.php";}, 3000);
+			}
+			else{
+			  $("#error_message").empty();
+			  $("#error_message").html("Error! " + data);
+			  toastbox('error_toast', 6000);
+			}
+			$("#edit_insurance_plan_btn").attr("disabled", false);
+			$("#edit_insurance_plan_btn").text("Edit");
+		  }
+		});
+	});
+
+
+	$("#edit_insurer_btn").click(function(){
+		var action = $('#action').val();
+		var $url = '';
+		if(action == 'add') $url = 'set_insurer.php';
+		else $url = 'edit_insurer.php';
+		
+		$.ajax({
+		  url: "ajax_admin/"+$url,
+		  method: "POST",
+		  data:$("#edit_insurer_form").serialize(),
+		  beforeSend:function(){
+			$("#edit_insurer_btn").attr("disabled", true);
+			$("#edit_insurer_btn").text("Editing...");
+		  },
+		  success: function(data){
+			  $("#modal").modal('hide');
+			if(data == "success"){
+			  $("#success_message").empty();
+			  $("#success_message").html("Success! plan has been edited successfully");
+			  toastbox('success_toast');
+			  setTimeout( function(){ window.location.href = "manage_insurers.php";}, 3000);
+			}
+			else{
+			  $("#error_message").empty();
+			  $("#error_message").html("Error! " + data);
+			  toastbox('error_toast', 6000);
+			}
+			$("#edit_insurer_btn").attr("disabled", false);
+			$("#edit_insurer_btn").text("Edit");
+		  }
+		});
+	});
 
 
 	 $("#edit_insurance_pricing_plan_btn").click(function(){

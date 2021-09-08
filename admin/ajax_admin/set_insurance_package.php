@@ -7,8 +7,7 @@
 	$create_insurance_package_decode = json_decode($create_insurance_package, true);
 	if($create_insurance_package_decode['status'] == "1"){
 		echo "success";
-	}
-	else{
+	}else{
 		echo $create_insurance_package_decode['msg'];
 	}
 ?>

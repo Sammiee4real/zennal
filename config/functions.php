@@ -3225,7 +3225,7 @@ function add_product($vendor_id, $product_name, $description, $price, $image, $c
   }
 }
 
-function insert_into_db($table,$data,$param,$validate_value){
+function insert_into_db($table,$data,$param,$validate_value, ?bool $timestamps = true){
   global $dbc;
   $validate_value = secure_database($validate_value);
   $param = secure_database($param);
@@ -3239,7 +3239,7 @@ function insert_into_db($table,$data,$param,$validate_value){
 
       if( is_array($data) && !empty($data) ){
      $sql = "INSERT INTO `$table` SET  `unique_id` = '$unique_id',";
-     $sql .= "`date_created` = now(), ";
+     if($timestamps) $sql .= "`date_created` = now(), ";
      //$sql .= "`privilege` = '1', ";
         for($i = 0; $i < count($data); $i++){
             $each_data = $data[$i];

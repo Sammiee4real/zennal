@@ -4,7 +4,7 @@ include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-$get_insurance_plans = get_rows_from_one_table('insurance_packages','date_created');
+$get_insurance_plans = get_rows_from_one_table('insurance_plans','datetime');
 // $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
 ?>
 
@@ -28,12 +28,15 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Insurance Packages</h1>
+          <h1 class="h3 mb-2 text-gray-800">Insurance Plans</h1>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <!-- <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6> -->
+              <span class="float-right">
+                <button class="btn btn-primary btn-sm" id="add_insurance_plan">Add New Plan</button>
+              </span>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -44,7 +47,8 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                       } else{ ?>
                   <tr>
                     
-                    <th scope="col">Package Name</th>
+                    <th scope="col">Plan Name</th>
+                    <th scope="col">Plan Value</th>
                     <th scope="col">Date Created</th>
                     <th>Action</th>
 
@@ -56,12 +60,18 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                    foreach($get_insurance_plans as $value){
                      ?>
                      <tr>
-                        <td><?php echo $value['package_name'];?></td>
+                        <td><?php echo $value['plan_name'];?></td>
+                        <td><?php echo $value['plan_percentage'].'%';?></td>
                         <td>
-                          <?php echo $value['date_created'];?>
+                          <?php echo $value['datetime'];?>
                         </td>
                         <td>
-                          <button class="btn btn-primary btn-sm edit_insurance_plan" type="button" id="<?php echo $value['unique_id'];?>" data-name="<?php echo $value['package_name'];?>">Edit</button>
+                          <button 
+                            class="btn btn-primary btn-sm edit_insurance_plan" 
+                            type="button" id="<?php echo $value['unique_id'];?>" 
+                            data-name="<?php echo $value['plan_name'];?>"
+                            data-value="<?php echo $value['plan_percentage'];?>"
+                        >Edit</button>
                           
                         <?php
                           if($value['is_active'] == 1){
@@ -79,7 +89,7 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                             id="insurace_status<?=$value['unique_id']?>"
                             data-id="<?php echo $value['unique_id'];?>"
                             data-status = "<?=$status?>"
-                            data-ref = "insurance_packages"
+                            data-ref = "insurance_plans"
                           ><?=$text?></button>
                         </td>
                       </tr>
@@ -103,11 +113,17 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                 <form method="post" id="edit_insurance_plan_form">
                   <div class="row justify-content-center">
                     <div class="col-md-10 mt-3">
-                      <label>Package Name</label>
-                      <input type="text" name="package_name" id="package_name" class="form-control">
+                      <label>Plan Name</label>
+                      <input type="text" name="plan_name" id="plan_name" class="form-control">
+                    </div>
+                    
+                    <div class="col-md-10 mt-3">
+                      <label>Plan Value <small>(In percentage)</small></label>
+                      <input type="number" name="plan_percentage" id="plan_percentage" class="form-control">
                     </div>
                   </div>
-                  <input type="hidden" name="package_id"  id="package_id" value="">
+                  <input type="hidden" name="plan_id"  id="plan_id" value="">
+                  <input type="hidden" name="action"  id="action" value="update"/>
                 </form>
               </div>
               <div class="modal-footer">
@@ -130,7 +146,7 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                 </button>
               </div> -->
               <div class="modal-body">
-                <h5 class="package-plan">Delete ?</h5>
+                <h5 class="plan-plan">Delete ?</h5>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="delete_insurance_plan_btn">Confirm</button>
@@ -164,20 +180,39 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
     $(document).ready(function(){
       $(".edit_insurance_plan").click(function(){
         $("#modal").modal('show');
-        let package_id = $(this).attr('id');
-        let package_name = $(this).data('name');
-        // console.log(package_name);
-        $("#package_id").val(package_id);
-        $("#package_name").val(package_name);
+        let plan_id = $(this).attr('id');
+        let plan_name = $(this).data('name');
+        let plan_value = $(this).data('value');
+
+        $('#modal .modal-title').html('Edit Insurance plan');
+        $('#edit_insurance_plan_btn').text('Edit');
+        $('#action').val('update');
+        // console.log(plan_name);
+        $("#plan_id").val(plan_id);
+        $("#plan_name").val(plan_name);
+        $("#plan_percentage").val(plan_value);
+
       });
 
       $(".delete_insurance_plan").click(function(){
-        let package_id = $(this).attr('id');
-        let package_name = $(this).data('name');
-        $("#delete_insurance_plan_btn").attr("data-packageid", package_id);
-        $(".package-plan").html(`Delete ${package_name} package?`);
+        let plan_id = $(this).attr('id');
+        let plan_name = $(this).data('name');
+        $("#delete_insurance_plan_btn").attr("data-planid", plan_id);
+        $(".plan-plan").html(`Delete ${plan_name} plan?`);
         $("#delete-dialog").modal("show");
       });
+
+      $('#add_insurance_plan').click(function(){
+        $("#plan_id").val('');
+        $("#plan_name").val('');
+        $("#plan_percentage").val('');
+
+        $('#modal .modal-title').html('Add Insurance plan');
+        $('#edit_insurance_plan_btn').text('Add');
+        $('#action').val('add');
+
+        $('#modal').modal('show');
+      })
     });
   </script>
 </body>

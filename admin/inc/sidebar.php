@@ -97,7 +97,11 @@
             <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
             <a class="collapse-item" href="view_insurance">Insurance Purchased</a>
             
+            <a class="collapse-item" href="view_insurance_packages">Insurance Packages</a>
+
             <a class="collapse-item" href="view_insurance_plans">Insurance Plans</a>
+
+            <a class="collapse-item" href="manage_insurers">Manage Insurers</a>
          
             <a class="collapse-item" href="view_insurance_pricing">Insurance Pricing Plans</a>
             
