@@ -1777,7 +1777,7 @@ function check_record_by_two_params($table,$param,$value,$param2,$value2){
   $table = secure_database($table);
   $param = secure_database($param);
   $value = secure_database($value);
-  $sql = "SELECT * FROM `$table` WHERE `$param` = '$value' AND `$param2`='$value2'" or die(mysqli_error($dbc));
+  $sql = "SELECT * FROM `$table` WHERE `$param` = '$value' AND `$param2`='$value2'";
   $query = mysqli_query($dbc, $sql);
   $num = mysqli_num_rows($query);
   if($num > 0 ){

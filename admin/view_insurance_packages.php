@@ -4,7 +4,7 @@ include("../config/functions.php");
 include("inc/header.php");
 $admin_id =$_SESSION['admin_id'];
 $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id, 'date_created');
-$get_insurance_plans = get_rows_from_one_table('insurance_packages','date_created');
+$get_insurance_packages = get_rows_from_one_table('insurance_packages','date_created');
 // $get_loan_categories = get_rows_from_one_table('loan_category','date_created');
 ?>
 
@@ -42,7 +42,7 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
               <div class="table-responsive">
                 <table class="table table-bordered" id="myTable" width="100%" cellspacing="0">
                    <thead class="thead-light">
-                 <?php if($get_insurance_plans == null){
+                 <?php if($get_insurance_packages == null){
                         echo "<tr><td>No record found...</td></tr>";
                       } else{ ?>
                   <tr>
@@ -56,7 +56,7 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                 <tbody>
                   <?php
 
-                   foreach($get_insurance_plans as $value){
+                   foreach($get_insurance_packages as $value){
                      ?>
                      <tr>
                         <td><?php echo $value['package_name'];?></td>
@@ -84,6 +84,18 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                             data-status = "<?=$status?>"
                             data-ref = "insurance_packages"
                           ><?=$text?></button>
+
+                          <!-- <div class="btn-group" role="group" aria-label="Button group with nested dropdown"> -->
+                            <div class="btn-group" role="group">
+                              <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                              </button>
+                              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <a class="dropdown-item" href="benefits?pkg_id=<?=base64_encode($value['unique_id']);?>">Manage Benefits</a>
+                                <a class="dropdown-item" href="insurers?pkg_id=<?=base64_encode($value['unique_id']);?>">Manage Insurers</a>
+                              </div>
+                            </div>
+                          <!-- </div> -->
                         </td>
                       </tr>
                     <?php } } ?>
@@ -134,10 +146,10 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
                 </button>
               </div> -->
               <div class="modal-body">
-                <h5 class="package-plan">Delete ?</h5>
+                <h5 class="package-package">Delete ?</h5>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="delete_insurance_plan_btn">Confirm</button>
+                <button type="button" class="btn btn-primary" id="delete_insurance_package_btn">Confirm</button>
                 <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
               </div>
             </div>
@@ -179,11 +191,11 @@ $get_insurance_plans = get_rows_from_one_table('insurance_packages','date_create
         $("#package_name").val(package_name);
       });
 
-      $(".delete_insurance_plan").click(function(){
+      $(".delete_insurance_package").click(function(){
         let package_id = $(this).attr('id');
         let package_name = $(this).data('name');
-        $("#delete_insurance_plan_btn").attr("data-packageid", package_id);
-        $(".package-plan").html(`Delete ${package_name} package?`);
+        $("#delete_insurance_package_btn").attr("data-packageid", package_id);
+        $(".package-package").html(`Delete ${package_name} package?`);
         $("#delete-dialog").modal("show");
       });
 

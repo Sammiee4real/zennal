@@ -47,7 +47,7 @@ $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id
                                     <option selected value="5">Vehicle Registration processed</option>
                                     <option value="6">Vehicle particulars processed</option>
                                     <option value="7">Vehicle Insurance processed</option>
-                                    <option value="8">Disbursement log-instalments-insurance/vehicle</option>
+                                    <!-- <option value="8">Disbursement log-instalments-insurance/vehicle</option> -->
                                 </select>
                             </div>
                         </div>

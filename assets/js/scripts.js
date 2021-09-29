@@ -1686,7 +1686,7 @@ $(document).ready(function(){
               $("#success_message").empty();
               $("#success_message").html("Success! Package has been edited successfully");
               toastbox('success_toast');
-              setTimeout( function(){ window.location.href = "view_insurance_plans.php";}, 3000);
+              setTimeout( function(){ window.location.href = "view_insurance_packages.php";}, 3000);
             }
             else{
               $("#error_message").empty();
@@ -1768,6 +1768,7 @@ $(document).ready(function(){
 
 
 	 $("#edit_insurance_pricing_plan_btn").click(function(){
+		
 		var text = '';
 		var url = '';
 		var action = $('#action').val();

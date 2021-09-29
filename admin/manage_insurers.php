@@ -145,8 +145,6 @@ $get_insurers = get_rows_from_one_table('insurers', 'datetime');
         </div>
 
       </div>
-      
-      
 
       <!-- Footer -->
         <?php include("inc/footer.php");?>

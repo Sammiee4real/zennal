@@ -103,7 +103,7 @@
 
             <a class="collapse-item" href="manage_insurers">Manage Insurers</a>
          
-            <a class="collapse-item" href="view_insurance_pricing">Insurance Pricing Plans</a>
+            <!-- <a class="collapse-item" href="view_insurance_pricing">Insurance Pricing Plans</a> -->
             
 
           
@@ -140,10 +140,8 @@
         </a>
         <div id="referrals" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <!-- <h6 class="collapse-header">View</h6> -->
-           <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
-            <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
             <a class="collapse-item" href="#">All Referrals</a>
+            <a class="collapse-item disabled" href="#" >Set Commissions</a>
             
           </div>
       </li>
@@ -165,21 +163,18 @@
       </li>
 
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#privilege" aria-expanded="true" aria-controls="manage_system">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Privileges</span>
         </a>
         <div id="privilege" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <!-- <h6 class="collapse-header">View</h6> -->
-           <!--  <a class="collapse-item" href="view_loan_applications">View Loan Applications</a> -->
-            <!-- <a class="collapse-item" href="view_repayment">View Repayments</a> -->
             <a class="collapse-item" href="#">All Roles</a>
             <a class="collapse-item" href="#">Manage Roles</a>
       
           </div>
-      </li>
+      </li> -->
 
 
       <!-- Nav Item - Pages Collapse Menu -->
