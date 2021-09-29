@@ -122,7 +122,7 @@ $admin_details = get_one_row_from_one_table_by_id('admin','unique_id', $admin_id
                 method:'post',
                 data:$(this).serialize(),
                 beforeSend: function(){
-                    $('title').html('Zenal App');
+                    $('title').html('Zenal App');   
                     $('.table-responsive').html('<table class="table" id="dataTable"></table>');
                 },
                 success:function(data){
